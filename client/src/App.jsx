@@ -1,5 +1,5 @@
 // src/App.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import Lenis from "lenis";
@@ -79,7 +79,13 @@ function App() {
               ease: [0.22, 0.61, 0.36, 1],
             }}
           >
-            <Outlet />
+            {/* Every route except Home is a lazy chunk, so the landing page
+                no longer ships the JavaScript for all 25 other pages. The
+                fallback is a plain ground rather than a spinner — chunks are
+                small and usually arrive within a frame or two. */}
+            <Suspense fallback={<div className="min-h-screen bg-[#0B0B0B]" />}>
+              <Outlet />
+            </Suspense>
           </motion.div>
         </AnimatePresence>
       </main>

@@ -11,32 +11,32 @@ import {
 import App from "./App.jsx";
 import "./index.css";
 import Home from "./pages/Home.jsx";
-import About from "./pages/About.jsx";
+const About = React.lazy(() => import("./pages/About.jsx"));
 
-import Projects from "./pages/Projects.jsx";
-import RateDetails from "./pages/RateDetails.jsx";
-import GraphicDesignPage from "./pages/GraphicDesignPage";
-import WebsiteDesignPage from "./pages/WebsiteDesignPage.jsx";
-import YDpayPage from "./pages/YDpayPage.jsx";
-import SavedupProject from "./pages/SavedupProject.jsx";
-import SnotesProject from "./pages/SnotesProject.jsx";
-import QuivProject from "./pages/QuivProject.jsx";
-import TabStudioProject from "./pages/TabStudioProject.jsx";
-import VerdeLuxeProject from "./pages/VerdeLuxeProject.jsx";
-import CleansteadProject from "./pages/CleansteadProject.jsx";
-import BookRionProject from "./pages/BookRionProject.jsx";
-import ADLMStudioPage from "./pages/ADLMStudioPage.jsx";
-import NiqsUIProject from "./pages/NiqsUIProject.jsx";
-import YDpayBrandPage from "./pages/YDpayBrandPage.jsx";
-import WhitespacePage from "./pages/WhitespacePage.jsx";
-import YDpayDesignPage from "./pages/YDpayDesignPage.jsx";
-import Contact from "./pages/Contact.jsx";
-import PresentationDesignPage from "./pages/PresentationDesignPage.jsx";
-import BookPlan from "./pages/BookPlan.jsx";
-import TestimonialPage from "./pages/TestimonialPage.jsx";
-import BookFlyer from "./pages/BookFlyer.jsx";
-import BookWebsite from "./pages/BookWebsite.jsx";
-import OfferPage from "./pages/OfferPage.jsx";
+const Projects = React.lazy(() => import("./pages/Projects.jsx"));
+const RateDetails = React.lazy(() => import("./pages/RateDetails.jsx"));
+const GraphicDesignPage = React.lazy(() => import("./pages/GraphicDesignPage"));
+const WebsiteDesignPage = React.lazy(() => import("./pages/WebsiteDesignPage.jsx"));
+const YDpayPage = React.lazy(() => import("./pages/YDpayPage.jsx"));
+const SavedupProject = React.lazy(() => import("./pages/SavedupProject.jsx"));
+const SnotesProject = React.lazy(() => import("./pages/SnotesProject.jsx"));
+const QuivProject = React.lazy(() => import("./pages/QuivProject.jsx"));
+const TabStudioProject = React.lazy(() => import("./pages/TabStudioProject.jsx"));
+const VerdeLuxeProject = React.lazy(() => import("./pages/VerdeLuxeProject.jsx"));
+const CleansteadProject = React.lazy(() => import("./pages/CleansteadProject.jsx"));
+const BookRionProject = React.lazy(() => import("./pages/BookRionProject.jsx"));
+const ADLMStudioPage = React.lazy(() => import("./pages/ADLMStudioPage.jsx"));
+const NiqsUIProject = React.lazy(() => import("./pages/NiqsUIProject.jsx"));
+const YDpayBrandPage = React.lazy(() => import("./pages/YDpayBrandPage.jsx"));
+const WhitespacePage = React.lazy(() => import("./pages/WhitespacePage.jsx"));
+const YDpayDesignPage = React.lazy(() => import("./pages/YDpayDesignPage.jsx"));
+const Contact = React.lazy(() => import("./pages/Contact.jsx"));
+const PresentationDesignPage = React.lazy(() => import("./pages/PresentationDesignPage.jsx"));
+const BookPlan = React.lazy(() => import("./pages/BookPlan.jsx"));
+const TestimonialPage = React.lazy(() => import("./pages/TestimonialPage.jsx"));
+const BookFlyer = React.lazy(() => import("./pages/BookFlyer.jsx"));
+const BookWebsite = React.lazy(() => import("./pages/BookWebsite.jsx"));
+const OfferPage = React.lazy(() => import("./pages/OfferPage.jsx"));
 
 // Redirect component that preserves slug params
 const RedirectWithSlug = ({ basePath }) => {

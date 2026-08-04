@@ -29,12 +29,8 @@ const BuildSection = () => {
           viewport={{ once: true, amount: 0.6 }}
         >
           {/* Background loop video */}
-          <video
+          <LazyVideo
             src="/background-loop.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-40"
           />

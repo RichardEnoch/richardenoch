@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import LazyVideo from "../components/common/LazyVideo";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
 import { Clock01Icon, Globe02Icon, ZapIcon } from "hugeicons-react";
@@ -169,14 +170,7 @@ const INFO_ITEMS = [
 
 // ─── Background Video ─────────────────────────────────────────────────────────
 const BgVideo = ({ className }) => (
-  <video
-    className={className}
-    src="/background-loop.mp4"
-    autoPlay
-    muted
-    loop
-    playsInline
-  />
+  <LazyVideo className={className} src="/background-loop.mp4" />
 );
 
 // ─── Info item ────────────────────────────────────────────────────────────────
