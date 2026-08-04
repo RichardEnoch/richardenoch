@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion, useMotionValue, useTransform, useSpring, useInView } from "framer-motion";
 import OtherProj from "../components/ProjectPage/OtherProj";
 import BuildSection from "../components/Home/BuildSection";
+import ProjectMeta from "../components/ProjectPage/ProjectMeta";
 import PageMeta from "../components/common/PageMeta";
 import GuidelineCarousel from "../components/ProjectPage/GuidelineCarousel";
 import BrandGallery from "../components/ProjectPage/BrandGallery";
@@ -112,14 +113,14 @@ const StaggerItem = ({ children, className = "" }) => (
 
 /* ─── section eyebrow ─── */
 const SLabel = ({ n, t }) => (
-  <p className="text-[11px] font-bold tracking-[0.3em] uppercase mb-5" style={{ color: GR }}>
+  <p className="type-eyebrow mb-5" style={{ color: GR }}>
     {n} — {t}
   </p>
 );
 
 /* ─── section heading ─── */
 const H2 = ({ white, accent, accentColor = GR }) => (
-  <h2 className="text-4xl sm:text-5xl lg:text-[52px] font-semibold leading-[1.05] tracking-[-0.03em]">
+  <h2 className="type-display-3">
     <span className="text-white">{white} </span>
     <span style={{ color: accentColor }}>{accent}</span>
   </h2>
@@ -232,7 +233,7 @@ export default function YDpayBrandPage() {
 
           <FadeUp delay={0.1}>
             <h1
-              className="text-5xl sm:text-6xl lg:text-[80px] font-bold leading-none tracking-[-0.04em] mb-6"
+              className="type-display-1 mb-6"
               style={{
                 background: "linear-gradient(180deg, #ffffff 0%, #9a9a9a 100%)",
                 WebkitBackgroundClip: "text",
@@ -263,24 +264,15 @@ export default function YDpayBrandPage() {
         <section className="py-16 sm:py-20 px-4 sm:px-8 lg:px-16 border-t border-white/5">
           <div className="max-w-[1100px] mx-auto">
             <FadeUp>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-0 sm:divide-x divide-white/8 mb-14">
-                {[
-                  { label: "CLIENT",  value: "YDPay (fintech app)" },
-                  { label: "SCOPE",   value: "Brand System", accent: true },
-                  { label: "ROLE",    value: "Brand Design Lead" },
-                  { label: "PHASE",   value: "Foundation (pre-product)" },
-                ].map(({ label, value, accent }) => (
-                  <div key={label} className="sm:px-8 first:pl-0">
-                    <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-1">{label}</p>
-                    <p
-                      className={`text-xl sm:text-2xl font-bold ${accent ? "" : "text-white"}`}
-                      style={accent ? { color: GR } : {}}
-                    >
-                      {value}
-                    </p>
-                  </div>
-                ))}
-              </div>
+              <ProjectMeta
+              className="mb-14"
+              items={[
+                { label: "Client", value: "YDPay (fintech app)" },
+                { label: "Scope", value: "Brand System" },
+                { label: "Role", value: "Brand Design Lead" },
+                { label: "Phase", value: "Foundation (pre-product)" },
+              ]}
+            />
             </FadeUp>
 
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
