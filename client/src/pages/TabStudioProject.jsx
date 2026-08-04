@@ -10,6 +10,7 @@ import BrandGallery from "../components/ProjectPage/BrandGallery";
 import GuidelineCarousel from "../components/ProjectPage/GuidelineCarousel";
 import OtherProj from "../components/ProjectPage/OtherProj";
 import BuildSection from "../components/Home/BuildSection";
+import ProjectMeta from "../components/ProjectPage/ProjectMeta";
 import PageMeta from "../components/common/PageMeta";
 import { buttonClasses } from "../components/ui";
 
@@ -92,13 +93,13 @@ const Reveal = ({ children, className = "" }) => {
 };
 
 const SLabel = ({ n, t }) => (
-  <p className="text-[11px] font-bold tracking-[0.3em] uppercase mb-5" style={{ color: G }}>
+  <p className="type-eyebrow mb-5" style={{ color: G }}>
     {n} — {t}
   </p>
 );
 
 const H2 = ({ white, accent }) => (
-  <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-semibold leading-[1.08] tracking-[-0.02em]">
+  <h2 className="type-display-3">
     <span className="text-white">{white} </span>
     <span style={{ color: G }}>{accent}</span>
   </h2>
@@ -145,7 +146,7 @@ const TabStudioProject = () => (
               </span>
             </FadeUp>
             <FadeUp delay={0.08}>
-              <h1 className="text-5xl sm:text-6xl lg:text-[68px] font-semibold leading-none tracking-[-0.03em] mb-5"
+              <h1 className="type-display-1 mb-5"
                 style={{ background: "linear-gradient(180deg, #ffffff 0%, #9a9a9a 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
                 Tabstudio
               </h1>
@@ -165,19 +166,15 @@ const TabStudioProject = () => (
       <section className="py-14 sm:py-16 px-4 sm:px-8 lg:px-16">
         <div className="max-w-[1100px] mx-auto">
           <Reveal>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-0 sm:divide-x divide-white/8 mb-12">
-              {[
-                { label: "CLIENT", value: "Tab Studio" },
-                { label: "INDUSTRY", value: "Video & Motion", accent: true },
-                { label: "ROLE", value: "Sole Brand Designer" },
-                { label: "SCOPE", value: "Full Identity System" },
-              ].map(({ label, value, accent }) => (
-                <div key={label} className="sm:px-8 first:pl-0">
-                  <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-1">{label}</p>
-                  <p className="text-lg sm:text-xl font-bold" style={accent ? { color: G } : {}}>{value}</p>
-                </div>
-              ))}
-            </div>
+            <ProjectMeta
+              className="mb-12"
+              items={[
+                { label: "Client", value: "Tab Studio" },
+                { label: "Industry", value: "Video & Motion" },
+                { label: "Role", value: "Sole Brand Designer" },
+                { label: "Scope", value: "Full Identity System" },
+              ]}
+            />
           </Reveal>
 
           <Reveal>
@@ -388,7 +385,7 @@ const TabStudioProject = () => (
               },
             ].map(({ q, a }, i) => (
               <Reveal key={q}>
-                <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-6 h-full flex flex-col gap-3">
+                <div className="card-surface card-surface-hover p-6 h-full flex flex-col gap-3">
                   <span className="rounded-md px-2 py-0.5 text-[9px] font-bold tracking-widest uppercase w-fit" style={{ background: `${G}15`, color: G }}>
                     Decision 0{i + 1}
                   </span>

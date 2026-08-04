@@ -30,10 +30,15 @@ const SIZES = {
 };
 
 // For <a> / <Link> elements that need to look like a button.
+/* Ghost is text-like, so a sweeping highlight would read as a glitch on it.
+   Every filled or outlined variant gets the glass sheen. */
+const SHEEN_VARIANTS = new Set(["primary", "secondary", "danger"]);
+
 export const buttonClasses = (variant = "primary", size = "md", className = "") =>
   [
     "inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-lg transition",
     "disabled:pointer-events-none disabled:opacity-50",
+    SHEEN_VARIANTS.has(variant) ? "btn-sheen" : "",
     VARIANTS[variant] || VARIANTS.primary,
     SIZES[size] ?? SIZES.md,
     className,
