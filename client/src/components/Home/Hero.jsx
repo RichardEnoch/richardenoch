@@ -1,5 +1,6 @@
 ﻿import React from "react";
 import { motion } from "framer-motion";
+import LazyVideo from "../common/LazyVideo";
 import ProjHero from "../../assets/ProjectHero.webp";
 
 const fadeUp = (delay = 0) => ({

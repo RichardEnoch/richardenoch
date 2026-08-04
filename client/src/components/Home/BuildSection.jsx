@@ -1,6 +1,7 @@
 ﻿import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import LazyVideo from "../common/LazyVideo";
 import TypingText from "../common/TypingText";
 import Button from "../ui/Button";
 

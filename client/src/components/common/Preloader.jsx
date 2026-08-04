@@ -1,8 +1,13 @@
 // src/components/common/Preloader.jsx
+//
+// The bar reports real loading progress, not a fixed animation. App counts
+// the assets the first screen actually needs and passes the percentage down,
+// so the bar reaching 100% means the page behind it is genuinely ready.
+
 import React from "react";
 import { motion } from "framer-motion";
 
-const Preloader = () => (
+const Preloader = ({ progress = 0 }) => (
   <motion.div
     className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#050505]"
     exit={{ opacity: 0 }}
@@ -23,7 +28,7 @@ const Preloader = () => (
       />
     </motion.div>
 
-    {/* Progress track */}
+    {/* Progress track — width follows real asset progress */}
     <motion.div
       className="w-[100px] h-[2px] rounded-full overflow-hidden bg-white/10"
       initial={{ opacity: 0 }}
@@ -33,12 +38,12 @@ const Preloader = () => (
       <motion.div
         className="h-full rounded-full bg-lime-400"
         initial={{ width: "0%" }}
-        animate={{ width: "100%" }}
-        transition={{ duration: 1.5, ease: [0.4, 0, 0.2, 1], delay: 0.25 }}
+        animate={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
+        transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
       />
     </motion.div>
 
-    {/* Name label */}
+    {/* Name label + real percentage */}
     <motion.p
       className="mt-5 text-[10px] font-semibold tracking-[0.3em] uppercase text-white/25"
       initial={{ opacity: 0 }}
@@ -46,6 +51,9 @@ const Preloader = () => (
       transition={{ delay: 0.35, duration: 0.4 }}
     >
       Richard Enoch
+      <span className="ml-3 tabular-nums text-white/40">
+        {Math.min(100, Math.round(progress))}%
+      </span>
     </motion.p>
   </motion.div>
 );
