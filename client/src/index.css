@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@200..700&display=swap');
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+
+@import "tailwindcss";
+
+
+
+/* src/index.css */
+html {
+  font-size: 16px;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Clip horizontal overflow on the root div — does NOT create a scroll
+   container and does NOT affect window.scrollY, sticky, or fixed positioning.
+   Putting it on html/body caused overflow-y to compute as clip too (CSS spec),
+   which broke body scrolling and all scroll-driven animations. */
+#root {
+  overflow-x: clip;
+}
+
+
+
+a.active hr{
+    display: block ;
+}
+
+*{
+    font-family: Outfit;
+}
+
+/* Pages that opt into Lexend. Scoped, because the `*` rule above targets
+   every element and would otherwise beat plain inheritance from the wrapper. */
+.page-lexend,
+.page-lexend * {
+    font-family: 'Lexend', sans-serif;
+}
+
+  @media (max-width:640px){
+    a.active{
+        background-color: black;
+        color: white;
+    }
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  .no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+
+/* Make sure the page itself can scroll */
+html, body, #root {
+  height: auto;
+  min-height: 100%;
+}
+body {
+  -webkit-overflow-scrolling: touch;
+}
