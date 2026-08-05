@@ -95,7 +95,7 @@ const STATIC_GFX_PROJECTS = [
 const SAVEDUP_THUMB = "https://res.cloudinary.com/dirgfivvb/image/upload/v1769320865/richard_portfolio/ui-projects/nhjprdndluq6dbch0j27.jpg";
 
 const QUIV_THUMB = "/thumb-quiv.svg";
-const NIQS_THUMB = "/NIQSEmblemDark.png";
+const NIQS_THUMB = "/NIQSEmblemDark.webp";
 
 const STATIC_UI_PROJECTS = [
   {

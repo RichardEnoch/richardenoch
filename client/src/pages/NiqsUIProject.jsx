@@ -207,7 +207,7 @@ export default function NiqsUIProject() {
           {/* Background: dark 3D emblem, subtle zoom on hover */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             <img
-              src="/NIQSEmblemDark.png"
+              src="/NIQSEmblemDark.webp"
               alt=""
               className="absolute inset-0 w-full h-full object-cover object-center"
               style={{

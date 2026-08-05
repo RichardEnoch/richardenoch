@@ -1,5 +1,5 @@
 // src/App.jsx
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import Lenis from "lenis";
@@ -17,6 +17,7 @@ function App() {
   const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
+  const observerRef = useRef(null);
 
   /* Real progress. Only eager images count — anything marked lazy is below
      the fold and deliberately not part of what the visitor waits for, so
@@ -73,27 +74,33 @@ function App() {
     if (loading) return;
     let cancelled = false;
 
+    /* Warm images as they APPROACH the viewport, not the whole page. The
+       first version of this pulled every lazy image on mount — on the home
+       page that is 93 images, which is why a cold load measured 14.6 MB when
+       the page only needs 2 MB. This widens the browser's lazy threshold
+       (~1250px in Chrome) to about two screens ahead and stops there. */
     const warm = () => {
       if (cancelled) return;
-      const pending = Array.from(
-        document.querySelectorAll('img[loading="lazy"]')
-      )
-        .filter((img) => !img.complete && img.currentSrc === "")
-        .map((img) => img.src)
-        .filter(Boolean);
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const img = entry.target;
+            io.unobserve(img);
+            if (img.complete || !img.src) return;
+            const pre = new Image();
+            pre.decoding = "async";
+            pre.src = img.src;
+          });
+        },
+        { rootMargin: "1800px 0px" } // roughly two screens of runway
+      );
 
-      let i = 0;
-      const batch = () => {
-        if (cancelled || i >= pending.length) return;
-        pending.slice(i, i + 4).forEach((src) => {
-          const pre = new Image();
-          pre.decoding = "async";
-          pre.src = src;
-        });
-        i += 4;
-        setTimeout(batch, 400); // paced, so it never starves what is on screen
-      };
-      batch();
+      document
+        .querySelectorAll('img[loading="lazy"]')
+        .forEach((img) => io.observe(img));
+
+      observerRef.current = io;
     };
 
     const id =
@@ -103,6 +110,8 @@ function App() {
 
     return () => {
       cancelled = true;
+      observerRef.current?.disconnect();
+      observerRef.current = null;
       if (typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(id);
       else clearTimeout(id);
     };

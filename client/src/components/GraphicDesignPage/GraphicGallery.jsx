@@ -1,6 +1,7 @@
 ﻿// src/components/GraphicDesignPage/GraphicGallery.jsx
 import React from "react";
 import { createPortal } from "react-dom";
+import { thumbFor } from "../../utils/thumbs";
 import { motion } from "framer-motion";
 
 /**
@@ -318,7 +319,7 @@ function ImgCard({
           />
 
           <img
-            src={src}
+            src={thumbFor(src)}
             alt=""
             loading="lazy"
             draggable="false"
