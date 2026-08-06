@@ -15,11 +15,23 @@ const modules = import.meta.glob("../assets/**/*.thumb.webp", {
   import: "default",
 });
 
+/* Vite flattens assets into one output directory, so at runtime the only
+   thing recoverable from a built URL is the basename — the folder is gone.
+   That makes this map unsafe for any name that exists in more than one
+   source folder: "Call for Ambassadors.jpg" lives in both FlyerSamples and
+   YDpayDesigns, and keying on basename alone silently served one project's
+   thumbnail in place of another's.
+   Ambiguous names are therefore recorded and never substituted — those few
+   tiles load the full image instead. A slightly heavier tile is a trivial
+   cost next to showing the wrong piece of work. */
 const byBasename = {};
+const ambiguous = new Set();
 for (const [filePath, url] of Object.entries(modules)) {
   const key = filePath.split("/").pop().replace(/\.thumb\.webp$/i, "");
+  if (key in byBasename) ambiguous.add(key);
   byBasename[key] = url;
 }
+ambiguous.forEach((key) => delete byBasename[key]);
 
 /* Vite emits `name-HASH.ext`; strip the hash and extension to recover the
    original basename, then look up its thumb. Falls back to the full image

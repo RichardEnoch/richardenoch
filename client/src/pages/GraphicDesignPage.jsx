@@ -28,15 +28,20 @@ const HERO_BG_TWEAK = {
   translateX: 0, translateY: 0, opacity: 0.99,
 };
 
-/* ── gallery: a randomised mix of graphic work — flyers, social campaigns,
-   carousels and product/card mockups — pulled from every graphic collection so
-   the page reads as a varied body of work, not one folder in a fixed order. ── */
-const GALLERY_ASSETS = {
-  ...import.meta.glob("../assets/FlyerSamples/*.{png,jpg,jpeg,webp}", { eager: true, import: "default" }),
-  ...import.meta.glob("../assets/ADLMStudio/*.{png,jpg,jpeg,webp}", { eager: true, import: "default" }),
-  ...import.meta.glob("../assets/Whitespace/*.{png,jpg,jpeg,webp}", { eager: true, import: "default" }),
-  ...import.meta.glob("../assets/YDpayDesigns/*.{png,jpg,jpeg,webp}", { eager: true, import: "default" }),
-};
+/* ── gallery: Richard's flyer and social design work, sourced from
+   extra/Flyer Samples.
+
+   This used to pool four folders — FlyerSamples, ADLMStudio, Whitespace and
+   YDpayDesigns — shuffle them, and keep only 48. Two things were wrong with
+   that. Most of the flyers were dropped at random on every visit, and the
+   survivors were diluted by three other brands' social work, all of which
+   already have their own dedicated pages (/adlm-studio-designs,
+   /whitespace-designs, /ydpay-designs). This page is the flyer body of work,
+   so it shows the flyer body of work — all of it. ── */
+const GALLERY_ASSETS = import.meta.glob(
+  "../assets/FlyerSamples/*.{png,jpg,jpeg,webp}",
+  { eager: true, import: "default" }
+);
 
 // Fisher–Yates shuffle (runs once at load → random per visit, stable per session)
 function shuffle(arr) {
@@ -49,11 +54,11 @@ function shuffle(arr) {
 }
 
 function buildGallery() {
-  const all = Object.entries(GALLERY_ASSETS).map(([path, src], idx) => ({
-    id: `gfx-${idx}`,
-    src,
-  }));
-  return shuffle(all).slice(0, 48);
+  const all = Object.entries(GALLERY_ASSETS)
+    .filter(([path]) => !/\.thumb\.webp$/i.test(path)) // tiles resolve their own thumb
+    .map(([path, src], idx) => ({ id: `gfx-${idx}`, src }));
+  // Shuffled so the page opens differently each visit, but nothing is dropped.
+  return shuffle(all);
 }
 
 const DATA = {
