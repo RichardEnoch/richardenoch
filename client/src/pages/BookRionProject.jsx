@@ -11,6 +11,7 @@ import OtherProj from "../components/ProjectPage/OtherProj";
 import BuildSection from "../components/Home/BuildSection";
 import ProjectMeta from "../components/ProjectPage/ProjectMeta";
 import PageMeta from "../components/common/PageMeta";
+import ScrollAlign from "../components/common/ScrollAlign";
 import { buttonClasses } from "../components/ui";
 
 /* ── artwork (existing project images + the newly added product shot) ── */
@@ -171,7 +172,7 @@ const BookRionProject = () => (
       {/* ══ 01 — THE CLIENT ══ */}
       <section className="py-16 sm:py-20 px-4 sm:px-8 lg:px-16 border-t border-white/5">
         <div className="max-w-[1100px] mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+          <ScrollAlign className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             <Reveal>
               <SLabel n="01" t="THE CLIENT" />
               <H2 white="The whole book world," accent="one front door" />
@@ -181,10 +182,10 @@ const BookRionProject = () => (
                 <p>And they were thinking past launch. The long game was a gamified reading habit, closer to how Duolingo makes practice feel like play. So the brand had to be friendly and playful, but still solid enough to sit under a proper product. I handled both sides on this one, the identity and the product design, which is exactly how it should be when the brand IS the product.</p>
               </div>
             </Reveal>
-            <Reveal className="h-full">
-              <Frame src={imgAppIcon} alt="The BookRion app icon, the crowned B, on a phone home screen" ratio="4/5" className="h-full" />
+            <Reveal>
+              <Frame src={imgAppIcon} alt="The BookRion app icon, the crowned B, on a phone home screen" ratio="4/5" />
             </Reveal>
-          </div>
+          </ScrollAlign>
         </div>
       </section>
 

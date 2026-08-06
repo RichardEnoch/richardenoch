@@ -5,6 +5,7 @@ import { motion, useMotionValue, useTransform, useSpring, AnimatePresence, useIn
 import OtherProj from "../components/ProjectPage/OtherProj";
 import BuildSection from "../components/Home/BuildSection";
 import PageMeta from "../components/common/PageMeta";
+import ScrollAlign from "../components/common/ScrollAlign";
 
 const GR = "#a3e635";
 
@@ -689,7 +690,7 @@ const SnotesProject = () => {
         {/* ══ 08 — PRODUCT PHASES ══ */}
         <section className="py-16 sm:py-24 px-4 sm:px-8 lg:px-16 border-t border-white/5">
           <div className="max-w-[1100px] mx-auto">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+            <ScrollAlign className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
               <FadeUp delay={0.1}>
                 <SLabel n="08" t="PRODUCT STRATEGY" />
                 <H2 white="Three phases." accent="One product." />
@@ -733,7 +734,7 @@ const SnotesProject = () => {
                   style={{ aspectRatio: "4/5" }}
                 />
               </SlideIn>
-            </div>
+            </ScrollAlign>
           </div>
         </section>
 
@@ -1006,7 +1007,7 @@ const SnotesProject = () => {
         {/* ══ 13 — WHAT'S NEXT ══ */}
         <section className="py-16 sm:py-24 px-4 sm:px-8 lg:px-16 border-t border-white/5">
           <div className="max-w-[1100px] mx-auto">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+            <ScrollAlign className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
               <FadeUp delay={0.1}>
                 <SLabel n="13" t="WHAT'S NEXT" />
                 <H2 white="From concept" accent="to first build" />
@@ -1043,7 +1044,7 @@ const SnotesProject = () => {
                   style={{ aspectRatio: "4/5" }}
                 />
               </SlideIn>
-            </div>
+            </ScrollAlign>
           </div>
         </section>
 

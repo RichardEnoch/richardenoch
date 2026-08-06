@@ -276,7 +276,7 @@ export default function YDpayBrandPage() {
             />
             </FadeUp>
 
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
+            <ScrollAlign className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
               <FadeUp>
                 <SLabel n="01" t="OVERVIEW" />
                 <H2 white="The foundation" accent="built first" />
@@ -315,7 +315,7 @@ export default function YDpayBrandPage() {
                   </p>
                 </div>
               </FadeUp>
-            </div>
+            </ScrollAlign>
           </div>
         </section>
 

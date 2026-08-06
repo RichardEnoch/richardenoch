@@ -12,6 +12,7 @@ import OtherProj from "../components/ProjectPage/OtherProj";
 import BuildSection from "../components/Home/BuildSection";
 import ProjectMeta from "../components/ProjectPage/ProjectMeta";
 import PageMeta from "../components/common/PageMeta";
+import ScrollAlign from "../components/common/ScrollAlign";
 import { buttonClasses } from "../components/ui";
 
 /* ── artwork ── */
@@ -195,7 +196,7 @@ const TabStudioProject = () => (
       {/* ══ 01 — THE CLIENT ══ */}
       <section className="py-16 sm:py-20 px-4 sm:px-8 lg:px-16 border-t border-white/5">
         <div className="max-w-[1100px] mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+          <ScrollAlign className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             <Reveal>
               <SLabel n="01" t="THE CLIENT" />
               <H2 white="A video agency named after" accent="its own habits" />
@@ -205,10 +206,10 @@ const TabStudioProject = () => (
                 <p>They serve startups, creators, media teams and tech brands, and they wanted an identity that felt like a real creative studio. Something modern and scalable that could hold its own in the African creative economy and signal what they do without spelling it out.</p>
               </div>
             </Reveal>
-            <Reveal className="h-full">
-              <Frame src={imgCardNotebook} alt="Tabstudio business card resting on a branded notebook" ratio="4/3" className="h-full" />
+            <Reveal>
+              <Frame src={imgCardNotebook} alt="Tabstudio business card resting on a branded notebook" ratio="4/3" />
             </Reveal>
-          </div>
+          </ScrollAlign>
         </div>
       </section>
 

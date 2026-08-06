@@ -6,6 +6,7 @@ import { Shield01Icon, FlashIcon, PaintBrush01Icon, RulerIcon } from "hugeicons-
 import OtherProj from "../components/ProjectPage/OtherProj";
 import BuildSection from "../components/Home/BuildSection";
 import PageMeta from "../components/common/PageMeta";
+import ScrollAlign from "../components/common/ScrollAlign";
 
 import iphone12 from "../assets/YDpay/iphone12pro.png";
 import iphone15 from "../assets/YDpay/iphone15pro.webp";
@@ -305,7 +306,7 @@ const YDpayPage = () => (
             </div>
           </FadeUp>
 
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
+          <ScrollAlign className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
             <FadeUp>
               <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-3">DELIVERABLES</p>
               <div className="flex flex-wrap gap-2 mb-10">
@@ -324,7 +325,7 @@ const YDpayPage = () => (
                 <img src={mockup13} alt="YDpay billboard" className="w-full object-cover" loading="lazy" />
               </div>
             </FadeUp>
-          </div>
+          </ScrollAlign>
         </div>
       </section>
 

@@ -4,6 +4,7 @@ import { motion, useMotionValue, useTransform, useSpring, useInView } from "fram
 import OtherProj from "../components/ProjectPage/OtherProj";
 import BuildSection from "../components/Home/BuildSection";
 import PageMeta from "../components/common/PageMeta";
+import ScrollAlign from "../components/common/ScrollAlign";
 import BrandGallery from "../components/ProjectPage/BrandGallery";
 import GuidelineCarousel from "../components/ProjectPage/GuidelineCarousel";
 
@@ -305,7 +306,7 @@ export default function NiqsUIProject() {
               </div>
             </FadeUp>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+            <ScrollAlign className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
               <FadeUp>
                 <SLabel n="01" t="THE BRIEF" />
                 <h2 className="text-4xl sm:text-5xl lg:text-[52px] font-semibold leading-[1.05] tracking-[-0.03em] break-words">
@@ -385,7 +386,7 @@ export default function NiqsUIProject() {
                   />
                 </div>
               </FadeUp>
-            </div>
+            </ScrollAlign>
           </div>
         </section>
 
@@ -848,7 +849,7 @@ export default function NiqsUIProject() {
         {/* ══ 07 — MEMBER PORTAL & ADMIN DASHBOARD ══ */}
         <section className="py-16 sm:py-24 px-4 sm:px-8 lg:px-16 border-t border-white/5">
           <div className="max-w-[1100px] mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+            <ScrollAlign className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
               <FadeUp>
                 <SLabel n="07" t="PORTAL & ADMIN" />
                 <H2 white="Built for the" accent="people who run NIQS" />
@@ -858,14 +859,14 @@ export default function NiqsUIProject() {
                   <p>A NIQS staff member who logs into the admin dashboard isn't looking for a hero treatment. They're trying to publish an announcement, approve a membership upgrade, upload a CPD recording, or export a chapter list to Excel before a 4pm deadline. The interface respects that.</p>
                 </div>
               </FadeUp>
-              <SlideIn direction="right" delay={0.1} className="h-full">
+              <SlideIn direction="right" delay={0.1}>
                 <TiltFrame
                   src={imgScreenExams}
                   alt="The professional examination flow — one of the member-facing surfaces the portal serves."
-                  className="w-full h-full"
+                  className="w-full"
                 />
               </SlideIn>
-            </div>
+            </ScrollAlign>
 
             {/* the four surfaces — full-width 2×2 grid */}
             <FadeUp delay={0.1} className="mt-10">
@@ -1073,12 +1074,12 @@ export default function NiqsUIProject() {
         {/* ══ 11 — TESTING & ITERATION ══ */}
         <section className="py-16 sm:py-24 px-4 sm:px-8 lg:px-16 border-t border-white/5">
           <div className="max-w-[1100px] mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              <SlideIn direction="left" delay={0.05} className="h-full">
+            <ScrollAlign className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+              <SlideIn direction="left" delay={0.05}>
                 <TiltFrame
                   src={imgScreenAbout}
                   alt="The About page after review — photography darkened, typography carrying the weight, the institutional tone the reviews pushed for."
-                  className="w-full h-full"
+                  className="w-full"
                 />
               </SlideIn>
               <FadeUp delay={0.1}>
@@ -1116,7 +1117,7 @@ export default function NiqsUIProject() {
                   </ul>
                 </div>
               </FadeUp>
-            </div>
+            </ScrollAlign>
           </div>
         </section>
 

@@ -12,6 +12,7 @@ import OtherProj from "../components/ProjectPage/OtherProj";
 import BuildSection from "../components/Home/BuildSection";
 import ProjectMeta from "../components/ProjectPage/ProjectMeta";
 import PageMeta from "../components/common/PageMeta";
+import ScrollAlign from "../components/common/ScrollAlign";
 import { buttonClasses } from "../components/ui";
 
 /* ── artwork ── */
@@ -195,7 +196,7 @@ const VerdeLuxeProject = () => (
       {/* ══ 01 — THE CLIENT ══ */}
       <section className="py-16 sm:py-20 px-4 sm:px-8 lg:px-16 border-t border-white/5">
         <div className="max-w-[1100px] mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+          <ScrollAlign className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             <Reveal>
               <SLabel n="01" t="THE CLIENT" />
               <H2 white="Luxury on the service" accent="and the shelf" />
@@ -205,10 +206,10 @@ const VerdeLuxeProject = () => (
                 <p>What they wanted was an identity that read as luxury without shouting it. Quiet money, not loud money. The kind of brand that does not announce how expensive it is, because it does not have to.</p>
               </div>
             </Reveal>
-            <Reveal className="h-full">
-              <Frame src={aBookCover} alt="The Verde Luxe logo look book, printed" ratio="4/5" className="h-full" />
+            <Reveal>
+              <Frame src={aBookCover} alt="The Verde Luxe logo look book, printed" ratio="4/5" />
             </Reveal>
-          </div>
+          </ScrollAlign>
         </div>
       </section>
 

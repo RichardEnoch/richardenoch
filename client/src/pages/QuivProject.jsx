@@ -9,6 +9,7 @@ import { motion, useInView } from "framer-motion";
 import OtherProj from "../components/ProjectPage/OtherProj";
 import BuildSection from "../components/Home/BuildSection";
 import PageMeta from "../components/common/PageMeta";
+import ScrollAlign from "../components/common/ScrollAlign";
 
 const QB = "#3B8EF0"; // Quiv Blue accent
 
@@ -661,7 +662,7 @@ const QuivProject = () => (
       {/* ══ OUTCOME ══ */}
       <section className="py-16 sm:py-24 px-4 sm:px-8 lg:px-16 border-t border-white/5">
         <div className="max-w-[1100px] mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
+          <ScrollAlign className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
             <FadeUp>
               <p className="text-[11px] font-bold tracking-[0.25em] uppercase mb-5" style={{ color: QB }}>
                 Outcome
@@ -693,7 +694,7 @@ const QuivProject = () => (
                 ))}
               </div>
             </FadeUp>
-          </div>
+          </ScrollAlign>
         </div>
       </section>
 
