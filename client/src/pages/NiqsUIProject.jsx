@@ -5,6 +5,7 @@ import OtherProj from "../components/ProjectPage/OtherProj";
 import BuildSection from "../components/Home/BuildSection";
 import PageMeta from "../components/common/PageMeta";
 import ScrollAlign from "../components/common/ScrollAlign";
+import useDragScroll from "../hooks/useDragScroll";
 import BrandGallery from "../components/ProjectPage/BrandGallery";
 import GuidelineCarousel from "../components/ProjectPage/GuidelineCarousel";
 
@@ -184,6 +185,9 @@ const TiltFrame = ({ src, alt = "", className = "", style = {}, onClick }) => {
 export default function NiqsUIProject() {
   const ph = useCallback(() => console.log("Image placeholder clicked — replace src in code"), []);
   const [heroHover, setHeroHover] = useState(false);
+  // Both of these overflow horizontally and are otherwise mouse-unreachable.
+  const dragDeliverables = useDragScroll();
+  const dragComparison = useDragScroll();
   const navigate = useNavigate();
   const handleBack = () => {
     if (window.history.length > 1) navigate(-1);
@@ -322,6 +326,7 @@ export default function NiqsUIProject() {
                 <div className="mt-8">
                   <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-3">DELIVERABLES</p>
                   <div
+                    ref={dragDeliverables}
                     className="flex gap-2 overflow-x-auto pb-1 no-scrollbar"
                     style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                   >
@@ -460,7 +465,7 @@ export default function NiqsUIProject() {
               <FadeUp delay={0.1}>
                 <p className="text-[11px] tracking-[0.28em] uppercase text-white/35 mb-5">COMPETITIVE COMPARISON</p>
                 <div className="rounded-2xl border border-white/8 bg-white/[0.02] overflow-hidden">
-                 <div className="overflow-x-auto no-scrollbar">
+                 <div ref={dragComparison} className="overflow-x-auto no-scrollbar">
                   <div className="min-w-[480px]">
                   <div className="grid grid-cols-[1fr_76px_76px_76px_76px] text-[9px] font-bold tracking-wider uppercase text-white/30 px-4 py-3 border-b border-white/6">
                     <span>Capability</span>

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import PlanSelection from "./PlanSelection";
 import PlanDetails from "./PlanDetails";
 import { Button } from "../ui";
+import useDragScroll from "../../hooks/useDragScroll";
 import {
   getFxRate,
   FALLBACK_RATE,
@@ -167,6 +168,7 @@ const WebsitePlans = () => {
 
 const BrandIdentity = () => {
   const navigate = useNavigate();
+  const dragTabs = useDragScroll();
 
   /* Prices are quoted in USD and shown in naira at the live rate. */
   const [fxRate, setFxRate] = useState(FALLBACK_RATE);
@@ -201,7 +203,12 @@ const BrandIdentity = () => {
 
   const TabBar = () => (
     <div className="flex justify-center">
-      <div className="inline-flex max-w-full overflow-x-auto rounded-xl border border-white/10 bg-[#181820]/95 px-2 py-2 backdrop-blur-md gap-2">
+      {/* The category tabs run wider than the bar on desktop, and there is no
+          horizontal gesture for a mouse — the last tabs were unreachable. */}
+      <div
+        ref={dragTabs}
+        className="inline-flex max-w-full overflow-x-auto rounded-xl border border-white/10 bg-[#181820]/95 px-2 py-2 backdrop-blur-md gap-2"
+      >
         {rateCategories.map((cat) => {
           const isActive = cat.id === activeCategoryId;
           return (
