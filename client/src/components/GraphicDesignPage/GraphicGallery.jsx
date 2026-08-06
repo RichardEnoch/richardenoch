@@ -496,8 +496,17 @@ function ViewerModal({ open, index, total, src, onClose, onPrev, onNext }) {
 
 export default function GraphicGallery({ items = [] }) {
   const safe = Array.isArray(items) ? items : [];
-  const galleryItems = React.useMemo(() => safe.slice(0, 50), [safe]);
+
+  /* Open with a tight first impression, but never hide work. The order is
+     shuffled per visit upstream; this only controls how much shows before
+     asking. Anything past the initial batch is one click away rather than
+     invisible — a visitor who only looks once should still be able to reach
+     every piece. */
+  const INITIAL = 50;
+  const [shown, setShown] = React.useState(INITIAL);
+  const galleryItems = React.useMemo(() => safe.slice(0, shown), [safe, shown]);
   const total = galleryItems.length;
+  const remaining = safe.length - galleryItems.length;
 
   const [viewerOpen, setViewerOpen] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -577,6 +586,18 @@ export default function GraphicGallery({ items = [] }) {
             );
           })}
         </div>
+
+        {remaining > 0 && (
+          <div className="mt-10 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setShown(safe.length)}
+              className="btn-sheen inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-lg border-2 border-[#5DB402] bg-transparent px-6 py-3 text-sm font-bold text-[#7BF003] transition hover:border-[#7BF003] hover:bg-[#7BF003]/10"
+            >
+              Show {remaining} more design{remaining === 1 ? "" : "s"}
+            </button>
+          </div>
+        )}
       </div>
 
       <ViewerModal
