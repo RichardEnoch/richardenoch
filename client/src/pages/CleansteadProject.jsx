@@ -104,7 +104,7 @@ const CleansteadProject = () => (
       {/* ══ HERO ══ */}
       <section className="relative w-full min-h-[78vh] flex flex-col overflow-hidden">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <img src={imgSignage} alt="" className="absolute inset-0 w-full h-full object-cover object-center" />
+          <img src={imgReception} alt="" className="absolute inset-0 w-full h-full object-cover object-center" />
           <div
             className="absolute inset-0"
             style={{ background: "linear-gradient(to bottom, rgba(7,9,12,0.5) 0%, rgba(7,9,12,0.4) 35%, rgba(7,9,12,0.94) 70%, #07090C 100%)" }}

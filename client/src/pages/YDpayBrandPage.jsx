@@ -4,6 +4,7 @@ import { motion, useMotionValue, useTransform, useSpring, useInView } from "fram
 import OtherProj from "../components/ProjectPage/OtherProj";
 import BuildSection from "../components/Home/BuildSection";
 import ProjectMeta from "../components/ProjectPage/ProjectMeta";
+import ScrollAlign from "../components/common/ScrollAlign";
 import PageMeta from "../components/common/PageMeta";
 import GuidelineCarousel from "../components/ProjectPage/GuidelineCarousel";
 import BrandGallery from "../components/ProjectPage/BrandGallery";
@@ -458,7 +459,7 @@ export default function YDpayBrandPage() {
             <FadeUp delay={0.08} className="mb-16">
               <p className="text-[11px] tracking-[0.28em] uppercase text-white/35 mb-2">4.2 — TYPOGRAPHY</p>
               <p className="text-[18px] font-semibold text-white mb-3">Setting the voice in type</p>
-              <div className="grid lg:grid-cols-[1fr_420px] gap-8 items-stretch">
+              <ScrollAlign className="grid lg:grid-cols-[1fr_420px] gap-8 items-start">
                 <div>
                   <p className="text-[15px] sm:text-[16px] leading-[1.65] text-white/50 mb-5">
                     I set the type system to <strong className="text-white">Onest</strong> — a clean, modern, geometric-leaning typeface with the legibility a fintech needs across both dense UI and bold marketing. Onest gives YDPay one consistent typographic voice from a button label to a billboard headline.
@@ -482,10 +483,9 @@ export default function YDpayBrandPage() {
                 <TiltFrame
                   src={imgTypography}
                   alt="Typography system — Onest"
-                  className="h-full"
                   style={{ minHeight: "calc(420px * 5 / 4)" }}
                 />
-              </div>
+              </ScrollAlign>
             </FadeUp>
 
             {/* 4.3 Tone of Voice */}
