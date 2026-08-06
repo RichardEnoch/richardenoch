@@ -13,10 +13,18 @@ const GRAPHICS_ASSETS = import.meta.glob(
   "../assets/Graphics/**/*.{png,jpg,jpeg,webp,svg}",
   { eager: true, import: "default" },
 );
+/* Matches on basename only, ignoring the extension. The hero used to be
+   looked up as "heroimg.png"; re-encoding it to .webp silently broke the
+   match and left four pages with a src-less hero for weeks, because an empty
+   string is a perfectly valid src as far as React is concerned. Comparing
+   without the extension means a future format change cannot repeat that. */
 function findAsset(name) {
-  const hit = Object.entries(GRAPHICS_ASSETS).find(([p]) =>
-    p.toLowerCase().endsWith(`/${name}`),
-  );
+  const want = name.toLowerCase().replace(/.[a-z0-9]+$/, "");
+  const hit = Object.entries(GRAPHICS_ASSETS).find(([p]) => {
+    const file = p.split("/").pop().toLowerCase();
+    if (file.endsWith(".thumb.webp")) return false; // never the tile variant
+    return file.replace(/.[a-z0-9]+$/, "") === want;
+  });
   return hit ? hit[1] : "";
 }
 const HeroBg = findAsset("heroimg.png");
