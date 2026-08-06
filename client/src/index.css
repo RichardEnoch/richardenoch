@@ -134,11 +134,60 @@ a.active hr{
     transform: translateY(-3px);
 }
 
+/* ── Accessibility preferences ──────────────────────────────────────────
+   Framer Motion is handled at the root by <MotionConfig reducedMotion="user">
+   in main.jsx, and Lenis smooth scrolling is skipped in App.jsx. What is left
+   for CSS is everything Motion never touches: transitions, keyframes, marquee
+   loops, hover lifts, and scroll-behavior. */
 @media (prefers-reduced-motion: reduce) {
-    .btn-sheen::after,
-    .card-surface-hover { transition: none; }
-    .btn-sheen:hover::after { opacity: 0; }
-    .card-surface-hover:hover { transform: none; }
+    /* Near-zero rather than 0s: some libraries wait on transitionend/
+       animationend to clean up, and a true 0s duration can mean that event
+       never fires, leaving an element stuck mid-state. */
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    html { scroll-behavior: auto !important; }
+
+    /* The partner marquee animates to translateX(-50%). Collapsing its
+       duration would park it there permanently, so stop the animation
+       outright and let the track rest at its natural start position. */
+    .marquee-track {
+        animation: none !important;
+        transform: none !important;
+    }
+
+    .btn-sheen::after { opacity: 0 !important; }
+    .card-surface-hover:hover { transform: none !important; }
+}
+
+/* Some visitors find layered translucency and heavy blur hard to read through
+   rather than merely decorative. Fall back to solid surfaces — the design
+   leans on frosted panels in a lot of places, and every one of them still has
+   to be legible without the blur. */
+@media (prefers-reduced-transparency: reduce) {
+    .card-surface,
+    [class*="backdrop-blur"] {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    .card-surface { background: #141414 !important; }
+}
+
+/* The palette rests a lot of secondary copy at white/40–white/55. That is
+   comfortably readable on the dark ground for most people and not for
+   everyone, so raise text and borders when higher contrast is requested. */
+@media (prefers-contrast: more) {
+    .type-mute { color: rgba(255, 255, 255, 0.82) !important; }
+    .card-surface {
+        border-color: rgba(255, 255, 255, 0.34) !important;
+        border-top-color: rgba(255, 255, 255, 0.46) !important;
+    }
 }
 
   @media (max-width:640px){

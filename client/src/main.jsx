@@ -8,6 +8,7 @@ import {
   Navigate,
   useParams,
 } from "react-router-dom";
+import { MotionConfig } from "framer-motion";
 import App from "./App.jsx";
 import "./index.css";
 import Home from "./pages/Home.jsx";
@@ -112,7 +113,15 @@ const router = createBrowserRouter([
 ReactDom.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <HelmetProvider>
-      <RouterProvider router={router} />
+      {/* reducedMotion="user" makes every motion component on the site honour
+          the visitor's OS setting: transform and layout animations are held at
+          their target value, while opacity and colour still cross-fade. That
+          matters here because ~55 files animate and only one of them checked
+          the preference on its own — this covers all of them at the root
+          rather than asking every future component to remember. */}
+      <MotionConfig reducedMotion="user">
+        <RouterProvider router={router} />
+      </MotionConfig>
     </HelmetProvider>
   </React.StrictMode>,
 );

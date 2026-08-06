@@ -16,7 +16,17 @@ const ScrollToTop = () => {
         if (el) {
           const y = el.getBoundingClientRect().top + window.scrollY - 16;
           if (window.__lenis) window.__lenis.scrollTo(y, { force: true });
-          else window.scrollTo({ top: y, left: 0, behavior: "smooth" });
+          // Without Lenis the visitor has asked for reduced motion (or it
+          // failed to start), so an animated glide is exactly what they
+          // opted out of — jump instead.
+          else
+            window.scrollTo({
+              top: y,
+              left: 0,
+              behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                ? "auto"
+                : "smooth",
+            });
           return true;
         }
         return false;

@@ -18,6 +18,9 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const observerRef = useRef(null);
+  /* Flipping this re-runs the Lenis effect, so changing the OS motion
+     preference takes hold without a reload. */
+  const [smoothScroll, setSmoothScroll] = useState(true);
 
   /* Real progress. Only eager images count — anything marked lazy is below
      the fold and deliberately not part of what the visitor waits for, so
@@ -118,8 +121,24 @@ function App() {
   }, [loading, location.pathname]);
 
   /* Buttery smooth scrolling — Lenis eases native scroll, so
-     scroll-driven framer-motion sections keep working untouched. */
+     scroll-driven framer-motion sections keep working untouched.
+
+     Skipped entirely when the visitor has asked for reduced motion. Hijacked
+     scrolling is one of the most common vestibular triggers there is, and it
+     cannot be softened from CSS — the easing lives in JS, so the only honest
+     answer is to hand the scroll back to the browser. Listening for changes
+     means toggling the OS setting takes effect without a reload. */
   useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = () => setSmoothScroll(!query.matches);
+    query.addEventListener("change", onChange);
+
+    if (query.matches) {
+      // Native scrolling only. ScrollToTop falls back to window.scrollTo when
+      // window.__lenis is absent, so leaving it null is the supported path.
+      return () => query.removeEventListener("change", onChange);
+    }
+
     const lenis = new Lenis({ duration: 0.9, smoothWheel: true, wheelMultiplier: 1.2 });
     // Exposed so route changes (ScrollToTop) can reset Lenis's internal
     // target — a bare window.scrollTo leaves it stale and the next wheel
@@ -132,11 +151,12 @@ function App() {
     };
     rafId = requestAnimationFrame(raf);
     return () => {
+      query.removeEventListener("change", onChange);
       cancelAnimationFrame(rafId);
       lenis.destroy();
       window.__lenis = null;
     };
-  }, []);
+  }, [smoothScroll]);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0B0B0B] text-white w-full max-w-full">
