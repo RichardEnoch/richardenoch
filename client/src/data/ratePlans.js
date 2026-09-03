@@ -1,157 +1,91 @@
 // src/data/ratePlans.js
 //
-// The rate card. Prices are held in USD and converted to naira at the live
-// rate, so the card stays current without anyone re-pinning a number.
-// Ported from the old server/config/plans.js.
+// The rate card — one source for every price on the site.
+//
+// Prices are held in US dollars and shown in naira at the live rate, so a
+// slide in the naira does not quietly discount the work. The FX helpers live
+// in config/fx.js, which both this file and the booking flow read, so a plan
+// cannot show one figure on the rate card and another at checkout.
+//
+// Deliverables are cumulative. A tier lists only what it adds to the tier
+// below it, because the ladder is the argument: seventeen flat lines make
+// Platinum look like a longer Silver rather than a different proposition.
+// The base tier of each service carries the full list; `inherits` names the
+// tier a card builds on.
+//
+// Durations are working days from the deposit clearing, assuming the client
+// answers questions. They are ranges because they are estimates, and a range
+// that is met beats a single number that is missed.
 
 import { PLANS } from "../config/plans";
+import { FALLBACK_RATE, getFxRate, toNGN, usdText } from "../config/fx";
 
-/* Live USD→NGN, with a pinned fallback so the card always renders. The
-   endpoint is public, keyless and sends Access-Control-Allow-Origin: *. */
-const FX_ENDPOINT = "https://open.er-api.com/v6/latest/USD";
-export const FALLBACK_RATE = 1364.77; // captured 2026-08-04
-const ROUND_TO = 1000;
-
-export async function getFxRate() {
-  try {
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 5000);
-    const res = await fetch(FX_ENDPOINT, { signal: ctrl.signal });
-    clearTimeout(timer);
-    const json = await res.json();
-    if (json?.rates?.NGN) return json.rates.NGN;
-  } catch {
-    /* fall through */
-  }
-  return FALLBACK_RATE;
-}
-
-export const toNGN = (usd, rate) =>
-  `₦${(Math.round((usd * rate) / ROUND_TO) * ROUND_TO).toLocaleString("en-NG")}`;
+export { FALLBACK_RATE, getFxRate };
 
 /* Deposit taken to start work. */
 export const DEPOSIT_PCT = 70;
 
-/* ── Brand identity tiers ── */
-const BRAND_TIERS = [
+/* ── Brand identity ───────────────────────────────────────────────────────
+   Silver's list is PLANS.silver verbatim. Gold and Platinum state their
+   additions only — kept here rather than derived, because "banners for three
+   platforms rather than one" is a sentence, not a diff. */
+export const BRAND_TIERS = [
   {
     id: "silver",
-    name: "Silver",
     usd: 150,
+    audience: "Starting out",
     description:
       "For small businesses starting out that need a subtle identity.",
+    duration: "10–14 days",
+    features: PLANS.silver.deliverables,
   },
   {
     id: "gold",
-    name: "Gold",
     usd: 350,
+    audience: "Ready to launch",
     description: "Launch your brand with everything you need to stand out.",
-    isFeatured: true,
-    badgeLabel: "Most popular",
+    duration: "3–4 weeks",
+    featured: true,
+    badge: "Most popular",
+    inherits: "Silver",
+    features: [
+      "Brand guideline, 15–30 pages",
+      "Brand patterns and textures",
+      "Email signature, letterhead and deck template",
+      "5-page website, source code included",
+      "2 marketing designs, banners for 3 platforms",
+      "4 merch designs and 7 mockups",
+      "A third revision round, and SVG files",
+    ],
   },
   {
     id: "platinum",
-    name: "Platinum",
     usd: 450,
+    audience: "Positioning to scale",
     description:
-      "Full brand plus a professional website to position your business at the next level.",
+      "Full brand + professional website to position your business at the next level.",
+    duration: "5–7 weeks",
+    inherits: "Gold",
+    features: [
+      "Complete brand guideline, 30+ pages",
+      "Website with as many pages as it needs",
+      "5 social designs, banners for every platform",
+      "5 marketing designs",
+      "10 merch designs, one mockup for each",
+      "Revisions until it is right, not a fixed count",
+      "Every working file, plus website source",
+    ],
   },
 ];
 
-/* Comparison rows. Values are "check", "-", or literal text. */
-const BRAND_DELIVERABLES = [
-  ["logo", "Logo design", "check", "check", "check"],
-  ["palette", "Colour palette", "check", "check", "check"],
-  ["type", "Typography", "check", "check", "check"],
-  ["patterns", "Brand patterns / textures", "-", "check", "check"],
-  ["card", "Business card", "check", "check", "check"],
-  ["signature", "Email signature", "-", "check", "check"],
-  ["letterhead", "Letterhead", "-", "check", "check"],
-  ["deck", "Presentation / deck template", "-", "check", "check"],
-  ["guideline", "Brand guideline", "-", "15–30 pages", "30+ pages"],
-  ["social", "Social media designs", "2", "2", "5"],
-  ["banners", "Social media banners", "1", "3", "All platforms"],
-  ["marketing", "Marketing designs", "-", "2", "5"],
-  ["merch", "Merch designs", "1", "4", "10"],
-  ["mockups", "Mockup images", "2", "7", "One per design"],
-  ["website", "Website", "-", "5 pages", "Pages as required"],
-  ["revisions", "Revision rounds", "2", "3", "As required"],
-  [
-    "files",
-    "Final files",
-    "JPEG, PNG",
-    "+ SVG and website source",
-    "All files and source",
-  ],
-];
-
-export const BRAND_DELIVERABLE_ROWS = BRAND_DELIVERABLES.map(
-  ([id, label, silver, gold, platinum]) => ({
-    id,
-    label,
-    perPlan: { silver, gold, platinum },
-  }),
-);
-
-/* Build the priced plan objects PlanSelection expects. */
-export function buildBrandPlans(rate) {
-  return BRAND_TIERS.map((tier) => ({
-    id: tier.id,
-    name: tier.name,
-    price: toNGN(tier.usd, rate),
-    currency: "NGN",
-    description: tier.description,
-    isFeatured: Boolean(tier.isFeatured),
-    badgeLabel: tier.badgeLabel || "",
-  }));
-}
-
-/* Categories whose pricing lived only in the retired admin panel. They show
-   an enquiry prompt instead of an empty tab until real numbers exist. */
-export const QUOTE_ON_REQUEST = new Set([
-  "ui-ux",
-  "publication-design",
-  "presentation-design",
-]);
-
-/* ══════════════════════════════════════════════════════════════════════
-   The rate card as one flat list of sections.
-
-   Every service that sells in tiers is a section; every tier is a card.
-   Prices that are quoted in dollars (brand) convert to naira; prices that
-   are quoted in naira (websites, flyers) convert the other way, so both
-   currencies show on every card without anyone maintaining two numbers.
-
-   Card copy is deliberately thin. The eyebrow says who or what the tier is
-   for, the list says what is in it, and that is the whole argument.
-   ══════════════════════════════════════════════════════════════════════ */
-
-const usdFrom = (ngn, rate) => Math.round(ngn / rate);
-const ngnText = (v) => `₦${Number(v).toLocaleString("en-NG")}`;
-const usdText = (v) => `$${Number(v).toLocaleString("en-US")}`;
-
-/* ── Brand identity ── audience lines, read off each tier's own blurb. */
-const BRAND_AUDIENCE = {
-  silver: "Starting out",
-  gold: "Ready to launch",
-  platinum: "Positioning to scale",
-};
-const BRAND_DURATION = {
-  silver: "21 days",
-  gold: "14 days",
-  platinum: "4–6 weeks",
-};
-
-/* ── Websites ── tiered by page count. */
-const WEBSITE_TIERS = [
+/* ── Websites ── tiered by page count. Design and build together. */
+export const WEBSITE_TIERS = [
   {
     id: "starter",
-    name: "Starter",
+    usd: 150,
     audience: "Up to 5 pages",
-    ngn: 200000,
-    from: false,
-    duration: "7 days",
     description: "A clean, credible presence for a business that needs one.",
+    duration: "2 weeks",
     features: [
       "Up to 5 custom-designed pages",
       "Mobile-first responsive build",
@@ -162,33 +96,30 @@ const WEBSITE_TIERS = [
   },
   {
     id: "business",
-    name: "Business",
+    usd: 285,
     audience: "Up to 10 pages",
-    ngn: 380000,
-    from: false,
-    duration: "14 days",
+    description: "Room to publish, room to grow, and analytics to see it.",
+    duration: "3–4 weeks",
     featured: true,
     badge: "Most booked",
-    description: "Room to publish, room to grow, and analytics to see it.",
+    inherits: "Starter",
     features: [
       "Up to 10 custom-designed pages",
-      "Everything in Starter",
       "Blog / CMS — edit your own content",
       "Analytics + SEO for every page",
-      "3 revision rounds",
+      "A third revision round",
     ],
   },
   {
     id: "premium",
-    name: "Premium",
-    audience: "15+ or custom",
-    ngn: 650000,
+    usd: 490,
     from: true,
-    duration: "21 days",
+    audience: "15+ or custom",
     description: "A larger site or a web app, scoped around what it has to do.",
+    duration: "6 weeks+, scoped",
+    inherits: "Business",
     features: [
-      "15+ pages or a custom web app",
-      "Everything in Business",
+      "15+ pages, or a custom web app",
       "Store, booking, payments, or member area",
       "Source files + handover docs",
       "Revisions until launch-ready",
@@ -196,17 +127,16 @@ const WEBSITE_TIERS = [
   },
 ];
 
-/* ── Graphic design ── flyer and social packs. The more you book, the less
-   each design costs, so the per-design rate is part of the price block. */
-const FLYER_TIERS = [
+/* ── Graphic design ── flyer and social packs. The more designs in a pack,
+   the less each one costs, so the per-design rate is part of the price. */
+export const FLYER_TIERS = [
   {
     id: "single",
-    name: "Single Design",
+    usd: 12,
+    perDesignUSD: 12,
     audience: "1 design",
-    ngn: 15000,
-    perDesign: 15000,
-    duration: "2 days",
     description: "One flyer or social design, done properly.",
+    duration: "2 days",
     features: [
       "1 flyer / social design",
       "Print + social-ready exports",
@@ -215,46 +145,42 @@ const FLYER_TIERS = [
   },
   {
     id: "triple",
-    name: "3-Design Pack",
+    usd: 30,
+    perDesignUSD: 10,
     audience: "3 designs",
-    ngn: 39000,
-    perDesign: 13000,
-    duration: "8 days",
     description: "A short run at a lower rate per design.",
-    features: [
-      "3 flyer / social designs",
-      "Print + social-ready exports",
-      "No source files",
-    ],
+    duration: "5 days",
+    inherits: "the single design",
+    features: ["2 more designs, 3 in total", "A lower rate for each of them"],
   },
   {
     id: "five",
-    name: "5-Design Pack",
+    usd: 42,
+    perDesignUSD: 8,
     audience: "5 designs",
-    ngn: 55000,
-    perDesign: 11000,
-    duration: "15 days",
+    description: "The best rate per design, with your files to keep.",
+    duration: "8 days",
     featured: true,
     badge: "Best value",
-    description: "The best rate per design, with your files to keep.",
+    inherits: "the 3-design pack",
     features: [
-      "5 flyer / social designs",
-      "Print + social-ready exports",
+      "2 more designs, 5 in total",
       "Source files included",
+      "The best rate per design",
     ],
   },
   {
     id: "event",
-    name: "Event Campaign",
+    usd: null,
+    perDesignUSD: 7,
     audience: "6+ designs",
-    ngn: null,
-    perDesign: 9000,
-    duration: "Scoped",
     description: "A full set for one event, priced on the number of designs.",
+    duration: "Scoped",
+    inherits: "the 5-design pack",
     features: [
-      "6+ designs — full event set",
+      "6 designs or more, the full set",
       "Anticipate, countdown, speaker, thank-you",
-      "Source files included",
+      "Priced per design, so the set can grow",
     ],
   },
 ];
@@ -280,6 +206,31 @@ export const SCOPED_SERVICES = [
   },
 ];
 
+/* Shared shape for a card. `priceMain` is the dollar figure, because dollars
+   are the price; `priceSub` carries the naira indication. */
+const toCard = (t, rate, { cadence, href, cta, perDesign }) => ({
+  id: t.id,
+  name: t.name,
+  audience: t.audience,
+  description: t.description,
+  duration: t.duration,
+  inherits: t.inherits,
+  features: t.features,
+  featured: Boolean(t.featured),
+  badge: t.badge || "",
+  priceMain:
+    t.usd == null ? "Custom" : `${t.from ? "From " : ""}${usdText(t.usd)}`,
+  priceSub:
+    t.usd == null
+      ? `from ${usdText(t.perDesignUSD)} per design`
+      : perDesign
+        ? `${toNGN(t.usd, rate)} · ${usdText(t.perDesignUSD)} per design`
+        : `about ${toNGN(t.usd, rate)}`,
+  cadence,
+  href,
+  cta,
+});
+
 export function buildRateSections(rate) {
   return [
     {
@@ -289,24 +240,13 @@ export function buildRateSections(rate) {
       heading: "Brand identity",
       blurb:
         "Your brand is the first impression. Every tier below is a complete identity — they differ in how far it reaches.",
-      tiers: ["silver", "gold", "platinum"].map((key) => {
-        const usd = BRAND_TIERS.find((t) => t.id === key)?.usd ?? 0;
-        return {
-          id: key,
-          name: PLANS[key].label,
-          audience: BRAND_AUDIENCE[key],
-          description: PLANS[key].blurb,
-          priceMain: toNGN(usd, rate),
-          priceSub: usdText(usd),
+      tiers: BRAND_TIERS.map((t) =>
+        toCard({ ...t, name: PLANS[t.id].label }, rate, {
           cadence: "one-off project",
-          duration: BRAND_DURATION[key],
-          features: PLANS[key].deliverables,
-          featured: key === "gold",
-          badge: key === "gold" ? "Most popular" : "",
-          href: `/book?plan=${key}`,
-          cta: `Talk about ${PLANS[key].label}`,
-        };
-      }),
+          href: `/book?plan=${t.id}`,
+          cta: `Talk about ${PLANS[t.id].label}`,
+        }),
+      ),
     },
     {
       id: "websites",
@@ -315,21 +255,13 @@ export function buildRateSections(rate) {
       heading: "Website design & build",
       blurb:
         "Design and build together. Hosting and domain are billed separately — I can set both up on your behalf.",
-      tiers: WEBSITE_TIERS.map((t) => ({
-        id: t.id,
-        name: t.name,
-        audience: t.audience,
-        description: t.description,
-        priceMain: `${t.from ? "From " : ""}${ngnText(t.ngn)}`,
-        priceSub: usdText(usdFrom(t.ngn, rate)),
-        cadence: "one-off project",
-        duration: t.duration,
-        features: t.features,
-        featured: Boolean(t.featured),
-        badge: t.badge || "",
-        href: `/book-website?plan=${t.id}`,
-        cta: `Talk about ${t.name}`,
-      })),
+      tiers: WEBSITE_TIERS.map((t) =>
+        toCard({ ...t, name: WEBSITE_NAMES[t.id] }, rate, {
+          cadence: "one-off project",
+          href: `/book-website?plan=${t.id}`,
+          cta: `Talk about ${WEBSITE_NAMES[t.id]}`,
+        }),
+      ),
     },
     {
       id: "graphic-design",
@@ -339,24 +271,30 @@ export function buildRateSections(rate) {
       heading: "Flyers & social design",
       blurb:
         "Sold in packs. The more designs in a pack, the less each one costs.",
-      tiers: FLYER_TIERS.map((t) => ({
-        id: t.id,
-        name: t.name,
-        audience: t.audience,
-        description: t.description,
-        priceMain: t.ngn != null ? ngnText(t.ngn) : "Custom",
-        priceSub:
-          t.ngn != null
-            ? `${usdText(usdFrom(t.ngn, rate))} · ${ngnText(t.perDesign)} per design`
-            : `from ${ngnText(t.perDesign)} per design`,
-        cadence: t.ngn != null ? "one-off pack" : "priced per design",
-        duration: t.duration,
-        features: t.features,
-        featured: Boolean(t.featured),
-        badge: t.badge || "",
-        href: `/book-flyer?plan=${t.id}`,
-        cta: t.ngn != null ? "Book this pack" : "Request a quote",
-      })),
+      tiers: FLYER_TIERS.map((t) =>
+        toCard({ ...t, name: FLYER_NAMES[t.id] }, rate, {
+          cadence: t.usd == null ? "priced per design" : "one-off pack",
+          href: `/book-flyer?plan=${t.id}`,
+          cta: t.usd == null ? "Request a quote" : "Book this pack",
+          perDesign: true,
+        }),
+      ),
     },
   ];
 }
+
+export const WEBSITE_NAMES = {
+  starter: "Starter",
+  business: "Business",
+  premium: "Premium",
+};
+
+export const FLYER_NAMES = {
+  single: "Single Design",
+  triple: "3-Design Pack",
+  five: "5-Design Pack",
+  event: "Event Campaign",
+};
+
+/* For the booking pages, which need the naira amount to invoice against. */
+export const usdFor = (tiers, id) => tiers.find((t) => t.id === id)?.usd ?? 0;

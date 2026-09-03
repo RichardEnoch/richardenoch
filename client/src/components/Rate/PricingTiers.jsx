@@ -99,6 +99,14 @@ const TierCard = ({ tier }) => (
     <div>
       <div className="my-5 h-px w-full bg-white/10" />
 
+      {/* A tier lists what it adds, not what it repeats. The line below is
+          the whole value ladder in one sentence. */}
+      {tier.inherits && (
+        <p className="mb-4 text-[15px] font-medium leading-[1.5] text-white">
+          Everything in {tier.inherits}, plus:
+        </p>
+      )}
+
       <ul className="flex flex-col gap-3">
         {tier.features.map((f) => (
           <li

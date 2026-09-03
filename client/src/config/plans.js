@@ -2,6 +2,8 @@
 // (and plan keys used by the Rate Card CTAs). Mirrored on the server in
 // server/config/plans.js — keep the two in sync when prices change.
 
+import { FALLBACK_RATE, getFxRate } from "./fx";
+
 export const OWNER = {
   name: "Richard Enoch",
   fullName: "Adesiyan Richard Enoch",
@@ -12,14 +14,15 @@ export const OWNER = {
   site: "richardenoch.vercel.app",
 };
 
-/* PRICING — USD rate-card prices, converted to NGN.
-   RATE_OVERRIDE pins the exchange rate (currently pins Gold at exactly
-   NGN 450,000 = 350 x 1285.72 as quoted). Set to null to use the live
-   market rate from open.er-api.com (FALLBACK_RATE if the fetch fails). */
+/* PRICING — the brand tiers, in dollars.
+   The rate is no longer pinned here. It was pinned at 1,285.72 so Gold
+   landed on exactly NGN 450,000, which meant the booking flow and the rate
+   card quoted two different naira figures for the same plan as soon as the
+   market moved. Both now read config/fx.js. */
 export const PRICING = {
   USD: { silver: 150, gold: 350, platinum: 450 },
-  RATE_OVERRIDE: 1285.72, // null = use live rate
-  FALLBACK_RATE: 1450,
+  RATE_OVERRIDE: null, // the rate is never pinned — see config/fx.js
+  FALLBACK_RATE,
   ROUND_TO: 1000,
 };
 
@@ -104,15 +107,8 @@ export const initialFx = () => ({
 });
 
 export async function fetchLiveRate() {
-  if (PRICING.RATE_OVERRIDE) return null; // pinned — skip
-  try {
-    const r = await fetch("https://open.er-api.com/v6/latest/USD");
-    const j = await r.json();
-    if (j?.rates?.NGN) return { rate: j.rates.NGN, source: "live" };
-  } catch {
-    /* keep fallback */
-  }
-  return null;
+  const rate = await getFxRate();
+  return rate === FALLBACK_RATE ? null : { rate, source: "live" };
 }
 
 export const planUSD = (key) => PRICING.USD[key] ?? 0;
