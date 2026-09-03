@@ -274,8 +274,8 @@ const RateForm = () => {
                   status.type === "success"
                     ? "text-lime-400"
                     : status.type === "error"
-                    ? "text-red-400"
-                    : "text-neutral-300"
+                      ? "text-red-400"
+                      : "text-neutral-300"
                 }`}
               >
                 {status.message}

@@ -1,7 +1,8 @@
 // src/pages/RateDetails.jsx
 import React from "react";
 import RateHero from "../components/Rate/RateHero";
-import BrandIdentity from "../components/Rate/BrandIdentity";
+import PricingTiers from "../components/Rate/PricingTiers";
+import WorkImg from "../components/Home/WorkImg";
 import BuildSection from "../components/Home/BuildSection";
 import SectionReveal from "../components/common/SectionReveal";
 import PageMeta from "../components/common/PageMeta";
@@ -18,9 +19,16 @@ const RateDetails = () => {
         <RateHero />
       </SectionReveal>
 
-      <div className="-mt-24 relative z-10">
-        <BrandIdentity />
+      <div className="relative z-10 -mt-24">
+        <PricingTiers />
       </div>
+
+      {/* A loop of the actual work, between the prices and the enquiry. It
+          answers the question the price raises — what does this buy — without
+          a second page of argument. */}
+      <SectionReveal delay={0.15}>
+        <WorkImg />
+      </SectionReveal>
 
       <SectionReveal delay={0.2}>
         <BuildSection />

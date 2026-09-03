@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from "react";
 import Hls from "hls.js";
 
-const HLS_SRC = "https://stream.mux.com/4IMYGcL01xjs7ek5ANO17JC4VQVUTsojZlnw4fXzwSxc.m3u8";
+const HLS_SRC =
+  "https://stream.mux.com/4IMYGcL01xjs7ek5ANO17JC4VQVUTsojZlnw4fXzwSxc.m3u8";
 
 const RateHero = () => {
   const videoRef = useRef(null);
@@ -79,7 +80,8 @@ const RateHero = () => {
                 text-white/95
               "
             >
-              No guesswork, no hidden fees. Just honest pricing built around what your project actually needs.
+              No guesswork, no hidden fees. Just honest pricing built around
+              what your project actually needs.
             </p>
           </div>
         </div>
