@@ -47,13 +47,23 @@ const FaqItem = ({ q, a, open, onToggle }) => (
       onClick={onToggle}
       className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
     >
-      <span className="text-[15px] sm:text-[16px] font-medium text-white/90">{q}</span>
+      <span className="text-[15px] sm:text-[16px] font-medium text-white/90">
+        {q}
+      </span>
       <motion.span
         animate={{ rotate: open ? 45 : 0 }}
         transition={{ duration: 0.25 }}
         className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-white/15 text-lime-400"
       >
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        >
           <path d="M12 5v14M5 12h14" />
         </svg>
       </motion.span>
@@ -66,7 +76,9 @@ const FaqItem = ({ q, a, open, onToggle }) => (
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.3, ease: [0.22, 0.61, 0.36, 1] }}
         >
-          <p className="px-6 pb-6 text-[14px] sm:text-[15px] leading-[1.7] text-white/50">{a}</p>
+          <p className="px-6 pb-6 text-[14px] sm:text-[15px] leading-[1.7] text-white/50">
+            {a}
+          </p>
         </motion.div>
       )}
     </AnimatePresence>
@@ -83,10 +95,19 @@ const FaqSection = () => {
       <div className="mx-auto max-w-[860px]">
         <div className="mb-12 text-center">
           <div className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-4 py-1.5 mb-5">
-            <span className="text-[11px] font-semibold tracking-widest uppercase text-neutral-50/80">FAQ</span>
+            <span className="text-[11px] font-semibold tracking-widest uppercase text-neutral-50/80">
+              FAQ
+            </span>
           </div>
-          <h2 className="text-[32px] sm:text-[44px] font-['Outfit'] font-semibold leading-[1.0] tracking-[-0.03em]"
-            style={{ background: "linear-gradient(180deg,#ffffff 0%,#7a7a7a 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+          <h2
+            className="text-[32px] sm:text-[44px] font-['Outfit'] font-semibold leading-[1.0] tracking-[-0.03em]"
+            style={{
+              background: "linear-gradient(180deg,#ffffff 0%,#7a7a7a 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
             Questions, answered
           </h2>
           <p className="mt-3 text-[15px] text-neutral-400 max-w-md mx-auto">
@@ -96,14 +117,21 @@ const FaqSection = () => {
 
         <div className="space-y-3">
           {faqs.map((f, i) => (
-            <FaqItem key={i} q={f.q} a={f.a} open={openIdx === i}
-              onToggle={() => setOpenIdx(openIdx === i ? -1 : i)} />
+            <FaqItem
+              key={i}
+              q={f.q}
+              a={f.a}
+              open={openIdx === i}
+              onToggle={() => setOpenIdx(openIdx === i ? -1 : i)}
+            />
           ))}
         </div>
 
         <p className="mt-10 text-center text-[14px] text-white/40">
           Still curious?{" "}
-          <Link to="/contact" className="text-lime-400 hover:underline">Reach out directly →</Link>
+          <Link to="/contact" className="text-lime-400 hover:underline">
+            Reach out directly →
+          </Link>
         </p>
       </div>
     </section>

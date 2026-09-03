@@ -69,14 +69,18 @@ const BuildSection = () => {
                   bg-clip-text text-transparent
                 "
               >
-                Let&apos;s Get to Work!
+                So — what are you building?
               </span>
             </h2>
 
             {/* Subtitle — two lines */}
             <p className="max-w-[600px] text-[19px] sm:text-[22px] font-normal leading-[1.25] text-neutral-200">
-              <span className="block">You have the vision. I have the craft. All that&apos;s</span>
-              <span className="block">left is the conversation.</span>
+              <span className="block">
+                Tell me what it is and where it is stuck.
+              </span>
+              <span className="block">
+                I will tell you straight if I can help.
+              </span>
             </p>
 
             {/* CTA button – navigates to /rate-details */}

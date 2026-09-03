@@ -51,7 +51,7 @@ const TransImg = () => {
         if (!res.ok) throw new Error("Failed to fetch project images");
         const data = await res.json();
         const cleaned = (Array.isArray(data) ? data : []).filter(
-          (p) => p.mainImage
+          (p) => p.mainImage,
         );
         setImages(cleaned);
         setCurrentIndex(0);

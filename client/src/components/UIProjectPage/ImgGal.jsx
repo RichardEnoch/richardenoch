@@ -1,7 +1,11 @@
 ﻿// src/components/UIProjectPage/ImgGal.jsx
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft01Icon, ArrowRight01Icon, Cancel01Icon } from "hugeicons-react";
+import {
+  ArrowLeft01Icon,
+  ArrowRight01Icon,
+  Cancel01Icon,
+} from "hugeicons-react";
 
 /* ----------------- styles / constants ----------------- */
 const tileBase =
@@ -100,9 +104,7 @@ function ImgOrFallback({ src, alt, className = "" }) {
   if (!src || broken) {
     return (
       <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(70%_70%_at_40%_35%,rgba(255,255,255,0.08)_0%,rgba(0,0,0,0.92)_72%)]">
-        <span className="text-xs text-white/45">
-          Image unavailable
-        </span>
+        <span className="text-xs text-white/45">Image unavailable</span>
       </div>
     );
   }
@@ -470,9 +472,6 @@ const ImgGal = ({ project: projectProp, slug, apiBase = "" }) => {
 
   const count = images.length;
 
-  // ✅ If there are no gallery images, do NOT render the section at all
-  if (!loading && count === 0) return null;
-
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
   const openLightbox = (index) => setLightboxIndex(index);
@@ -513,6 +512,14 @@ const ImgGal = ({ project: projectProp, slug, apiBase = "" }) => {
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [lightboxIndex, closeLightbox, showPrev, showNext]);
+
+  /* A gallery with nothing in it renders nothing — but the bail-out has to come
+     AFTER every hook. It used to sit above the lightbox state, which meant a
+     project that finished loading with an empty gallery ran fewer hooks on its
+     second render than on its first, and React throws on that. No project in
+     the current data hits it, which is exactly why it survived: it is a crash
+     waiting for the first project shipped without gallery images. */
+  if (!loading && count === 0) return null;
 
   return (
     <section className="relative w-full bg-[#050505] pt-10 pb-24">

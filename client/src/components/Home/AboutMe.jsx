@@ -63,9 +63,13 @@ const AboutMe = () => {
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, ease: [0.22, 0.61, 0.36, 1], delay: 0.25 }}
+              transition={{
+                duration: 0.6,
+                ease: [0.22, 0.61, 0.36, 1],
+                delay: 0.25,
+              }}
             >
-              {`I'm a visual designer and product thinker with 6 years of experience across brand identity, UI/UX, and construction technology.\n\nI'm drawn to work that demands precision and restraint — design that carries weight without announcing itself. Given a clear brief, I make it look like it couldn't have been done any other way.`}
+              {`I design brand identities and the products they end up living inside. Six years in design, three of them in product, across fintech, publishing, interiors, professional bodies and construction technology.\n\nI'm drawn to work that demands precision and restraint — design that carries weight without announcing itself. Given a clear brief, I make it look like it couldn't have been done any other way.`}
             </motion.p>
           </div>
 
@@ -115,10 +119,16 @@ const AboutMe = () => {
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, ease: [0.22, 0.61, 0.36, 1], delay: 0.15 }}
+              transition={{
+                duration: 0.6,
+                ease: [0.22, 0.61, 0.36, 1],
+                delay: 0.15,
+              }}
             >
               {`I'm also a trained Quantity Surveyor — which means when I'm designing for the built environment, I already speak the language. That background shows up in how I approach systems, structure, and detail.\n\n`}
-              <span className="text-lime-400 font-medium">I build things I design.</span>
+              <span className="text-lime-400 font-medium">
+                I build things I design.
+              </span>
               {` This portfolio was designed and coded by me — not templated, not generated.`}
             </motion.p>
 
@@ -140,7 +150,10 @@ const AboutMe = () => {
                   hover:-translate-y-0.5 active:translate-y-0
                 "
               >
-                <Download01Icon size={14} className="text-lime-400 transition-colors group-hover:text-black" />
+                <Download01Icon
+                  size={14}
+                  className="text-lime-400 transition-colors group-hover:text-black"
+                />
                 View Resume
               </a>
 

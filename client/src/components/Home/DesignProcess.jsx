@@ -7,25 +7,29 @@ import {
   TestTubeIcon,
 } from "hugeicons-react";
 
+/* The four steps here used to be Discover / Ideate / Design / Test & Refine —
+   the diagram every design site carries, which tells a reader nothing. These
+   four are how the work actually runs, and they run the same way whether the
+   job is an identity system, a pitch deck or a hundred-screen product. */
 const steps = [
   {
-    title: "Discover",
-    desc: "Understanding the problem and defining the goal.",
+    title: "Understand the brief",
+    desc: "Read it properly, then ask the questions it did not answer. Most briefs describe a deliverable when what I need is the problem underneath it.",
     icon: Search01Icon,
   },
   {
-    title: "Ideate",
-    desc: "Brainstorm ideas and explore multiple design directions.",
+    title: "Research",
+    desc: "What already exists, what the competition is doing, what the audience is used to, and — where I have it — what I know of the trade first-hand.",
     icon: BulbIcon,
   },
   {
-    title: "Design",
-    desc: "Develop high-fidelity designs, focusing on usability and aesthetics.",
+    title: "Brainstorm and ideate",
+    desc: "Sketching, drafting, mapping ideas out and throwing most of them away. This is the messy part, and skipping it shows later.",
     icon: PencilEdit01Icon,
   },
   {
-    title: "Test & Refine",
-    desc: "Conduct usability testing to identify potential pain points.",
+    title: "Execute",
+    desc: "Build it, take it out to every place it has to live, and check it against the problem I started with. If the problem is not solved, it is not finished — however good it looks.",
     icon: TestTubeIcon,
   },
 ];
@@ -60,12 +64,12 @@ const DesignProcess = () => {
               bg-clip-text text-transparent
             "
           >
-            My Design Process: From Concept to Completion
+            How the work actually goes
           </h2>
 
           <p className="max-w-[592px] text-[15px] sm:text-[17px] font-normal leading-7 text-neutral-200">
-            Every project is unique, but the path to great design is built on a
-            clear and thoughtful approach.
+            Not a process diagram. This is the order things happen in, and what
+            each step is for.
           </p>
         </div>
 

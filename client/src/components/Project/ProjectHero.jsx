@@ -47,31 +47,30 @@ const ProjectHero = () => {
             <h1
               className="
                 font-['Outfit'] font-semibold
-                text-4xl sm:text-5xl md:text-6xl lg:text-[64px]
-                leading-tight lg:leading-[1.05]
+                text-[42px] sm:text-6xl md:text-7xl lg:text-[82px]
+                leading-[1.04] lg:leading-[0.98] tracking-[-0.02em]
                 bg-gradient-to-b from-[#FCFCFC] via-[#E4E4E4] to-[#8E8E8E]
                 bg-clip-text text-transparent
                 drop-shadow-[0_0_16px_rgba(0,0,0,0.75)]
               "
             >
-              Explore curated designs
-              <br className="hidden sm:block" />
-              crafted with passion.
+              Every project here, <br className="hidden sm:block" />
+              and how it was decided.
             </h1>
 
             {/* BODY TEXT – larger like Figma */}
             <p
               className="
-                max-w-[620px]
+                max-w-[660px]
                
-                text-[15px] sm:text-[16px] md:text-[17px] lg:text-[18px]
+                text-[16px] sm:text-[17px] md:text-[18px] lg:text-[19px]
                 font-medium
                 leading-relaxed
                 text-white/95
               "
             >
-              Here’s a collection of my recent work, showcasing my ability to
-              merge creativity with functionality.
+              Brand identity, design systems, websites and product interfaces —
+              most of it for clients who needed all four to hold together.
             </p>
           </div>
         </div>

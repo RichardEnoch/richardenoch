@@ -86,9 +86,7 @@ const ProjectHero = ({ project }) => {
               hover:border-white/20
             "
           >
-            <span className="text-xs leading-5 text-white/75">
-              Back
-            </span>
+            <span className="text-xs leading-5 text-white/75">Back</span>
           </button>
 
           <h1

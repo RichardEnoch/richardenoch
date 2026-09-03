@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import Button from "../ui/Button";
+import StatusPill from "../common/StatusPill";
 
 import GraphicHeroImg from "../../assets/Graphics/HeroImg.webp";
 import ydpayThumb from "../../assets/YDpay/iphone15pro.webp";
@@ -15,22 +16,91 @@ import presThumb from "../../assets/PresentationDesigns/1.webp";
 import webOluwatosin from "../../assets/websiteThumbs/oluwatosin.webp";
 import webNiqs from "../../assets/websiteThumbs/niqs.webp";
 import webAdlm from "../../assets/websiteThumbs/adlm.webp";
-import webBookrion from "../../assets/websiteThumbs/bookrion.webp";
 
 /* Brand case-study thumbnails. These four projects are hardcoded pages with
    local assets, so they must not depend on the API to be discoverable. */
 import tabstudioThumb from "../../assets/TabStudio/stationery-dark.webp";
 import verdeLuxeThumb from "../../assets/VerdeLuxe/hero.webp";
 import bookRionThumb from "../../assets/Bookrion/mainSign.jpg";
+import adlmBrandThumb from "../../assets/ADLM/brand/evo-3.webp";
+import adlmSystemThumb from "../../assets/ADLM/site/designsystem.webp";
+import adlmProductThumb from "../../assets/ADLM/site/dashboard.webp";
+import adlmSocialThumb from "../../assets/ADLM/gallery/gal-02.webp";
 import cleansteadThumb from "../../assets/Cleanstead/signage.webp";
 
+const ADLM_BASE = "/projects/featured/adlm-studio";
+
+/* The four ADLM discipline cards. Each one is scoped to a single category and
+   routes into that discipline's own page rather than the hub, so a filtered
+   grid stays filtered when it is clicked. */
+const ADLM_CARDS = [
+  {
+    kind: "default",
+    slug: "adlm-brand",
+    route: `${ADLM_BASE}/brand`,
+    name: "ADLM Studio — Brand Identity",
+    description:
+      "One icon holding two meanings — a building whose slanted edge is the rise and fall of a price. Four lockups, three colours, and a system built to be produced by people who are not designers.",
+    url: "",
+    tags: ["Brand Identity", "Construction Tech"],
+    images: { main: adlmBrandThumb },
+    pageImg: adlmBrandThumb,
+    categories: ["Brand Identity Designs"],
+    id: "static-adlm-brand",
+  },
+  {
+    kind: "default",
+    slug: "adlm-design-system",
+    route: `${ADLM_BASE}/design-system`,
+    name: "ADLM Studio — Design System",
+    description:
+      "Seventy-six components on one token foundation, dual-theme by rule, shared by the marketing site, the signed-in account and the admin so the three cannot drift apart.",
+    url: "",
+    tags: ["Design System", "UI/UX"],
+    images: { main: adlmSystemThumb },
+    pageImg: adlmSystemThumb,
+    categories: ["Product UI/UX Designs"],
+    id: "static-adlm-system",
+  },
+  {
+    kind: "default",
+    slug: "adlm-product",
+    route: `${ADLM_BASE}/product`,
+    name: "ADLM Studio — Product Suite",
+    description:
+      "Six take-off and estimating products behaving as one tool: plugins inside Revit and Planswift, a shared rate library, and one account carrying a surveyor's work from the drawing to the bill.",
+    url: "",
+    tags: ["Product UI/UX", "Construction Tech"],
+    images: { main: adlmProductThumb },
+    pageImg: adlmProductThumb,
+    categories: ["Product UI/UX Designs"],
+    id: "static-adlm-product",
+  },
+  {
+    kind: "default",
+    slug: "adlm-graphics",
+    route: "/adlm-studio-designs",
+    name: "ADLM Studio — Social & Marketing",
+    description:
+      "Course launches, enrolment campaigns, event collateral and partnership announcements — the identity doing its day job across every channel.",
+    url: "",
+    tags: ["Graphic Design", "Campaign"],
+    images: { main: adlmSocialThumb },
+    pageImg: adlmSocialThumb,
+    categories: ["Graphic Designs"],
+    id: "static-adlm-graphics",
+  },
+];
+
 const STATIC_GFX_PROJECTS = [
+  ADLM_CARDS[3],
   {
     kind: "gallary",
     slug: "graphic-design",
     route: "/graphic-design",
     name: "Flyers & Social Media",
-    description: "Brand flyers, birthday cards, event graphics, and promotional materials.",
+    description:
+      "Brand flyers, birthday cards, event graphics, and promotional materials.",
     url: "",
     tags: ["Graphic Design"],
     images: { main: GraphicHeroImg },
@@ -43,7 +113,8 @@ const STATIC_GFX_PROJECTS = [
     slug: "adlm-studio-designs",
     route: "/adlm-studio-designs",
     name: "ADLM Studio Designs",
-    description: "Course promotions, enrolment campaigns, and brand content for ADLM Studio.",
+    description:
+      "Course promotions, enrolment campaigns, and brand content for ADLM Studio.",
     url: "",
     tags: ["Graphic Design"],
     images: { main: adlmThumb },
@@ -56,7 +127,8 @@ const STATIC_GFX_PROJECTS = [
     slug: "whitespace-designs",
     route: "/whitespace-designs",
     name: "Whitespace Designs",
-    description: "Educational carousels, event graphics, and brand content for Whitespace.",
+    description:
+      "Educational carousels, event graphics, and brand content for Whitespace.",
     url: "",
     tags: ["Graphic Design"],
     images: { main: wsThumb },
@@ -69,7 +141,8 @@ const STATIC_GFX_PROJECTS = [
     slug: "ydpay-designs",
     route: "/ydpay-designs",
     name: "YDpay Social Media",
-    description: "Campaign banners, card mockups, and social content for YDpay.",
+    description:
+      "Campaign banners, card mockups, and social content for YDpay.",
     url: "",
     tags: ["Graphic Design"],
     images: { main: ydpayGfxThumb },
@@ -82,7 +155,8 @@ const STATIC_GFX_PROJECTS = [
     slug: "presentation-design",
     route: "/presentation-design",
     name: "Presentation Design",
-    description: "Investor pitch decks, corporate presentations, and personal brand slide design — built to communicate with clarity and confidence.",
+    description:
+      "Investor pitch decks, corporate presentations, and personal brand slide design — built to communicate with clarity and confidence.",
     url: "",
     tags: ["Presentation Design", "Pitch Deck"],
     images: { main: presThumb },
@@ -92,17 +166,21 @@ const STATIC_GFX_PROJECTS = [
   },
 ];
 
-const SAVEDUP_THUMB = "https://res.cloudinary.com/dirgfivvb/image/upload/v1769320865/richard_portfolio/ui-projects/nhjprdndluq6dbch0j27.jpg";
+const SAVEDUP_THUMB =
+  "https://res.cloudinary.com/dirgfivvb/image/upload/v1769320865/richard_portfolio/ui-projects/nhjprdndluq6dbch0j27.jpg";
 
 const QUIV_THUMB = "/thumb-quiv.svg";
 const NIQS_THUMB = "/NIQSEmblemDark.webp";
 
 const STATIC_UI_PROJECTS = [
+  ADLM_CARDS[1],
+  ADLM_CARDS[2],
   {
     kind: "ui",
     slug: "niqs",
     name: "NIQS — Digital Transformation",
-    description: "Full digital identity rebuild for Nigeria's premier professional body for Quantity Surveyors — brand system, website, member portal, admin dashboard, and a self-serve flyer design engine.",
+    description:
+      "Full digital identity rebuild for Nigeria's premier professional body for Quantity Surveyors — brand system, website, member portal, admin dashboard, and a self-serve flyer design engine.",
     url: "",
     tags: ["UI/UX Design", "Institutional", "Web App"],
     images: { main: NIQS_THUMB },
@@ -115,7 +193,8 @@ const STATIC_UI_PROJECTS = [
     kind: "ui",
     slug: "ydpay-mobile-redesign",
     name: "YDpay Mobile Redesign",
-    description: "Full redesign of the YDpay crypto trading and wallet app — sharper hierarchy, bolder visual language, and simplified flows.",
+    description:
+      "Full redesign of the YDpay crypto trading and wallet app — sharper hierarchy, bolder visual language, and simplified flows.",
     url: "",
     tags: ["UI/UX Design", "Mobile App", "Fintech"],
     images: { main: ydpayThumb },
@@ -127,7 +206,8 @@ const STATIC_UI_PROJECTS = [
     kind: "ui",
     slug: "savedup",
     name: "SavedUp — Savings App",
-    description: "A mobile savings and budgeting platform for students and recent graduates — goal-based saving, AI-driven budgeting, and peer accountability.",
+    description:
+      "A mobile savings and budgeting platform for students and recent graduates — goal-based saving, AI-driven budgeting, and peer accountability.",
     url: "",
     tags: ["UI/UX Design", "Mobile App", "Fintech"],
     images: { main: SAVEDUP_THUMB },
@@ -157,12 +237,14 @@ const STATIC_UI_PROJECTS = [
    outage silently removed finished work from the portfolio. Order here is the
    display order. */
 const STATIC_BRAND_PROJECTS = [
+  ADLM_CARDS[0],
   {
     kind: "default",
     slug: "ydpay-brand",
     route: "/projects/ydpay-brand",
     name: "YDPay Brand Identity",
-    description: "Full brand system for a Nigerian crypto-fintech — logo, colour, typography, tone, and touchpoint application.",
+    description:
+      "Full brand system for a Nigerian crypto-fintech — logo, colour, typography, tone, and touchpoint application.",
     url: "",
     tags: ["Brand Identity", "Fintech"],
     images: { main: ydpayBrandThumb },
@@ -175,7 +257,8 @@ const STATIC_BRAND_PROJECTS = [
     slug: "tabstudio",
     route: "/projects/tabstudio",
     name: "Tabstudio",
-    description: "One mark that reads as a play button on the surface and spells T, A and B underneath — a full identity system for a video media agency, documented across 48 pages.",
+    description:
+      "One mark that reads as a play button on the surface and spells T, A and B underneath — a full identity system for a video media agency, documented across 48 pages.",
     url: "",
     tags: ["Brand Identity", "Video & Motion"],
     images: { main: tabstudioThumb },
@@ -188,7 +271,8 @@ const STATIC_BRAND_PROJECTS = [
     slug: "verde-luxe",
     route: "/projects/verde-luxe",
     name: "Verde Luxe",
-    description: "An interior design company selling luxury on two fronts. A mark drawn like a floor plan, a doorway you are invited through, and a deep emerald system built on quiet money.",
+    description:
+      "An interior design company selling luxury on two fronts. A mark drawn like a floor plan, a doorway you are invited through, and a deep emerald system built on quiet money.",
     url: "",
     tags: ["Brand Identity", "Interiors"],
     images: { main: verdeLuxeThumb },
@@ -201,7 +285,8 @@ const STATIC_BRAND_PROJECTS = [
     slug: "book-rion",
     route: "/projects/book-rion",
     name: "BookRion",
-    description: "A platform connecting Nigeria's whole book world. A crowned B built from stacked books with eyes folded into the letters, and a research-backed move from brown to blue.",
+    description:
+      "A platform connecting Nigeria's whole book world. A crowned B built from stacked books with eyes folded into the letters, and a research-backed move from brown to blue.",
     url: "",
     tags: ["Brand Identity", "Product Design"],
     images: { main: bookRionThumb },
@@ -214,7 +299,8 @@ const STATIC_BRAND_PROJECTS = [
     slug: "cleanstead",
     route: "/projects/cleanstead",
     name: "Cleanstead",
-    description: "A cleaning and property care service in Lagos. A well-made wordmark, two blues and a lot of white — the restraint is the idea.",
+    description:
+      "A cleaning and property care service in Lagos. A well-made wordmark, two blues and a lot of white — the restraint is the idea.",
     url: "",
     tags: ["Brand Identity", "Services"],
     images: { main: cleansteadThumb },
@@ -234,7 +320,11 @@ const TAB_CONFIG = [
   { label: "All", matches: null },
   {
     label: "Brand Identity Designs",
-    matches: ["Brand Identity Designs", "Brand Identity", "Brand Identity Design"],
+    matches: [
+      "Brand Identity Designs",
+      "Brand Identity",
+      "Brand Identity Design",
+    ],
   },
   {
     label: "Websites Designs",
@@ -288,7 +378,9 @@ function WebsiteDesignHeroCard({ onView }) {
         role="button"
         tabIndex={0}
         onClick={onView}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onView(); }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") onView();
+        }}
         className="relative overflow-hidden rounded-[14px] border border-sky-500/25 bg-black/60 shadow-[0_0_40px_rgba(0,0,0,0.85)] cursor-pointer select-none transition hover:border-sky-400/40 hover:shadow-[0_0_55px_rgba(56,189,248,0.14)] focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/35"
         style={{ minHeight: 380 }}
       >
@@ -319,13 +411,17 @@ function WebsiteDesignHeroCard({ onView }) {
               <span className="text-white/55">real web.</span>
             </h3>
             <p className="mt-3 max-w-[520px] text-[12px] sm:text-[13px] leading-5 text-white/55">
-              Five live website projects — interactive browser previews, client comments, and full case details.
+              Five live website projects — interactive browser previews, client
+              comments, and full case details.
             </p>
             <Button
               variant="primary"
               size="sm"
               className="mt-5"
-              onClick={(e) => { e.stopPropagation(); onView(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onView();
+              }}
             >
               View Projects
             </Button>
@@ -338,10 +434,29 @@ function WebsiteDesignHeroCard({ onView }) {
 
 /* ---- Website projects grid (live-site screenshots) ---- */
 const WEB_PROJECTS = [
-  { id: "oluwatosin", name: "Oluwatosin", category: "Personal Brand · Portfolio", thumb: webOluwatosin, live: "https://oluwatosin-website.vercel.app/" },
-  { id: "niqs", name: "NIQS", category: "Professional Body · Government", thumb: webNiqs, live: "https://niqs-website.vercel.app/" },
-  { id: "adlm", name: "ADLM Studio", category: "Creative Agency · ConTech", thumb: webAdlm, live: "https://www.adlmstudio.net/" },
-  { id: "bookrion", name: "Book Rion", category: "EdTech · Reading Platform", thumb: webBookrion, live: "https://www.bookrion.com/" },
+  {
+    id: "oluwatosin",
+    name: "Oluwatosin",
+    category: "Personal Brand · Portfolio",
+    thumb: webOluwatosin,
+    live: "https://oluwatosin-website.vercel.app/",
+  },
+  {
+    id: "niqs",
+    name: "NIQS",
+    category: "Professional Body · Government",
+    thumb: webNiqs,
+    live: "https://niqs-website.vercel.app/",
+  },
+  {
+    id: "adlm",
+    name: "ADLM Studio",
+    category: "Construction Tech · Software",
+    thumb: webAdlm,
+    // www.adlmstudio.net still serves the pre-rebuild site; the redesign this
+    // card shows is the Vercel deploy.
+    live: "https://adlm-studio.vercel.app/",
+  },
 ];
 
 function WebsiteGrid({ onOpen }) {
@@ -352,7 +467,7 @@ function WebsiteGrid({ onOpen }) {
           key={p.id}
           onClick={onOpen}
           className="
-            group flex cursor-pointer flex-col overflow-hidden
+            sheen group flex cursor-pointer flex-col overflow-hidden
             rounded-[24px] border border-neutral-700 bg-black/40
             transition duration-300 hover:-translate-y-1
             hover:border-[#89ff00] hover:shadow-[0_0_35px_rgba(137,255,0,0.12)]
@@ -374,7 +489,10 @@ function WebsiteGrid({ onOpen }) {
           </div>
 
           {/* live-site screenshot */}
-          <div className="relative overflow-hidden" style={{ aspectRatio: "16 / 10" }}>
+          <div
+            className="relative overflow-hidden"
+            style={{ aspectRatio: "16 / 10" }}
+          >
             <img
               src={p.thumb}
               alt={`${p.name} website`}
@@ -386,7 +504,9 @@ function WebsiteGrid({ onOpen }) {
           {/* footer */}
           <div className="flex items-center justify-between gap-4 px-5 py-4">
             <div className="min-w-0">
-              <h3 className="truncate font-['Outfit'] text-[20px] font-semibold text-white">{p.name}</h3>
+              <h3 className="truncate font-['Outfit'] text-[20px] font-semibold text-white">
+                {p.name}
+              </h3>
               <p className="truncate text-[12px] text-white/45">{p.category}</p>
             </div>
             <a
@@ -411,9 +531,17 @@ function WebsiteGrid({ onOpen }) {
 /* ================================================================
    ProjectGrid
    ================================================================ */
-const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
+/* `tab` lets a page open the grid on one discipline without going through the
+   ?tab= query string — the discipline landing pages are already about a single
+   category, so their URLs should stay clean. An explicit prop wins; the query
+   string still works everywhere else. */
+const ProjectGrid = ({ contained = true, excludeSlug, excludeKind, tab }) => {
   const [searchParams] = useSearchParams();
-  const initialTab = tabs.includes(searchParams.get("tab")) ? searchParams.get("tab") : tabs[0];
+  const initialTab = tabs.includes(tab)
+    ? tab
+    : tabs.includes(searchParams.get("tab"))
+      ? searchParams.get("tab")
+      : tabs[0];
   const [activeTab, setActiveTab] = useState(initialTab);
   const [tabDropdownOpen, setTabDropdownOpen] = useState(false);
   const tabDropdownRef = useRef(null);
@@ -442,13 +570,7 @@ const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
 
   useEffect(() => {
     setVisibleCount(4);
-  }, [
-    activeTab,
-    projects.length,
-    uiProjects.length,
-    excludeSlug,
-    excludeKind,
-  ]);
+  }, [activeTab, projects.length, uiProjects.length, excludeSlug, excludeKind]);
 
   const visibleDefaultProjects = useMemo(() => {
     return (projects || []).filter(
@@ -456,15 +578,28 @@ const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
     );
   }, [projects]);
 
-  const staticUiSlugs = useMemo(() => new Set(STATIC_UI_PROJECTS.map((p) => p.slug.toLowerCase())), []);
-  const staticUiNameKeys = useMemo(() => new Set(STATIC_UI_PROJECTS.map((p) => p.name.toLowerCase().replace(/[^a-z0-9]/g, ""))), []);
+  const staticUiSlugs = useMemo(
+    () => new Set(STATIC_UI_PROJECTS.map((p) => p.slug.toLowerCase())),
+    [],
+  );
+  const staticUiNameKeys = useMemo(
+    () =>
+      new Set(
+        STATIC_UI_PROJECTS.map((p) =>
+          p.name.toLowerCase().replace(/[^a-z0-9]/g, ""),
+        ),
+      ),
+    [],
+  );
 
   const mappedUiProjects = useMemo(() => {
     return (uiProjects || [])
       .filter((p) => p.showOnProjectsPage === undefined || p.showOnProjectsPage)
       .filter((p) => {
         const slug = (p.slug || "").toLowerCase();
-        const nameKey = (p.name || p.title || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+        const nameKey = (p.name || p.title || "")
+          .toLowerCase()
+          .replace(/[^a-z0-9]/g, "");
         return !staticUiSlugs.has(slug) && !staticUiNameKeys.has(nameKey);
       })
       .map((p) => ({
@@ -485,8 +620,19 @@ const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
       }));
   }, [uiProjects]);
 
-  const staticBrandSlugs = useMemo(() => new Set(STATIC_BRAND_PROJECTS.map((p) => p.slug.toLowerCase())), []);
-  const staticBrandNameKeys = useMemo(() => new Set(STATIC_BRAND_PROJECTS.map((p) => p.name.toLowerCase().replace(/[^a-z0-9]/g, ""))), []);
+  const staticBrandSlugs = useMemo(
+    () => new Set(STATIC_BRAND_PROJECTS.map((p) => p.slug.toLowerCase())),
+    [],
+  );
+  const staticBrandNameKeys = useMemo(
+    () =>
+      new Set(
+        STATIC_BRAND_PROJECTS.map((p) =>
+          p.name.toLowerCase().replace(/[^a-z0-9]/g, ""),
+        ),
+      ),
+    [],
+  );
 
   /* Drop any API copy of a project that is already listed statically, so the
      grid never shows the same case study twice. */
@@ -494,7 +640,9 @@ const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
     return visibleDefaultProjects
       .filter((p) => {
         const slug = (p.slug || "").toLowerCase();
-        const nameKey = (p.name || p.title || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+        const nameKey = (p.name || p.title || "")
+          .toLowerCase()
+          .replace(/[^a-z0-9]/g, "");
         return !staticBrandSlugs.has(slug) && !staticBrandNameKeys.has(nameKey);
       })
       .map((p) => ({ ...p, kind: "default" }));
@@ -513,7 +661,9 @@ const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
     // Place the static UI projects (NIQS first) after Tabstudio, keeping the
     // original Brand Identity tab rhythm now that the brand list is local.
     const leadBrand = STATIC_BRAND_PROJECTS.slice(0, BRAND_STATIC_LEAD_COUNT);
-    const restStaticBrand = STATIC_BRAND_PROJECTS.slice(BRAND_STATIC_LEAD_COUNT);
+    const restStaticBrand = STATIC_BRAND_PROJECTS.slice(
+      BRAND_STATIC_LEAD_COUNT,
+    );
     return [
       ...leadBrand,
       ...STATIC_UI_PROJECTS,
@@ -559,7 +709,8 @@ const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
 
   const handleOpenProject = (item) => {
     if (item.kind === "ui") return navigate(`/ui-projects/${item.slug}`);
-    if (item.kind === "gallary") return navigate(item.route || GRAPHIC_GALLERY_ROUTE);
+    if (item.kind === "gallary")
+      return navigate(item.route || GRAPHIC_GALLERY_ROUTE);
     if (item.route) return navigate(item.route);
     navigate(`/projects/${item.slug}`);
   };
@@ -578,7 +729,6 @@ const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
     >
       {/* ---- FILTER TABS ---- */}
       <div className="flex justify-center">
-
         {/* Desktop: pill row */}
         <div
           className="hidden sm:inline-flex flex-wrap items-center gap-4 rounded-[12px] border-[0.5px] border-white/40 p-2 backdrop-blur-[12.5px]"
@@ -607,7 +757,10 @@ const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
         </div>
 
         {/* Mobile: dropdown */}
-        <div ref={tabDropdownRef} className="relative sm:hidden w-full max-w-xs">
+        <div
+          ref={tabDropdownRef}
+          className="relative sm:hidden w-full max-w-xs"
+        >
           <button
             onClick={() => setTabDropdownOpen((p) => !p)}
             className="w-full flex items-center justify-between gap-3 rounded-[12px] border border-white/30 px-4 py-3 text-[14px] font-medium text-white backdrop-blur-[12.5px]"
@@ -618,16 +771,27 @@ const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
           >
             <span>{activeTab}</span>
             <svg
-              width="16" height="16" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-              style={{ transition: "transform 0.2s", transform: tabDropdownOpen ? "rotate(180deg)" : "rotate(0deg)", flexShrink: 0 }}
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{
+                transition: "transform 0.2s",
+                transform: tabDropdownOpen ? "rotate(180deg)" : "rotate(0deg)",
+                flexShrink: 0,
+              }}
             >
               <polyline points="6 9 12 15 18 9" />
             </svg>
           </button>
 
           {tabDropdownOpen && (
-            <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-30 rounded-[12px] border border-white/20 overflow-hidden shadow-[0_16px_48px_rgba(0,0,0,0.8)] backdrop-blur-xl"
+            <div
+              className="absolute left-0 right-0 top-[calc(100%+6px)] z-30 rounded-[12px] border border-white/20 overflow-hidden shadow-[0_16px_48px_rgba(0,0,0,0.8)] backdrop-blur-xl"
               style={{ background: "rgba(12,12,16,0.97)" }}
             >
               {tabs.map((tab) => {
@@ -635,7 +799,10 @@ const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
                 return (
                   <button
                     key={tab}
-                    onClick={() => { setActiveTab(tab); setTabDropdownOpen(false); }}
+                    onClick={() => {
+                      setActiveTab(tab);
+                      setTabDropdownOpen(false);
+                    }}
                     className={`
                       w-full text-left px-4 py-3 text-[14px] font-medium
                       border-b border-white/[0.06] last:border-0
@@ -645,7 +812,9 @@ const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
                   >
                     <span className="flex items-center justify-between">
                       {tab}
-                      {isActive && <span className="h-1.5 w-1.5 rounded-full bg-lime-400 flex-shrink-0" />}
+                      {isActive && (
+                        <span className="h-1.5 w-1.5 rounded-full bg-lime-400 flex-shrink-0" />
+                      )}
                     </span>
                   </button>
                 );
@@ -653,7 +822,6 @@ const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
             </div>
           )}
         </div>
-
       </div>
 
       {/* ---- CONTENT ---- */}
@@ -661,9 +829,7 @@ const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
         {isWebTab ? (
           <WebsiteGrid onOpen={() => navigate("/website-design")} />
         ) : gridLoading ? (
-          <p className="text-sm text-neutral-300">
-            Loading projects…
-          </p>
+          <p className="text-sm text-neutral-300">Loading projects…</p>
         ) : status.error && filteredItems.length === 0 ? (
           <p className="text-sm text-red-400">{status.error}</p>
         ) : filteredItems.length === 0 ? (
@@ -685,7 +851,7 @@ const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
                     key={`${project.kind}-${project.id || project._id || project.slug || index}`}
                     onClick={() => handleOpenProject(project)}
                     className="
-                      group flex cursor-pointer flex-col
+                      sheen group flex cursor-pointer flex-col
                       rounded-[28px] border border-neutral-700
                       pt-[37px] px-[30px] sm:px-[45px]
                       h-auto md:h-[533px]
@@ -745,8 +911,10 @@ const ProjectGrid = ({ contained = true, excludeSlug, excludeKind }) => {
                           </div>
                         )}
 
-                        {/* Tags */}
+                        {/* Tags — the shipped-state leads, because it is
+                            the thing a reader is most likely to assume wrongly. */}
                         <div className="flex flex-wrap items-center gap-1.5">
+                          <StatusPill slug={project.slug} />
                           {(project.tags || []).map((tag, tagIdx) => (
                             <span
                               key={`${project.slug}-${tagIdx}`}

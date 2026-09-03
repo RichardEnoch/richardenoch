@@ -6,41 +6,46 @@
 // neighbours and revealing colour. Click → the project's page. Tiles are tripled
 // so the loop never gaps; the block fades on all four edges into the page.
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useSpring, useAnimationFrame } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useAnimationFrame,
+} from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../ui/Button";
 
-import tsSweat  from "../../assets/bento/ts-sweat.webp";
-import tsTees   from "../../assets/bento/ts-tees.webp";
-import tsId     from "../../assets/bento/ts-id.webp";
-import tsNote   from "../../assets/bento/ts-note.webp";
-import ydApp    from "../../assets/bento/yd-app.webp";
-import ydMerch  from "../../assets/bento/yd-merch.webp";
+import tsSweat from "../../assets/bento/ts-sweat.webp";
+import tsTees from "../../assets/bento/ts-tees.webp";
+import tsId from "../../assets/bento/ts-id.webp";
+import tsNote from "../../assets/bento/ts-note.webp";
+import ydApp from "../../assets/bento/yd-app.webp";
+import ydMerch from "../../assets/bento/yd-merch.webp";
 import ydTshirt from "../../assets/bento/yd-tshirt.webp";
 import ydBottle from "../../assets/bento/yd-bottle.webp";
-import ydCard1  from "../../assets/bento/yd-card1.webp";
-import ydCard2  from "../../assets/bento/yd-card2.webp";
-import ydCard3  from "../../assets/bento/yd-card3.webp";
-import ydCard4  from "../../assets/bento/yd-card4.webp";
+import ydCard1 from "../../assets/bento/yd-card1.webp";
+import ydCard2 from "../../assets/bento/yd-card2.webp";
+import ydCard3 from "../../assets/bento/yd-card3.webp";
+import ydCard4 from "../../assets/bento/yd-card4.webp";
 import nqHoodie from "../../assets/bento/nq-hoodie.webp";
-import nqShirt  from "../../assets/bento/nq-shirt.webp";
-import nqAbout  from "../../assets/bento/nq-about.webp";
-import nqExams  from "../../assets/bento/nq-exams.webp";
+import nqShirt from "../../assets/bento/nq-shirt.webp";
+import nqAbout from "../../assets/bento/nq-about.webp";
+import nqExams from "../../assets/bento/nq-exams.webp";
 import nqJournal from "../../assets/bento/nq-journal.webp";
-import pres1    from "../../assets/bento/pres1.webp";
-import pres2    from "../../assets/bento/pres2.webp";
-import pres3    from "../../assets/bento/pres3.webp";
-import vlTee    from "../../assets/bento/vl-tee.webp";
+import pres1 from "../../assets/bento/pres1.webp";
+import pres2 from "../../assets/bento/pres2.webp";
+import pres3 from "../../assets/bento/pres3.webp";
+import vlTee from "../../assets/bento/vl-tee.webp";
 import vlBottle from "../../assets/bento/vl-bottle.webp";
-import clShirt  from "../../assets/bento/cl-shirt.webp";
-import clId     from "../../assets/bento/cl-id.webp";
-import brG1     from "../../assets/bento/br-g1.webp";
-import brG3     from "../../assets/bento/br-g3.webp";
-import brG4     from "../../assets/bento/br-g4.webp";
-import socTech  from "../../assets/bento/soc-tech.webp";
-import adlmEid  from "../../assets/bento/adlm-eid.webp";
-import adlmNm   from "../../assets/bento/adlm-nm.webp";
-import wsAi     from "../../assets/bento/ws-ai.webp";
+import clShirt from "../../assets/bento/cl-shirt.webp";
+import clId from "../../assets/bento/cl-id.webp";
+import brG1 from "../../assets/bento/br-g1.webp";
+import brG3 from "../../assets/bento/br-g3.webp";
+import brG4 from "../../assets/bento/br-g4.webp";
+import socTech from "../../assets/bento/soc-tech.webp";
+import adlmEid from "../../assets/bento/adlm-eid.webp";
+import adlmNm from "../../assets/bento/adlm-nm.webp";
+import wsAi from "../../assets/bento/ws-ai.webp";
 
 const YD_APP = "/ui-projects/ydpay-mobile-redesign";
 const YD_BRAND = "/projects/ydpay-brand";
@@ -58,43 +63,83 @@ const HOVER_SPEED = 4; // px/s — near-frozen so a tile stays under the pointer
 // r = frame aspect ratio; alternated across each row for the 4:5 / 3:4 mix.
 const ROWS = [
   [
-    { img: tsSweat,  label: "Tab Studio — Apparel",   route: TABSTUDIO,  r: "4/5" },
-    { img: ydApp,    label: "YDPay — App Redesign",   route: YD_APP,     r: "3/4" },
-    { img: nqHoodie, label: "NIQS — Merch",           route: NIQS,       r: "4/5" },
-    { img: pres1,    label: "Pitch Deck",             route: PRES,       r: "3/4" },
-    { img: vlTee,    label: "Verde Luxe — Apparel",   route: "/projects/verde-luxe", r: "4/5" },
-    { img: ydCard1,  label: "YDPay — Card Design",    route: YD_GFX,     r: "3/4" },
-    { img: brG1,     label: "Book Rion — Product",    route: "/projects/book-rion", r: "4/5" },
-    { img: adlmEid,  label: "ADLM — Social",          route: ADLM,       r: "3/4" },
+    { img: tsSweat, label: "Tab Studio — Apparel", route: TABSTUDIO, r: "4/5" },
+    { img: ydApp, label: "YDPay — App Redesign", route: YD_APP, r: "3/4" },
+    { img: nqHoodie, label: "NIQS — Merch", route: NIQS, r: "4/5" },
+    { img: pres1, label: "Pitch Deck", route: PRES, r: "3/4" },
+    {
+      img: vlTee,
+      label: "Verde Luxe — Apparel",
+      route: "/projects/verde-luxe",
+      r: "4/5",
+    },
+    { img: ydCard1, label: "YDPay — Card Design", route: YD_GFX, r: "3/4" },
+    {
+      img: brG1,
+      label: "Book Rion — Product",
+      route: "/projects/book-rion",
+      r: "4/5",
+    },
+    { img: adlmEid, label: "ADLM — Social", route: ADLM, r: "3/4" },
   ],
   [
-    { img: tsTees,   label: "Tab Studio — Tees",      route: TABSTUDIO,  r: "3/4" },
-    { img: ydMerch,  label: "YDPay — Merch",          route: YD_BRAND,   r: "4/5" },
-    { img: nqAbout,  label: "NIQS — App",             route: NIQS,       r: "3/4" },
-    { img: pres2,    label: "Slide Design",           route: PRES,       r: "4/5" },
-    { img: clShirt,  label: "Cleanstead — Apparel",   route: "/projects/cleanstead", r: "3/4" },
-    { img: ydCard2,  label: "YDPay — Card Design",    route: YD_GFX,     r: "4/5" },
-    { img: socTech,  label: "Social — Campaign",      route: GFX,        r: "3/4" },
-    { img: wsAi,     label: "Whitespace — Social",    route: WHITESPACE, r: "4/5" },
+    { img: tsTees, label: "Tab Studio — Tees", route: TABSTUDIO, r: "3/4" },
+    { img: ydMerch, label: "YDPay — Merch", route: YD_BRAND, r: "4/5" },
+    { img: nqAbout, label: "NIQS — App", route: NIQS, r: "3/4" },
+    { img: pres2, label: "Slide Design", route: PRES, r: "4/5" },
+    {
+      img: clShirt,
+      label: "Cleanstead — Apparel",
+      route: "/projects/cleanstead",
+      r: "3/4",
+    },
+    { img: ydCard2, label: "YDPay — Card Design", route: YD_GFX, r: "4/5" },
+    { img: socTech, label: "Social — Campaign", route: GFX, r: "3/4" },
+    { img: wsAi, label: "Whitespace — Social", route: WHITESPACE, r: "4/5" },
   ],
   [
-    { img: tsId,     label: "Tab Studio — Identity",  route: TABSTUDIO,  r: "4/5" },
-    { img: ydTshirt, label: "YDPay — Brand Tee",      route: YD_BRAND,   r: "3/4" },
-    { img: nqExams,  label: "NIQS — App",             route: NIQS,       r: "4/5" },
-    { img: pres3,    label: "Slide Design",           route: PRES,       r: "3/4" },
-    { img: vlBottle, label: "Verde Luxe — Product",   route: "/projects/verde-luxe", r: "4/5" },
-    { img: ydCard3,  label: "YDPay — Card Design",    route: YD_GFX,     r: "3/4" },
-    { img: brG3,     label: "Book Rion — Product",    route: "/projects/book-rion", r: "4/5" },
-    { img: adlmNm,   label: "ADLM — Social",          route: ADLM,       r: "3/4" },
+    { img: tsId, label: "Tab Studio — Identity", route: TABSTUDIO, r: "4/5" },
+    { img: ydTshirt, label: "YDPay — Brand Tee", route: YD_BRAND, r: "3/4" },
+    { img: nqExams, label: "NIQS — App", route: NIQS, r: "4/5" },
+    { img: pres3, label: "Slide Design", route: PRES, r: "3/4" },
+    {
+      img: vlBottle,
+      label: "Verde Luxe — Product",
+      route: "/projects/verde-luxe",
+      r: "4/5",
+    },
+    { img: ydCard3, label: "YDPay — Card Design", route: YD_GFX, r: "3/4" },
+    {
+      img: brG3,
+      label: "Book Rion — Product",
+      route: "/projects/book-rion",
+      r: "4/5",
+    },
+    { img: adlmNm, label: "ADLM — Social", route: ADLM, r: "3/4" },
   ],
   [
-    { img: tsNote,   label: "Tab Studio — Stationery",route: TABSTUDIO,  r: "3/4" },
-    { img: ydBottle, label: "YDPay — Brand",          route: YD_BRAND,   r: "4/5" },
-    { img: nqShirt,  label: "NIQS — Apparel",         route: NIQS,       r: "3/4" },
-    { img: nqJournal,label: "NIQS — Touchpoint",      route: NIQS,       r: "4/5" },
-    { img: clId,     label: "Cleanstead — Identity",  route: "/projects/cleanstead", r: "3/4" },
-    { img: ydCard4,  label: "YDPay — Card Design",    route: YD_GFX,     r: "4/5" },
-    { img: brG4,     label: "Book Rion — Stationery", route: "/projects/book-rion", r: "3/4" },
+    {
+      img: tsNote,
+      label: "Tab Studio — Stationery",
+      route: TABSTUDIO,
+      r: "3/4",
+    },
+    { img: ydBottle, label: "YDPay — Brand", route: YD_BRAND, r: "4/5" },
+    { img: nqShirt, label: "NIQS — Apparel", route: NIQS, r: "3/4" },
+    { img: nqJournal, label: "NIQS — Touchpoint", route: NIQS, r: "4/5" },
+    {
+      img: clId,
+      label: "Cleanstead — Identity",
+      route: "/projects/cleanstead",
+      r: "3/4",
+    },
+    { img: ydCard4, label: "YDPay — Card Design", route: YD_GFX, r: "4/5" },
+    {
+      img: brG4,
+      label: "Book Rion — Stationery",
+      route: "/projects/book-rion",
+      r: "3/4",
+    },
   ],
 ];
 
@@ -135,14 +180,27 @@ const Tile = ({ t }) => {
   return (
     <div
       className="relative mr-4 shrink-0"
-      style={{ height: "clamp(210px, 24vw, 300px)", aspectRatio: t.r, perspective: 1000, zIndex: hovered ? 30 : 1 }}
+      style={{
+        height: "clamp(210px, 24vw, 300px)",
+        aspectRatio: t.r,
+        perspective: 1000,
+        zIndex: hovered ? 30 : 1,
+      }}
     >
       <motion.div
         ref={ref}
         onMouseMove={onMove}
         onMouseEnter={onEnter}
         onMouseLeave={onLeave}
-        style={{ rotateX: srx, rotateY: sry, scale, z: lift, transformStyle: "preserve-3d", height: "100%", width: "100%" }}
+        style={{
+          rotateX: srx,
+          rotateY: sry,
+          scale,
+          z: lift,
+          transformStyle: "preserve-3d",
+          height: "100%",
+          width: "100%",
+        }}
         className="group relative"
       >
         <Link
@@ -214,7 +272,8 @@ const Row = ({ tiles, dir, base }) => {
   useAnimationFrame((_t, delta) => {
     const w = copyW.current;
     if (!w || delta > 100) return; // skip huge frame gaps (tab refocus)
-    speed.current += (target.current - speed.current) * Math.min(1, delta / 200);
+    speed.current +=
+      (target.current - speed.current) * Math.min(1, delta / 200);
     let nx = x.get() + sign * speed.current * (delta / 1000);
     if (nx <= -w) nx += w;
     else if (nx >= 0) nx -= w;
@@ -226,8 +285,12 @@ const Row = ({ tiles, dir, base }) => {
   return (
     <div
       className="overflow-y-visible"
-      onMouseEnter={() => { target.current = HOVER_SPEED; }}
-      onMouseLeave={() => { target.current = base; }}
+      onMouseEnter={() => {
+        target.current = HOVER_SPEED;
+      }}
+      onMouseLeave={() => {
+        target.current = base;
+      }}
     >
       <motion.div ref={trackRef} className="flex w-max" style={{ x }}>
         {loop.map((t, i) => (
@@ -264,9 +327,15 @@ const WorkExp = () => {
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.6, delay: 0.05, ease: [0.22, 0.61, 0.36, 1] }}
+          transition={{
+            duration: 0.6,
+            delay: 0.05,
+            ease: [0.22, 0.61, 0.36, 1],
+          }}
         >
-          A living wall of the brands and products I&apos;ve shaped — identities, apps, campaigns and merch. Hover to slow it down and tilt one to life, click to open its story.
+          A living wall of the brands and products I&apos;ve shaped —
+          identities, apps, campaigns and merch. Hover to slow it down and tilt
+          one to life, click to open its story.
         </motion.p>
       </div>
 
@@ -289,10 +358,28 @@ const WorkExp = () => {
         </motion.div>
 
         {/* edge fades — ease the block into the page on every side */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-40 h-24" style={{ background: `linear-gradient(to bottom, ${BG} 30%, transparent)` }} />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-40 h-24" style={{ background: `linear-gradient(to top, ${BG} 30%, transparent)` }} />
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-40 w-16 sm:w-24" style={{ background: `linear-gradient(to right, ${BG}, transparent)` }} />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-40 w-16 sm:w-24" style={{ background: `linear-gradient(to left, ${BG}, transparent)` }} />
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 z-40 h-24"
+          style={{
+            background: `linear-gradient(to bottom, ${BG} 30%, transparent)`,
+          }}
+        />
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-40 h-24"
+          style={{
+            background: `linear-gradient(to top, ${BG} 30%, transparent)`,
+          }}
+        />
+        <div
+          className="pointer-events-none absolute inset-y-0 left-0 z-40 w-16 sm:w-24"
+          style={{
+            background: `linear-gradient(to right, ${BG}, transparent)`,
+          }}
+        />
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 z-40 w-16 sm:w-24"
+          style={{ background: `linear-gradient(to left, ${BG}, transparent)` }}
+        />
       </div>
 
       {/* CTA — primary, centred, jumps to the About page's work-experience section */}
@@ -303,7 +390,11 @@ const WorkExp = () => {
         viewport={{ once: true, amount: 0.6 }}
         transition={{ duration: 0.5, ease: [0.22, 0.61, 0.36, 1] }}
       >
-        <Button variant="primary" size="md" onClick={() => navigate("/about#work-experience")}>
+        <Button
+          variant="primary"
+          size="md"
+          onClick={() => navigate("/about#work-experience")}
+        >
           View work experience
         </Button>
       </motion.div>

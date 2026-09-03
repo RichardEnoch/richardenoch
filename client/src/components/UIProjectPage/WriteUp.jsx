@@ -225,13 +225,9 @@ function PersonasSection({ cards }) {
 
               {name ? (
                 <div className="space-y-0.5">
-                  <div className="text-sm font-semibold text-white">
-                    {name}
-                  </div>
+                  <div className="text-sm font-semibold text-white">{name}</div>
                   {subtitle ? (
-                    <div className="text-xs text-white/60">
-                      {subtitle}
-                    </div>
+                    <div className="text-xs text-white/60">{subtitle}</div>
                   ) : null}
                 </div>
               ) : null}

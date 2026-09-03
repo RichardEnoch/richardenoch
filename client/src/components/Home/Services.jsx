@@ -32,12 +32,13 @@ const Services = () => {
               bg-clip-text text-transparent
             "
           >
-            Custom design solutions for your requirements.
+            Pick a lane. The work is in there.
           </h2>
 
           <p className="max-w-[592px] text-[17px] sm:text-[19px] font-normal leading-[1.55] text-neutral-200 mt-1">
-            I specialize in crafting user-centered solutions for businesses and
-            individuals. Let&apos;s create something extraordinary together.
+            Brand identity, product UI, websites, graphics and decks. Filter by
+            what you actually came for — every card says what happened to the
+            project, not only what it looked like.
           </p>
         </div>
 

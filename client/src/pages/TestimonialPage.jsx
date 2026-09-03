@@ -3,7 +3,15 @@ import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import PageMeta from "../components/common/PageMeta";
-import { Button, Input, Textarea, Select, Label, Field, buttonClasses } from "../components/ui";
+import {
+  Button,
+  Input,
+  Textarea,
+  Select,
+  Label,
+  Field,
+  buttonClasses,
+} from "../components/ui";
 import { fetchJson } from "../api/http";
 import { TESTIMONIAL_SERVICES } from "../data/testimonialOptions";
 
@@ -15,13 +23,16 @@ const StarButton = ({ filled, onClick, onHover, onLeave }) => (
     onMouseLeave={onLeave}
     className="p-1 transition-transform hover:scale-110"
   >
-    <svg width="30" height="30" viewBox="0 0 24 24"
-      fill={filled ? "#84cc16" : "rgba(255,255,255,0.12)"}>
+    <svg
+      width="30"
+      height="30"
+      viewBox="0 0 24 24"
+      fill={filled ? "#84cc16" : "rgba(255,255,255,0.12)"}
+    >
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" />
     </svg>
   </button>
 );
-
 
 const deriveInitials = (name) =>
   name
@@ -56,7 +67,8 @@ const TestimonialPage = () => {
     if (!initials.trim()) return setError("Please enter your initials.");
     if (!service) return setError("Please pick the project we worked on.");
     if (!rating) return setError("Please pick a star rating.");
-    if (!feedback.trim()) return setError("Please write a few words of feedback.");
+    if (!feedback.trim())
+      return setError("Please write a few words of feedback.");
 
     setSubmitting(true);
     try {
@@ -95,8 +107,14 @@ const TestimonialPage = () => {
             className="rounded-2xl border border-lime-400/30 bg-[#0d0f12] px-8 py-14 text-center"
           >
             <div className="mx-auto mb-6 flex h-[74px] w-[74px] items-center justify-center rounded-full border-2 border-lime-400 shadow-[0_0_30px_rgba(163,230,53,0.3)]">
-              <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" strokeLinecap="round"
-                strokeLinejoin="round" className="h-8 w-8 stroke-lime-400">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-8 w-8 stroke-lime-400"
+              >
                 <path d="M20 6L9 17l-5-5" />
               </svg>
             </div>
@@ -104,35 +122,65 @@ const TestimonialPage = () => {
             <p className="mt-3 text-[15px] leading-relaxed text-white/55">
               Your feedback means a lot — it's what keeps this studio growing.
             </p>
-            <Link to="/" className={buttonClasses("primary", "lg", "mt-8 inline-flex items-center gap-1")}>
+            <Link
+              to="/"
+              className={buttonClasses(
+                "primary",
+                "lg",
+                "mt-8 inline-flex items-center gap-1",
+              )}
+            >
               Back to home →
             </Link>
           </motion.div>
         ) : (
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
             <p className="text-[11px] font-bold tracking-[0.3em] uppercase text-lime-400 mb-4">
               Feedback
             </p>
             <h1 className="text-3xl sm:text-4xl font-semibold leading-tight tracking-[-0.02em]">
-              How was it, <span className="text-lime-400">working together?</span>
+              How was it,{" "}
+              <span className="text-lime-400">working together?</span>
             </h1>
             <p className="mt-3 mb-10 text-[15px] leading-[1.65] text-white/50">
-              A minute of your time, and your words help the next client take the leap.
+              A minute of your time, and your words help the next client take
+              the leap.
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* honeypot */}
-              <input ref={hpRef} type="text" name="_hp" tabIndex={-1} autoComplete="off"
-                className="absolute left-[-9999px] h-0 w-0 opacity-0" aria-hidden="true" />
+              <input
+                ref={hpRef}
+                type="text"
+                name="_hp"
+                tabIndex={-1}
+                autoComplete="off"
+                className="absolute left-[-9999px] h-0 w-0 opacity-0"
+                aria-hidden="true"
+              />
 
               <div className="grid grid-cols-1 sm:grid-cols-[1fr_140px] gap-4">
                 <Field label="Name (optional)">
-                  <Input value={name} placeholder="Your name"
-                    maxLength={80} onChange={(e) => onNameChange(e.target.value)} />
+                  <Input
+                    value={name}
+                    placeholder="Your name"
+                    maxLength={80}
+                    onChange={(e) => onNameChange(e.target.value)}
+                  />
                 </Field>
                 <Field label="Initials *">
-                  <Input value={initials} placeholder="e.g. DA" maxLength={4}
-                    onChange={(e) => { setInitialsTouched(true); setInitials(e.target.value.toUpperCase()); }} />
+                  <Input
+                    value={initials}
+                    placeholder="e.g. DA"
+                    maxLength={4}
+                    onChange={(e) => {
+                      setInitialsTouched(true);
+                      setInitials(e.target.value.toUpperCase());
+                    }}
+                  />
                 </Field>
               </div>
 
@@ -141,9 +189,17 @@ const TestimonialPage = () => {
                   value={service}
                   onChange={(e) => setService(e.target.value)}
                 >
-                  <option value="" disabled>Select a service…</option>
+                  <option value="" disabled>
+                    Select a service…
+                  </option>
                   {TESTIMONIAL_SERVICES.map((s) => (
-                    <option key={s} value={s} className="bg-[#111318] text-white">{s}</option>
+                    <option
+                      key={s}
+                      value={s}
+                      className="bg-[#111318] text-white"
+                    >
+                      {s}
+                    </option>
                   ))}
                 </Select>
               </Field>
@@ -161,7 +217,9 @@ const TestimonialPage = () => {
                     />
                   ))}
                   {rating > 0 && (
-                    <span className="ml-3 text-[13px] text-white/40">{rating} / 5</span>
+                    <span className="ml-3 text-[13px] text-white/40">
+                      {rating} / 5
+                    </span>
                   )}
                 </div>
               </div>
@@ -181,7 +239,13 @@ const TestimonialPage = () => {
                 </p>
               )}
 
-              <Button type="submit" disabled={submitting} variant="primary" size="lg" className="w-full">
+              <Button
+                type="submit"
+                disabled={submitting}
+                variant="primary"
+                size="lg"
+                className="w-full"
+              >
                 {submitting ? "Sending…" : "Submit testimonial"}
               </Button>
             </form>

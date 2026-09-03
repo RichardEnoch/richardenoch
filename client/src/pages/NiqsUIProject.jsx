@@ -1,6 +1,12 @@
 import React, { useRef, useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { motion, useMotionValue, useTransform, useSpring, useInView } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  useSpring,
+  useInView,
+} from "framer-motion";
 import OtherProj from "../components/ProjectPage/OtherProj";
 import BuildSection from "../components/Home/BuildSection";
 import PageMeta from "../components/common/PageMeta";
@@ -8,28 +14,39 @@ import ScrollAlign from "../components/common/ScrollAlign";
 import useDragScroll from "../hooks/useDragScroll";
 import BrandGallery from "../components/ProjectPage/BrandGallery";
 import GuidelineCarousel from "../components/ProjectPage/GuidelineCarousel";
+import SitemapTree from "../components/ProjectPage/SitemapTree";
+/* Two frames on this page are standing in with a screenshot borrowed from
+   another section — the portal/admin surface and the Flyer Engine have no
+   capture of their own yet. Both now name a drop-in key and fall back to the
+   stand-in until the real one lands. See data/dropin.js and IMAGE-SLOTS.md. */
+import { asset } from "../data/dropin";
 
 /* touchpoint mockups */
-import imgBillboard     from "../assets/NIQS/board.webp";
-import imgBottle        from "../assets/NIQS/bottle.webp";
-import imgCapBlue       from "../assets/NIQS/cap-blue.webp";
-import imgCapWhite      from "../assets/NIQS/cap-white.webp";
-import imgConference    from "../assets/NIQS/conference.webp";
-import imgCup           from "../assets/NIQS/cup.webp";
-import imgEmailSig      from "../assets/NIQS/email-signature.webp";
-import imgFolder        from "../assets/NIQS/folder.webp";
-import imgHoodie        from "../assets/NIQS/hoodie.webp";
-import imgHoodieWhite   from "../assets/NIQS/hoodie-white.webp";
-import imgJournal       from "../assets/NIQS/journal.webp";
-import imgLetterhead    from "../assets/NIQS/letterhead.webp";
-import imgShirt         from "../assets/NIQS/shirt.webp";
-import imgToteBag       from "../assets/NIQS/tote-bag.webp";
+import imgBillboard from "../assets/NIQS/board.webp";
+import imgBottle from "../assets/NIQS/bottle.webp";
+import imgCapBlue from "../assets/NIQS/cap-blue.webp";
+import imgCapWhite from "../assets/NIQS/cap-white.webp";
+import imgConference from "../assets/NIQS/conference.webp";
+import imgCup from "../assets/NIQS/cup.webp";
+import imgEmailSig from "../assets/NIQS/email-signature.webp";
+import imgFolder from "../assets/NIQS/folder.webp";
+import imgHoodie from "../assets/NIQS/hoodie.webp";
+import imgHoodieWhite from "../assets/NIQS/hoodie-white.webp";
+import imgJournal from "../assets/NIQS/journal.webp";
+import imgLetterhead from "../assets/NIQS/letterhead.webp";
+import imgShirt from "../assets/NIQS/shirt.webp";
+import imgToteBag from "../assets/NIQS/tote-bag.webp";
 import imgToteBagLadies from "../assets/NIQS/tote-bag-ladies.webp";
-import imgSocialMedia   from "../assets/NIQS/social-media.webp";
-import imgScreenAbout   from "../assets/NIQS/screen-about.webp";
+import imgSocialMedia from "../assets/NIQS/social-media.webp";
+/* Captured from the live site at niqs-website.vercel.app rather than exported
+   from a design file, so this section shows what is actually shipped. The
+   thumbnail elsewhere on the portfolio had gone stale against the same deploy. */
+import imgScreenHome from "../assets/NIQS/screen-home.webp";
+import imgScreenContact from "../assets/NIQS/screen-contact.webp";
+import imgScreenAbout from "../assets/NIQS/screen-about.webp";
 import imgScreenSearch1 from "../assets/NIQS/screen-search-1.webp";
 import imgScreenSearch2 from "../assets/NIQS/screen-search-2.webp";
-import imgScreenExams   from "../assets/NIQS/screen-exams.webp";
+import imgScreenExams from "../assets/NIQS/screen-exams.webp";
 
 /* brand guideline spreads (curated from the 60-page document) */
 import g01 from "../assets/NIQS/guideline/g01.webp";
@@ -46,6 +63,110 @@ import g35 from "../assets/NIQS/guideline/g35.webp";
 import g39 from "../assets/NIQS/guideline/g39.webp";
 import g52 from "../assets/NIQS/guideline/g52.webp";
 import g60 from "../assets/NIQS/guideline/g60.webp";
+
+/* ── 09 · information architecture ──
+   Three surfaces, drawn as trees rather than as a wall of equal tiles. The
+   grid of nine identical boxes gave a chapter page the same weight as a single
+   locked form, which is not what the structure says. A tree does: a
+   destination, what it is for, and what sits under it. Same treatment as the
+   ADLM sitemap, so the two case studies read as one method. */
+const PUBLIC_IA = [
+  {
+    t: "Home",
+    note: "The institution in one screen",
+    kids: [
+      { t: "Hero · Stats" },
+      { t: "Services · News · Events" },
+      { t: "Request a quote · CTA" },
+    ],
+  },
+  {
+    t: "About NIQS",
+    note: "The largest section — an institution with a long record to show",
+    kids: [
+      { t: "About · President · Council" },
+      { t: "NPC · Past Presidents" },
+      { t: "Chapters", note: "37 states" },
+      { t: "WAQSN · YQSF · Reciprocity" },
+      { t: "Brand Materials" },
+    ],
+  },
+  {
+    t: "Membership",
+    note: "Public route in, private documents behind it",
+    kids: [
+      { t: "Requirements · QS Search" },
+      { t: "Portal 🔒" },
+      { t: "Induction Letter 🔒" },
+      { t: "Upgrade Letter 🔒" },
+    ],
+  },
+  {
+    t: "Exams",
+    note: "The path to full membership",
+    kids: [
+      { t: "Examinations · Published Results" },
+      { t: "Interview 🔒" },
+      { t: "TPC/GDE · Logbook 🔒" },
+    ],
+  },
+  {
+    t: "Research & Devt",
+    kids: [{ t: "Workshops · Webinars" }, { t: "Publications · Journal" }],
+  },
+  {
+    t: "News",
+    kids: [
+      { t: "Latest News · Events Calendar" },
+      { t: "QS Connect" },
+      { t: "Article template" },
+    ],
+  },
+  {
+    t: "Jobs · Payment · Contact",
+    note: "Three short routes that had nowhere to live",
+    kids: [
+      { t: "Jobs board" },
+      { t: "Payment portal 🔒" },
+      { t: "Secretariat contact" },
+    ],
+  },
+];
+
+const PORTAL_IA = [
+  {
+    t: "Dashboard",
+    note: "Status first, everything else after",
+    kids: [{ t: "Profile" }, { t: "Membership status" }],
+  },
+  {
+    t: "Records",
+    kids: [
+      { t: "Library access" },
+      { t: "Event registrations" },
+      { t: "CPD records" },
+    ],
+  },
+];
+
+const ADMIN_IA = [
+  {
+    t: "Members & content",
+    kids: [
+      { t: "Member database" },
+      { t: "Events · News" },
+      { t: "Library uploads" },
+    ],
+  },
+  {
+    t: "Operations",
+    kids: [
+      { t: "Staff accounts" },
+      { t: "Flyer engine", note: "Self-serve design, no designer in the loop" },
+      { t: "Audit logs" },
+    ],
+  },
+];
 
 const GR = "#a3e635";
 const NIQS_NAVY = "#000066";
@@ -70,7 +191,12 @@ const FadeUp = ({ children, delay = 0, className = "" }) => {
   );
 };
 
-const SlideIn = ({ children, direction = "left", delay = 0, className = "" }) => {
+const SlideIn = ({
+  children,
+  direction = "left",
+  delay = 0,
+  className = "",
+}) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0 });
   return (
@@ -78,7 +204,11 @@ const SlideIn = ({ children, direction = "left", delay = 0, className = "" }) =>
       ref={ref}
       className={className}
       initial={{ opacity: 0, x: direction === "left" ? -40 : 40 }}
-      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: direction === "left" ? -40 : 40 }}
+      animate={
+        isInView
+          ? { opacity: 1, x: 0 }
+          : { opacity: 0, x: direction === "left" ? -40 : 40 }
+      }
       transition={{ duration: 0.75, ease: [0.22, 0.61, 0.36, 1], delay }}
     >
       {children}
@@ -116,7 +246,10 @@ const StaggerItem = ({ children, className = "" }) => (
 );
 
 const SLabel = ({ n, t }) => (
-  <p className="text-[11px] font-bold tracking-[0.3em] uppercase mb-5" style={{ color: GR }}>
+  <p
+    className="text-[11px] font-bold tracking-[0.3em] uppercase mb-5"
+    style={{ color: GR }}
+  >
     {n} — {t}
   </p>
 );
@@ -132,8 +265,14 @@ const TiltFrame = ({ src, alt = "", className = "", style = {}, onClick }) => {
   const ref = useRef(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [10, -10]), { stiffness: 280, damping: 28 });
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-10, 10]), { stiffness: 280, damping: 28 });
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [10, -10]), {
+    stiffness: 280,
+    damping: 28,
+  });
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-10, 10]), {
+    stiffness: 280,
+    damping: 28,
+  });
   const scale = useSpring(1, { stiffness: 280, damping: 28 });
 
   const onMove = (e) => {
@@ -142,7 +281,11 @@ const TiltFrame = ({ src, alt = "", className = "", style = {}, onClick }) => {
     x.set((e.clientX - r.left) / r.width - 0.5);
     y.set((e.clientY - r.top) / r.height - 0.5);
   };
-  const onLeave = () => { x.set(0); y.set(0); scale.set(1); };
+  const onLeave = () => {
+    x.set(0);
+    y.set(0);
+    scale.set(1);
+  };
   const onEnter = () => scale.set(1.04);
 
   return (
@@ -154,25 +297,49 @@ const TiltFrame = ({ src, alt = "", className = "", style = {}, onClick }) => {
       <motion.div
         ref={ref}
         className="rounded-lg sm:rounded-2xl overflow-hidden border border-white/10 bg-black/20 relative h-full mx-auto"
-        style={{ ...style, rotateX, rotateY, scale, transformStyle: "preserve-3d" }}
+        style={{
+          ...style,
+          rotateX,
+          rotateY,
+          scale,
+          transformStyle: "preserve-3d",
+        }}
         onMouseMove={onMove}
         onMouseLeave={onLeave}
         onMouseEnter={onEnter}
-        whileHover={{ boxShadow: "0 0 48px 10px rgba(163,230,53,0.18), 0 24px 60px rgba(0,0,0,0.55)" }}
+        whileHover={{
+          boxShadow:
+            "0 0 48px 10px rgba(163,230,53,0.18), 0 24px 60px rgba(0,0,0,0.55)",
+        }}
         transition={{ boxShadow: { duration: 0.35 } }}
       >
         {src ? (
-          <img src={src} alt={alt} className="w-full h-full object-cover" loading="lazy" />
+          <img
+            src={src}
+            alt={alt}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-white/[0.02] px-8 py-10 min-h-[180px]">
-            <p className="text-[11px] text-white/20 text-center leading-relaxed">{alt}</p>
+            <p className="text-[11px] text-white/20 text-center leading-relaxed">
+              {alt}
+            </p>
           </div>
         )}
         {onClick && (
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/25">
             <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/40 bg-black/50 backdrop-blur-md">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
-                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+              >
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
               </svg>
             </div>
           </div>
@@ -183,7 +350,10 @@ const TiltFrame = ({ src, alt = "", className = "", style = {}, onClick }) => {
 };
 
 export default function NiqsUIProject() {
-  const ph = useCallback(() => console.log("Image placeholder clicked — replace src in code"), []);
+  const ph = useCallback(
+    () => console.log("Image placeholder clicked — replace src in code"),
+    [],
+  );
   const [heroHover, setHeroHover] = useState(false);
   // Both of these overflow horizontally and are otherwise mouse-unreachable.
   const dragDeliverables = useDragScroll();
@@ -202,7 +372,6 @@ export default function NiqsUIProject() {
       />
 
       <div className="relative z-10">
-
         {/* ══ 00 — HERO ══ */}
         <section
           className="relative w-full min-h-[82vh] sm:min-h-[88vh] flex flex-col overflow-hidden"
@@ -234,7 +403,6 @@ export default function NiqsUIProject() {
           {/* Content — centered, pushes to bottom of section */}
           <div className="relative z-10 mt-auto px-4 sm:px-8 pt-24 pb-14">
             <div className="max-w-[760px] mx-auto flex flex-col items-center text-center">
-
               <FadeUp>
                 <button
                   onClick={handleBack}
@@ -247,7 +415,11 @@ export default function NiqsUIProject() {
               <FadeUp delay={0.05}>
                 <span
                   className="inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-semibold mb-7"
-                  style={{ borderColor: `${GR}44`, color: GR, background: `${GR}0D` }}
+                  style={{
+                    borderColor: `${GR}44`,
+                    color: GR,
+                    background: `${GR}0D`,
+                  }}
                 >
                   Case Study · Digital Transformation
                 </span>
@@ -265,7 +437,8 @@ export default function NiqsUIProject() {
                 <h1
                   className="text-6xl sm:text-7xl lg:text-[88px] font-bold leading-none tracking-[-0.04em] mb-5"
                   style={{
-                    background: "linear-gradient(180deg, #ffffff 0%, #9a9a9a 100%)",
+                    background:
+                      "linear-gradient(180deg, #ffffff 0%, #9a9a9a 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
@@ -277,11 +450,12 @@ export default function NiqsUIProject() {
 
               <FadeUp delay={0.15}>
                 <p className="text-[15px] sm:text-[17px] leading-[1.65] text-white/60 max-w-[540px] mb-8">
-                  A full digital identity rebuild for Nigeria's premier professional body for Quantity Surveyors — brand system, website, member portal, admin dashboard, and a self-serve design engine.
+                  A full digital identity rebuild for Nigeria's premier
+                  professional body for Quantity Surveyors — brand system,
+                  website, member portal, admin dashboard, and a self-serve
+                  design engine.
                 </p>
               </FadeUp>
-
-
             </div>
           </div>
         </section>
@@ -298,7 +472,9 @@ export default function NiqsUIProject() {
                   { label: "STATUS", value: "In Production" },
                 ].map(({ label, value, accent }) => (
                   <div key={label} className="sm:px-8 first:pl-0">
-                    <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-1">{label}</p>
+                    <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-1">
+                      {label}
+                    </p>
                     <p
                       className={`text-xl sm:text-2xl font-bold ${accent ? "" : "text-white"}`}
                       style={accent ? { color: GR } : {}}
@@ -314,17 +490,47 @@ export default function NiqsUIProject() {
               <FadeUp>
                 <SLabel n="01" t="THE BRIEF" />
                 <h2 className="text-4xl sm:text-5xl lg:text-[52px] font-semibold leading-[1.05] tracking-[-0.03em] break-words">
-                  <span className="text-white">A 56-year institution,</span><br />
+                  <span className="text-white">A 56-year institution,</span>
+                  <br />
                   <span style={{ color: GR }}>rebuilt for 2026</span>
                 </h2>
-                <div className="mt-5 mb-8 h-[2px] w-16 rounded-full" style={{ background: GR }} />
+                <div
+                  className="mt-5 mb-8 h-[2px] w-16 rounded-full"
+                  style={{ background: GR }}
+                />
                 <div className="space-y-5 text-[15px] sm:text-[16px] leading-[1.65] text-white/55 break-words">
-                  <p>The Nigerian Institute of Quantity Surveyors (NIQS) is the foremost professional and regulatory body for quantity surveyors in Nigeria — founded in 1969, granted statutory authority by Decree No. 31 of 1986, and home to over 10,000 members across all 37 states. After more than half a century of growth, its digital presence had fallen behind the institution's stature.</p>
-                  <p>ADLM Studio was appointed Official Technical Partner to deliver a full digital transformation: a new brand guideline, a custom-coded MERN website to replace the legacy WordPress/PHP system, a member portal, an admin dashboard, a digital library, and a self-serve flyer design engine for the secretariat. I led the design side of this partnership — owning every pixel from the brand system to the portal interface.</p>
-                  <p>The brief was institutional in tone but operational in spirit: respect 56 years of heritage, retain the heraldic logo and navy-gold palette, but rebuild the entire digital experience so that members, regulators, and the public meet NIQS the way they should — as a serious, modern, technology-forward institute.</p>
+                  <p>
+                    The Nigerian Institute of Quantity Surveyors (NIQS) is the
+                    foremost professional and regulatory body for quantity
+                    surveyors in Nigeria — founded in 1969, granted statutory
+                    authority by Decree No. 31 of 1986, and home to over 10,000
+                    members across all 37 states. After more than half a century
+                    of growth, its digital presence had fallen behind the
+                    institution's stature.
+                  </p>
+                  <p>
+                    ADLM Studio was appointed Official Technical Partner to
+                    deliver a full digital transformation: a new brand
+                    guideline, a custom-coded MERN website to replace the legacy
+                    WordPress/PHP system, a member portal, an admin dashboard, a
+                    digital library, and a self-serve flyer design engine for
+                    the secretariat. I led the design side of this partnership —
+                    owning every pixel from the brand system to the portal
+                    interface.
+                  </p>
+                  <p>
+                    The brief was institutional in tone but operational in
+                    spirit: respect 56 years of heritage, retain the heraldic
+                    logo and navy-gold palette, but rebuild the entire digital
+                    experience so that members, regulators, and the public meet
+                    NIQS the way they should — as a serious, modern,
+                    technology-forward institute.
+                  </p>
                 </div>
                 <div className="mt-8">
-                  <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-3">DELIVERABLES</p>
+                  <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-3">
+                    DELIVERABLES
+                  </p>
                   <div
                     ref={dragDeliverables}
                     className="flex gap-2 overflow-x-auto pb-1 no-scrollbar"
@@ -343,7 +549,11 @@ export default function NiqsUIProject() {
                       <span
                         key={t}
                         className="shrink-0 rounded-md border px-2.5 py-1 text-[11px] font-semibold"
-                        style={{ borderColor: `${GR}44`, color: GR, background: `${GR}0D` }}
+                        style={{
+                          borderColor: `${GR}44`,
+                          color: GR,
+                          background: `${GR}0D`,
+                        }}
                       >
                         {t}
                       </span>
@@ -354,10 +564,15 @@ export default function NiqsUIProject() {
 
               <FadeUp delay={0.15} className="flex flex-col gap-4">
                 <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-6">
-                  <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-4">MY ROLE</p>
-                  <p className="text-[15px] font-semibold text-white mb-4">Creative Lead · ADLM Studio</p>
+                  <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-4">
+                    MY ROLE
+                  </p>
+                  <p className="text-[15px] font-semibold text-white mb-4">
+                    Creative Lead · ADLM Studio
+                  </p>
                   <p className="text-[15px] leading-[1.65] text-white/55 mb-5">
-                    I led the design side of the NIQS Digital Transformation partnership, owning:
+                    I led the design side of the NIQS Digital Transformation
+                    partnership, owning:
                   </p>
                   <ul className="space-y-2">
                     {[
@@ -371,8 +586,14 @@ export default function NiqsUIProject() {
                       "Design system & component library",
                       "Developer handover",
                     ].map((item) => (
-                      <li key={item} className="flex items-start gap-2 text-[15px] leading-[1.6] text-white/50">
-                        <span className="mt-[6px] w-1.5 h-1.5 rounded-full shrink-0" style={{ background: GR }} />
+                      <li
+                        key={item}
+                        className="flex items-start gap-2 text-[15px] leading-[1.6] text-white/50"
+                      >
+                        <span
+                          className="mt-[6px] w-1.5 h-1.5 rounded-full shrink-0"
+                          style={{ background: GR }}
+                        />
                         {item}
                       </li>
                     ))}
@@ -400,42 +621,56 @@ export default function NiqsUIProject() {
           <div className="max-w-[1100px] mx-auto">
             <FadeUp>
               <SLabel n="02" t="THE PROBLEM" />
-              <H2 white="What didn't" accent="match the institution" accentColor="#E05252" />
+              <H2
+                white="What didn't"
+                accent="match the institution"
+                accentColor="#E05252"
+              />
               <div className="mt-5 mb-8 h-[2px] w-16 rounded-full bg-[#E05252]" />
               <p className="text-[15px] sm:text-[16px] leading-[1.65] text-white/55 mb-8 max-w-[720px]">
-                The 2020 brand work served NIQS for a season, but five years of institutional growth, digital expansion, and member service evolution had outpaced it. Four core problems shaped this redesign:
+                The 2020 brand work served NIQS for a season, but five years of
+                institutional growth, digital expansion, and member service
+                evolution had outpaced it. Four core problems shaped this
+                redesign:
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                  {[
-                    {
-                      n: "01",
-                      title: "A brand system stuck in 2020",
-                      body: "The 2020 guideline was a static PDF reference rather than a working system. It defined logo usage and colour but lacked typography rules, spacing rules, photography treatment specs, or any modern UI patterns. Every new piece of NIQS communication required redrawing the wheel.",
-                    },
-                    {
-                      n: "02",
-                      title: "A legacy website that didn't scale",
-                      body: "The old WordPress/PHP site relied on plugin-based scaling and didn't support institutional-grade role-based access. Member portal, admin workflows, and a proper digital library could not be built on it. Performance and security had aged.",
-                    },
-                    {
-                      n: "03",
-                      title: "Every flyer needed a designer",
-                      body: "The secretariat produced announcements, event notices, and recognitions weekly — but every single one required a designer to open Photoshop or Canva, fight the layout, export, and hand back. No design literacy on the secretariat side. The volume was unsustainable.",
-                    },
-                    {
-                      n: "04",
-                      title: "Inconsistent communications",
-                      body: "Without a templates system or a content discipline, NIQS chapters across all 37 states produced communications in wildly different styles. The national brand and the chapter brand didn't look like one institution.",
-                    },
+                {[
+                  {
+                    n: "01",
+                    title: "A brand system stuck in 2020",
+                    body: "The 2020 guideline was a static PDF reference rather than a working system. It defined logo usage and colour but lacked typography rules, spacing rules, photography treatment specs, or any modern UI patterns. Every new piece of NIQS communication required redrawing the wheel.",
+                  },
+                  {
+                    n: "02",
+                    title: "A legacy website that didn't scale",
+                    body: "The old WordPress/PHP site relied on plugin-based scaling and didn't support institutional-grade role-based access. Member portal, admin workflows, and a proper digital library could not be built on it. Performance and security had aged.",
+                  },
+                  {
+                    n: "03",
+                    title: "Every flyer needed a designer",
+                    body: "The secretariat produced announcements, event notices, and recognitions weekly — but every single one required a designer to open Photoshop or Canva, fight the layout, export, and hand back. No design literacy on the secretariat side. The volume was unsustainable.",
+                  },
+                  {
+                    n: "04",
+                    title: "Inconsistent communications",
+                    body: "Without a templates system or a content discipline, NIQS chapters across all 37 states produced communications in wildly different styles. The national brand and the chapter brand didn't look like one institution.",
+                  },
                 ].map(({ n, title, body }) => (
-                  <div key={n} className="rounded-2xl border border-[#E0525222] bg-[#1A0A0A] p-5 h-full flex flex-col">
+                  <div
+                    key={n}
+                    className="rounded-2xl border border-[#E0525222] bg-[#1A0A0A] p-5 h-full flex flex-col"
+                  >
                     <div className="flex items-start justify-between gap-2 mb-3">
-                      <h3 className="text-[15px] font-semibold text-white leading-snug">{title}</h3>
+                      <h3 className="text-[15px] font-semibold text-white leading-snug">
+                        {title}
+                      </h3>
                       <span className="shrink-0 w-6 h-6 rounded-full border border-[#E0525244] flex items-center justify-center text-[10px] font-bold text-[#E05252]">
                         {n}
                       </span>
                     </div>
-                    <p className="text-[14px] sm:text-[15px] leading-[1.65] text-white/50 flex-1">{body}</p>
+                    <p className="text-[14px] sm:text-[15px] leading-[1.65] text-white/50 flex-1">
+                      {body}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -457,79 +692,144 @@ export default function NiqsUIProject() {
               <SLabel n="03" t="RESEARCH & INSIGHTS" />
               <H2 white="Benchmarking the" accent="institutional standard" />
               <p className="mt-5 text-[15px] sm:text-[16px] leading-[1.65] text-white/55 max-w-[620px] mb-12">
-                Research combined a teardown of the legacy NIQS site, a competitive scan of peer professional bodies (NSE — Nigerian Society of Engineers, NIA — Nigerian Institute of Architects, RICS — Royal Institution of Chartered Surveyors), and structural analysis of how a modern professional institute should serve members, regulators, and the public.
+                Research combined a teardown of the legacy NIQS site, a
+                competitive scan of peer professional bodies (NSE — Nigerian
+                Society of Engineers, NIA — Nigerian Institute of Architects,
+                RICS — Royal Institution of Chartered Surveyors), and structural
+                analysis of how a modern professional institute should serve
+                members, regulators, and the public.
               </p>
             </FadeUp>
 
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
               <FadeUp delay={0.1}>
-                <p className="text-[11px] tracking-[0.28em] uppercase text-white/35 mb-5">COMPETITIVE COMPARISON</p>
+                <p className="text-[11px] tracking-[0.28em] uppercase text-white/35 mb-5">
+                  COMPETITIVE COMPARISON
+                </p>
                 <div className="rounded-2xl border border-white/8 bg-white/[0.02] overflow-hidden">
-                 <div ref={dragComparison} className="overflow-x-auto no-scrollbar">
-                  <div className="min-w-[480px]">
-                  <div className="grid grid-cols-[1fr_76px_76px_76px_76px] text-[9px] font-bold tracking-wider uppercase text-white/30 px-4 py-3 border-b border-white/6">
-                    <span>Capability</span>
-                    <span className="text-center" style={{ color: GR }}>NIQS New</span>
-                    <span className="text-center text-white/25">Legacy</span>
-                    <span className="text-center text-white/25">NSE/NIA</span>
-                    <span className="text-center text-white/25">RICS UK</span>
-                  </div>
-                  {[
-                    ["Modern responsive website", "✅", "❌", "⚠️", "✅"],
-                    ["Custom-coded backend", "✅", "❌", "❌", "✅"],
-                    ["Member portal with dashboard", "✅", "❌", "⚠️", "✅"],
-                    ["Role-based access", "✅", "❌", "❌", "✅"],
-                    ["Integrated digital library", "✅", "❌", "❌", "✅"],
-                    ["Self-serve design tool for staff", "✅", "❌", "❌", "❌"],
-                    ["Modern brand guideline", "✅", "❌", "⚠️", "✅"],
-                    ["Editorial typography system", "✅", "❌", "❌", "✅"],
-                    ["Mobile-first public site", "✅", "❌", "⚠️", "✅"],
-                  ].map(([cap, ...vals], i) => (
-                    <div
-                      key={cap}
-                      className={`grid grid-cols-[1fr_76px_76px_76px_76px] px-4 py-3 text-[15px] ${i > 0 ? "border-t border-white/5" : ""}`}
-                    >
-                      <span className="text-white/55">{cap}</span>
-                      {vals.map((v, j) => (
-                        <span key={j} className="text-center text-[14px]">{v}</span>
+                  <div
+                    ref={dragComparison}
+                    className="overflow-x-auto no-scrollbar"
+                  >
+                    <div className="min-w-[480px]">
+                      <div className="grid grid-cols-[1fr_76px_76px_76px_76px] text-[9px] font-bold tracking-wider uppercase text-white/30 px-4 py-3 border-b border-white/6">
+                        <span>Capability</span>
+                        <span className="text-center" style={{ color: GR }}>
+                          NIQS New
+                        </span>
+                        <span className="text-center text-white/25">
+                          Legacy
+                        </span>
+                        <span className="text-center text-white/25">
+                          NSE/NIA
+                        </span>
+                        <span className="text-center text-white/25">
+                          RICS UK
+                        </span>
+                      </div>
+                      {[
+                        ["Modern responsive website", "✅", "❌", "⚠️", "✅"],
+                        ["Custom-coded backend", "✅", "❌", "❌", "✅"],
+                        [
+                          "Member portal with dashboard",
+                          "✅",
+                          "❌",
+                          "⚠️",
+                          "✅",
+                        ],
+                        ["Role-based access", "✅", "❌", "❌", "✅"],
+                        ["Integrated digital library", "✅", "❌", "❌", "✅"],
+                        [
+                          "Self-serve design tool for staff",
+                          "✅",
+                          "❌",
+                          "❌",
+                          "❌",
+                        ],
+                        ["Modern brand guideline", "✅", "❌", "⚠️", "✅"],
+                        ["Editorial typography system", "✅", "❌", "❌", "✅"],
+                        ["Mobile-first public site", "✅", "❌", "⚠️", "✅"],
+                      ].map(([cap, ...vals], i) => (
+                        <div
+                          key={cap}
+                          className={`grid grid-cols-[1fr_76px_76px_76px_76px] px-4 py-3 text-[15px] ${i > 0 ? "border-t border-white/5" : ""}`}
+                        >
+                          <span className="text-white/55">{cap}</span>
+                          {vals.map((v, j) => (
+                            <span key={j} className="text-center text-[14px]">
+                              {v}
+                            </span>
+                          ))}
+                        </div>
                       ))}
                     </div>
-                  ))}
                   </div>
-                 </div>
                 </div>
               </FadeUp>
 
               <div className="space-y-4">
                 <FadeUp delay={0.15}>
                   <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-5">
-                    <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-3">INSTITUTION SCALE</p>
-                    <p className="text-[42px] font-bold leading-none mb-3" style={{ color: GR }}>10,000+</p>
+                    <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-3">
+                      INSTITUTION SCALE
+                    </p>
+                    <p
+                      className="text-[42px] font-bold leading-none mb-3"
+                      style={{ color: GR }}
+                    >
+                      10,000+
+                    </p>
                     <p className="text-[15px] leading-[1.65] text-white/50">
-                      members across 37 state chapters and the FCT. The redesigned digital infrastructure is built to serve every one of them — not just the National Secretariat.
+                      members across 37 state chapters and the FCT. The
+                      redesigned digital infrastructure is built to serve every
+                      one of them — not just the National Secretariat.
                     </p>
                   </div>
                 </FadeUp>
                 <FadeUp delay={0.2}>
                   <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-5">
-                    <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-4">COMMUNICATIONS VOLUME</p>
+                    <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-4">
+                      COMMUNICATIONS VOLUME
+                    </p>
                     {[
-                      { label: "Weekly announcements/recognitions", val: "~12/week", color: GR, w: "40%" },
-                      { label: "Events per year", val: "~40", color: "#60A5FA", w: "60%" },
-                      { label: "Chapter comms per month", val: "~150+", color: "#A78BFA", w: "90%" },
+                      {
+                        label: "Weekly announcements/recognitions",
+                        val: "~12/week",
+                        color: GR,
+                        w: "40%",
+                      },
+                      {
+                        label: "Events per year",
+                        val: "~40",
+                        color: "#60A5FA",
+                        w: "60%",
+                      },
+                      {
+                        label: "Chapter comms per month",
+                        val: "~150+",
+                        color: "#A78BFA",
+                        w: "90%",
+                      },
                     ].map(({ label, val, color, w }) => (
                       <div key={label} className="mb-3">
                         <div className="flex justify-between text-[11px] mb-1">
                           <span className="text-white/40">{label}</span>
-                          <span className="font-bold" style={{ color }}>{val}</span>
+                          <span className="font-bold" style={{ color }}>
+                            {val}
+                          </span>
                         </div>
                         <div className="h-1 rounded-full bg-white/8">
-                          <div className="h-full rounded-full" style={{ background: color, width: w }} />
+                          <div
+                            className="h-full rounded-full"
+                            style={{ background: color, width: w }}
+                          />
                         </div>
                       </div>
                     ))}
                     <p className="text-[11px] text-white/35 mt-3 leading-relaxed">
-                      Volume that no central design team could sustainably hand-produce. The Flyer Design Engine exists to solve this.
+                      Volume that no central design team could sustainably
+                      hand-produce. The Flyer Design Engine exists to solve
+                      this.
                     </p>
                   </div>
                 </FadeUp>
@@ -543,7 +843,11 @@ export default function NiqsUIProject() {
           <FadeUp className="max-w-[1100px] mx-auto">
             <div
               className="rounded-2xl sm:rounded-3xl overflow-hidden border-2"
-              style={{ borderColor: `${GR}55`, height: "55vh", background: "#0A0D12" }}
+              style={{
+                borderColor: `${GR}55`,
+                height: "55vh",
+                background: "#0A0D12",
+              }}
             >
               <img
                 src={imgBillboard}
@@ -562,69 +866,150 @@ export default function NiqsUIProject() {
               <SLabel n="05" t="BRAND SYSTEM" />
               <H2 white="Heritage, made" accent="operational" />
               <p className="mt-5 text-[15px] sm:text-[16px] leading-[1.65] text-white/55 max-w-[620px] mb-14">
-                The 2020 brand established the NIQS heraldic identity — eagle, shield, navy, gold, "The professional construction cost managers." That heritage is non-negotiable. The redesign retained every heraldic element and rebuilt the system around it: typography that didn't exist before, a working colour scale, photography treatment specs, and a logo system with four official lockup configurations.
+                The 2020 brand established the NIQS heraldic identity — eagle,
+                shield, navy, gold, "The professional construction cost
+                managers." That heritage is non-negotiable. The redesign
+                retained every heraldic element and rebuilt the system around
+                it: typography that didn't exist before, a working colour scale,
+                photography treatment specs, and a logo system with four
+                official lockup configurations.
               </p>
             </FadeUp>
 
             {/* 5.0 Logo System */}
             <FadeUp delay={0.05} className="mb-16">
-              <p className="text-[11px] tracking-[0.28em] uppercase text-white/35 mb-2">5.0 — LOGO SYSTEM</p>
-              <p className="text-[18px] font-semibold text-white mb-6">One heraldic mark. Every surface. Zero compromise.</p>
+              <p className="text-[11px] tracking-[0.28em] uppercase text-white/35 mb-2">
+                5.0 — LOGO SYSTEM
+              </p>
+              <p className="text-[18px] font-semibold text-white mb-6">
+                One heraldic mark. Every surface. Zero compromise.
+              </p>
               <div className="grid sm:grid-cols-2 gap-4">
-                <div className="rounded-2xl border border-white/8 p-8 flex flex-col items-center justify-center gap-6" style={{ background: `${NIQS_NAVY}` }}>
-                  <img src="/NIQSColor.svg" alt="NIQS Heraldic Emblem — colour" className="w-full max-w-[260px]" />
-                  <p className="text-[10px] tracking-[0.2em] uppercase text-white/30">Primary Mark · Light on Dark</p>
+                <div
+                  className="rounded-2xl border border-white/8 p-8 flex flex-col items-center justify-center gap-6"
+                  style={{ background: `${NIQS_NAVY}` }}
+                >
+                  <img
+                    src="/NIQSColor.svg"
+                    alt="NIQS Heraldic Emblem — colour"
+                    className="w-full max-w-[260px]"
+                  />
+                  <p className="text-[10px] tracking-[0.2em] uppercase text-white/30">
+                    Primary Mark · Light on Dark
+                  </p>
                 </div>
-                <div className="rounded-2xl border border-white/8 p-8 flex flex-col items-center justify-center gap-6" style={{ background: NIQS_OFFWHITE }}>
-                  <img src="/NIQSGrey.svg" alt="NIQS mark — monochrome on light" className="w-full max-w-[260px]" />
-                  <p className="text-[10px] tracking-[0.2em] uppercase text-black/40">Monochrome Mark · On Light</p>
+                <div
+                  className="rounded-2xl border border-white/8 p-8 flex flex-col items-center justify-center gap-6"
+                  style={{ background: NIQS_OFFWHITE }}
+                >
+                  <img
+                    src="/NIQSGrey.svg"
+                    alt="NIQS mark — monochrome on light"
+                    className="w-full max-w-[260px]"
+                  />
+                  <p className="text-[10px] tracking-[0.2em] uppercase text-black/40">
+                    Monochrome Mark · On Light
+                  </p>
                 </div>
               </div>
               <p className="mt-5 text-[15px] leading-[1.7] text-white/40 max-w-[680px]">
-                The heraldic mark — eagle, shield, chain — is the core institutional symbol. It appears alone when authority is the only message needed, and the monochrome variant carries it onto light surfaces — documents, stationery, print — without losing that authority.
+                The heraldic mark — eagle, shield, chain — is the core
+                institutional symbol. It appears alone when authority is the
+                only message needed, and the monochrome variant carries it onto
+                light surfaces — documents, stationery, print — without losing
+                that authority.
               </p>
             </FadeUp>
 
             {/* 5.1 Colour Palette */}
             <FadeUp delay={0.1} className="mb-16">
-              <p className="text-[11px] tracking-[0.28em] uppercase text-white/35 mb-2">5.1 — COLOUR PALETTE</p>
-              <p className="text-[18px] font-semibold text-white mb-6">Navy & Gold — refined into a working system</p>
+              <p className="text-[11px] tracking-[0.28em] uppercase text-white/35 mb-2">
+                5.1 — COLOUR PALETTE
+              </p>
+              <p className="text-[18px] font-semibold text-white mb-6">
+                Navy & Gold — refined into a working system
+              </p>
               <StaggerGrid className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                 {[
-                  { hex: NIQS_NAVY,     name: "NIQS Navy",   desc: "Primary institutional voice · headers · navy backplates · official surfaces" },
-                  { hex: NIQS_GOLD,     name: "NIQS Gold",   desc: "Accent · eyebrows · em-treated nouns in headings · gold rules · CTA highlights" },
-                  { hex: NIQS_OFFWHITE, name: "Off-White",   desc: "Secondary surface · alternating section backgrounds · card backgrounds" },
-                  { hex: NIQS_DEEP,     name: "Navy Deep",   desc: "Hero overlays · chapter opener backgrounds · photography darkening" },
-                  { hex: NIQS_WHITE,    name: "True White",  desc: "Document/page background · content cards · clean surfaces" },
+                  {
+                    hex: NIQS_NAVY,
+                    name: "NIQS Navy",
+                    desc: "Primary institutional voice · headers · navy backplates · official surfaces",
+                  },
+                  {
+                    hex: NIQS_GOLD,
+                    name: "NIQS Gold",
+                    desc: "Accent · eyebrows · em-treated nouns in headings · gold rules · CTA highlights",
+                  },
+                  {
+                    hex: NIQS_OFFWHITE,
+                    name: "Off-White",
+                    desc: "Secondary surface · alternating section backgrounds · card backgrounds",
+                  },
+                  {
+                    hex: NIQS_DEEP,
+                    name: "Navy Deep",
+                    desc: "Hero overlays · chapter opener backgrounds · photography darkening",
+                  },
+                  {
+                    hex: NIQS_WHITE,
+                    name: "True White",
+                    desc: "Document/page background · content cards · clean surfaces",
+                  },
                 ].map(({ hex, name, desc }) => (
                   <StaggerItem key={hex}>
                     <div className="flex flex-col rounded-xl overflow-hidden border border-white/8 bg-white/[0.02]">
-                      <div className="h-20 sm:h-24 w-full border-b border-white/10" style={{ background: hex }} />
+                      <div
+                        className="h-20 sm:h-24 w-full border-b border-white/10"
+                        style={{ background: hex }}
+                      />
                       <div className="p-3 flex flex-col gap-1">
-                        <p className="text-[11px] font-mono font-semibold" style={{ color: GR }}>{hex}</p>
-                        <p className="text-[12px] font-semibold text-white">{name}</p>
-                        <p className="text-[10px] leading-[1.5] text-white/35">{desc}</p>
+                        <p
+                          className="text-[11px] font-mono font-semibold"
+                          style={{ color: GR }}
+                        >
+                          {hex}
+                        </p>
+                        <p className="text-[12px] font-semibold text-white">
+                          {name}
+                        </p>
+                        <p className="text-[10px] leading-[1.5] text-white/35">
+                          {desc}
+                        </p>
                       </div>
                     </div>
                   </StaggerItem>
                 ))}
               </StaggerGrid>
               <p className="mt-5 text-[15px] leading-[1.7] text-white/40 max-w-[680px]">
-                The redesign retained the 2020 navy (<code className="text-white/60">#000066</code>) and gold (<code className="text-white/60">#D9B650</code>) as official primaries — non-negotiable. The work added a tonal <strong className="text-white/60">scale</strong> beneath each colour (13% / 34% / 65% opacity surfaces, dividers, hover states) so designers no longer guess at "lighter navy" or "softer gold." The institution finally has a working palette, not just two colours.
+                The redesign retained the 2020 navy (
+                <code className="text-white/60">#000066</code>) and gold (
+                <code className="text-white/60">#D9B650</code>) as official
+                primaries — non-negotiable. The work added a tonal{" "}
+                <strong className="text-white/60">scale</strong> beneath each
+                colour (13% / 34% / 65% opacity surfaces, dividers, hover
+                states) so designers no longer guess at "lighter navy" or
+                "softer gold." The institution finally has a working palette,
+                not just two colours.
               </p>
             </FadeUp>
 
             {/* 5.2 Typography */}
             <FadeUp delay={0.1} className="mb-16">
-              <p className="text-[11px] tracking-[0.28em] uppercase text-white/35 mb-2">5.2 — TYPOGRAPHY</p>
-              <p className="text-[18px] font-semibold text-white mb-6">Two typefaces. One institutional. One editorial.</p>
+              <p className="text-[11px] tracking-[0.28em] uppercase text-white/35 mb-2">
+                5.2 — TYPOGRAPHY
+              </p>
+              <p className="text-[18px] font-semibold text-white mb-6">
+                Two typefaces. One institutional. One editorial.
+              </p>
               <div className="grid sm:grid-cols-2 gap-4">
                 {[
                   {
                     role: "DISPLAY",
                     face: "Bricolage Grotesque",
                     weights: "800 / 700 / 600",
-                    usage: "Hero · H1 · H2 · Key numerics · em-treated gold accents",
+                    usage:
+                      "Hero · H1 · H2 · Key numerics · em-treated gold accents",
                     source: "Google Fonts",
                     note: 'Bricolage Grotesque is the NIQS display typeface. Its slightly playful "g" and "a" characters soften the institutional formality without undermining it — making NIQS feel modern and editorial while remaining authoritative.',
                   },
@@ -632,12 +1017,16 @@ export default function NiqsUIProject() {
                     role: "BODY",
                     face: "Sora",
                     weights: "700 / 600 / 400 / 300",
-                    usage: "All body copy · UI labels · Buttons · Navigation · Forms · Metadata",
+                    usage:
+                      "All body copy · UI labels · Buttons · Navigation · Forms · Metadata",
                     source: "Google Fonts",
                     note: "Sora carries all body copy. Its generous x-height and uniform stroke width make it highly legible at small sizes — important for the data-dense tables and member notices that characterise NIQS communications.",
                   },
                 ].map(({ role, face, weights, usage, source, note }) => (
-                  <div key={role} className="rounded-2xl border border-white/8 bg-white/[0.025] p-6">
+                  <div
+                    key={role}
+                    className="rounded-2xl border border-white/8 bg-white/[0.025] p-6"
+                  >
                     <div className="flex items-center justify-between mb-4">
                       <span
                         className="rounded-md px-2 py-0.5 text-[9px] font-bold tracking-widest uppercase"
@@ -645,52 +1034,99 @@ export default function NiqsUIProject() {
                       >
                         {role}
                       </span>
-                      <span className="text-[10px] text-white/30">{source}</span>
+                      <span className="text-[10px] text-white/30">
+                        {source}
+                      </span>
                     </div>
-                    <p className="text-[22px] font-bold text-white mb-3">{face}</p>
+                    <p className="text-[22px] font-bold text-white mb-3">
+                      {face}
+                    </p>
                     <div className="space-y-1 mb-4">
-                      <p className="text-[11px] text-white/35"><span className="text-white/50">Weights:</span> {weights}</p>
-                      <p className="text-[11px] text-white/35"><span className="text-white/50">Used for:</span> {usage}</p>
+                      <p className="text-[11px] text-white/35">
+                        <span className="text-white/50">Weights:</span>{" "}
+                        {weights}
+                      </p>
+                      <p className="text-[11px] text-white/35">
+                        <span className="text-white/50">Used for:</span> {usage}
+                      </p>
                     </div>
-                    <p className="text-[15px] leading-[1.65] text-white/45 border-t border-white/6 pt-4">{note}</p>
+                    <p className="text-[15px] leading-[1.65] text-white/45 border-t border-white/6 pt-4">
+                      {note}
+                    </p>
                   </div>
                 ))}
               </div>
               <p className="mt-5 text-[15px] leading-[1.7] text-white/40 max-w-[680px]">
-                The 2020 guideline did not specify typography. The new system locks two typefaces: one for institutional voice, one for operational clarity. Both are free, web-served, and load across every NIQS touchpoint — print, document, web, portal, flyer engine.
+                The 2020 guideline did not specify typography. The new system
+                locks two typefaces: one for institutional voice, one for
+                operational clarity. Both are free, web-served, and load across
+                every NIQS touchpoint — print, document, web, portal, flyer
+                engine.
               </p>
             </FadeUp>
 
             {/* 5.3 Photography Treatment */}
             <FadeUp delay={0.1} className="mb-16">
-              <p className="text-[11px] tracking-[0.28em] uppercase text-white/35 mb-2">5.3 — PHOTOGRAPHY TREATMENT</p>
-              <p className="text-[18px] font-semibold text-white mb-6">Three rules. Zero ad-hoc treatment.</p>
+              <p className="text-[11px] tracking-[0.28em] uppercase text-white/35 mb-2">
+                5.3 — PHOTOGRAPHY TREATMENT
+              </p>
+              <p className="text-[18px] font-semibold text-white mb-6">
+                Three rules. Zero ad-hoc treatment.
+              </p>
               <div className="rounded-2xl border border-white/8 bg-white/[0.025] overflow-hidden">
                 {[
-                  { rule: "Hero — Behind text", spec: "brightness(0.22) saturate(0.8) + navy gradient overlay", note: "Photography is under the type, never competing." },
-                  { rule: "Card images", spec: "100% brightness, natural tones. Slow zoom on hover (scale(1.04) over 350ms).", note: "" },
-                  { rule: "Portrait crops", spec: "object-fit: cover · object-position: top", note: "Head always in frame." },
+                  {
+                    rule: "Hero — Behind text",
+                    spec: "brightness(0.22) saturate(0.8) + navy gradient overlay",
+                    note: "Photography is under the type, never competing.",
+                  },
+                  {
+                    rule: "Card images",
+                    spec: "100% brightness, natural tones. Slow zoom on hover (scale(1.04) over 350ms).",
+                    note: "",
+                  },
+                  {
+                    rule: "Portrait crops",
+                    spec: "object-fit: cover · object-position: top",
+                    note: "Head always in frame.",
+                  },
                 ].map(({ rule, spec, note }, i) => (
-                  <div key={rule} className={`flex gap-4 px-6 py-4 ${i > 0 ? "border-t border-white/6" : ""}`}>
+                  <div
+                    key={rule}
+                    className={`flex gap-4 px-6 py-4 ${i > 0 ? "border-t border-white/6" : ""}`}
+                  >
                     <div className="w-32 sm:w-44 shrink-0">
-                      <p className="text-[11px] font-semibold text-white/60">{rule}</p>
+                      <p className="text-[11px] font-semibold text-white/60">
+                        {rule}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-[12px] text-white/40 font-mono">{spec}</p>
-                      {note && <p className="text-[12px] text-white/30 mt-1">{note}</p>}
+                      <p className="text-[12px] text-white/40 font-mono">
+                        {spec}
+                      </p>
+                      {note && (
+                        <p className="text-[12px] text-white/30 mt-1">{note}</p>
+                      )}
                     </div>
                   </div>
                 ))}
               </div>
               <p className="mt-4 text-[15px] leading-[1.7] text-white/40 max-w-[680px]">
-                The 2020 system applied photography ad-hoc — sometimes a blue gradient, sometimes a full overlay, sometimes raw. The new spec ensures every photograph across NIQS communications is treated identically.
+                The 2020 system applied photography ad-hoc — sometimes a blue
+                gradient, sometimes a full overlay, sometimes raw. The new spec
+                ensures every photograph across NIQS communications is treated
+                identically.
               </p>
             </FadeUp>
 
             {/* 5.4 Brand in Application */}
             <FadeUp delay={0.1} className="mt-4">
-              <p className="text-[11px] tracking-[0.28em] uppercase text-white/35 mb-2">5.4 — BRAND IN APPLICATION</p>
-              <p className="text-[18px] font-semibold text-white mb-6">Not a guideline on a shelf</p>
+              <p className="text-[11px] tracking-[0.28em] uppercase text-white/35 mb-2">
+                5.4 — BRAND IN APPLICATION
+              </p>
+              <p className="text-[18px] font-semibold text-white mb-6">
+                Not a guideline on a shelf
+              </p>
               <div className="space-y-10">
                 {[
                   {
@@ -716,11 +1152,23 @@ export default function NiqsUIProject() {
                 ].map(({ img, title, body }) => (
                   <div key={title} className="flex flex-col gap-5">
                     <div className="max-w-[520px]">
-                      <p className="text-[16px] font-semibold text-white mb-2">{title}</p>
-                      <p className="text-[15px] leading-[1.65] text-white/50">{body}</p>
+                      <p className="text-[16px] font-semibold text-white mb-2">
+                        {title}
+                      </p>
+                      <p className="text-[15px] leading-[1.65] text-white/50">
+                        {body}
+                      </p>
                     </div>
-                    <div className="w-full rounded-2xl border border-white/8 bg-white/[0.02] overflow-hidden" style={{ aspectRatio: "16/9" }}>
-                      <img src={img} alt={`${title} — NIQS brand application`} loading="lazy" className="w-full h-full object-cover object-center" />
+                    <div
+                      className="w-full rounded-2xl border border-white/8 bg-white/[0.02] overflow-hidden"
+                      style={{ aspectRatio: "16/9" }}
+                    >
+                      <img
+                        src={img}
+                        alt={`${title} — NIQS brand application`}
+                        loading="lazy"
+                        className="w-full h-full object-cover object-center"
+                      />
                     </div>
                   </div>
                 ))}
@@ -741,7 +1189,10 @@ export default function NiqsUIProject() {
           slides={[
             { src: g01, alt: "Cover — The Visual & Verbal Identity" },
             { src: g04, alt: "Chapter 01 — Brand Story" },
-            { src: g06, alt: "Five decades of professional leadership — the NIQS timeline" },
+            {
+              src: g06,
+              alt: "Five decades of professional leadership — the NIQS timeline",
+            },
             { src: g11, alt: "Our brand personality — the six pillars" },
             { src: g16, alt: "The NIQS mark, codified" },
             { src: g17, alt: "Four official logo configurations" },
@@ -759,13 +1210,27 @@ export default function NiqsUIProject() {
         {/* ══ PROJECT STATUS ══ */}
         <section className="py-10 px-4 sm:px-8 lg:px-16">
           <div className="max-w-[1100px] mx-auto">
-            <div className="rounded-2xl border p-6 sm:p-8" style={{ borderColor: `${GR}33`, background: `${GR}06` }}>
+            <div
+              className="rounded-2xl border p-6 sm:p-8"
+              style={{ borderColor: `${GR}33`, background: `${GR}06` }}
+            >
               <div className="flex items-center gap-3 mb-3">
-                <span className="w-2 h-2 rounded-full" style={{ background: GR }} />
-                <p className="text-[11px] font-bold tracking-[0.25em] uppercase" style={{ color: GR }}>Project Status</p>
+                <span
+                  className="w-2 h-2 rounded-full"
+                  style={{ background: GR }}
+                />
+                <p
+                  className="text-[11px] font-bold tracking-[0.25em] uppercase"
+                  style={{ color: GR }}
+                >
+                  Project Status
+                </p>
               </div>
               <p className="text-[15px] leading-[1.65] text-white/60">
-                This transformation is in production. The brand system is delivered and live; the website, portal, and flyer-engine visuals below are being prepared for publication and will land in their frames progressively.
+                This transformation is in production. The brand system is
+                delivered and live; the website, portal, and flyer-engine
+                visuals below are being prepared for publication and will land
+                in their frames progressively.
               </p>
             </div>
           </div>
@@ -776,9 +1241,17 @@ export default function NiqsUIProject() {
           <div className="max-w-[1300px] mx-auto">
             <FadeUp>
               <SLabel n="06" t="PUBLIC WEBSITE" />
-              <H2 white="From institutional" accent="directory to digital flagship" />
+              <H2
+                white="From institutional"
+                accent="directory to digital flagship"
+              />
               <p className="mt-5 text-[15px] sm:text-[16px] leading-[1.65] text-white/55 max-w-[620px] mb-14">
-                The public website is the first impression NIQS makes — for prospective members, regulators, corporate partners, journalists, and the public. The redesign moved it from a 2020-era institutional directory into a modern editorial platform that respects the institution's authority and shows up the way it should on every device.
+                The public website is the first impression NIQS makes — for
+                prospective members, regulators, corporate partners,
+                journalists, and the public. The redesign moved it from a
+                2020-era institutional directory into a modern editorial
+                platform that respects the institution's authority and shows up
+                the way it should on every device.
               </p>
             </FadeUp>
 
@@ -788,8 +1261,9 @@ export default function NiqsUIProject() {
                   n: "SCREEN 01",
                   title: "Home & Hero",
                   body: `"Advancing Nigeria's Built Environment" — a gold-accented headline over a deep navy hero, with a statistics row anchoring the institution's scale before the first scroll.`,
-                  alt: "Desktop browser mockup of NIQS home page hero section",
+                  alt: "The live NIQS home page — crest, headline and the two entry points",
                   flip: false,
+                  img: imgScreenHome,
                 },
                 {
                   n: "SCREEN 02",
@@ -819,13 +1293,16 @@ export default function NiqsUIProject() {
                   n: "SCREEN 05",
                   title: "Brand Materials, Jobs & Contact",
                   body: "Public brand downloads, an aggregated jobs board, and direct secretariat contact — smaller surfaces, treated with the same editorial polish as the marquee pages.",
-                  alt: "Three phone mockups side-by-side: Brand Materials, Jobs, Contact",
+                  alt: "The live Contact page — secretariat details and the enquiry route",
                   flip: false,
+                  img: imgScreenContact,
                 },
               ].map(({ n, title, body, alt, flip, img }, i) => (
                 <FadeUp key={n} delay={0.04 * i}>
                   <div className={`flex flex-col gap-6`}>
-                    <div className={`flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 ${flip ? "sm:flex-row-reverse" : ""}`}>
+                    <div
+                      className={`flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 ${flip ? "sm:flex-row-reverse" : ""}`}
+                    >
                       <div className="max-w-[680px]">
                         <span
                           className="rounded-md px-2 py-0.5 text-[9px] font-bold tracking-widest uppercase mb-3 inline-block"
@@ -833,15 +1310,22 @@ export default function NiqsUIProject() {
                         >
                           {n}
                         </span>
-                        <h3 className="text-[22px] sm:text-[26px] font-semibold text-white mb-4">{title}</h3>
-                        <p className="text-[15px] sm:text-[16px] leading-[1.7] text-white/55">{body}</p>
+                        <h3 className="text-[22px] sm:text-[26px] font-semibold text-white mb-4">
+                          {title}
+                        </h3>
+                        <p className="text-[15px] sm:text-[16px] leading-[1.7] text-white/55">
+                          {body}
+                        </p>
                       </div>
                     </div>
                     <TiltFrame
                       src={img || null}
                       alt={alt}
                       className="w-full"
-                      style={{ aspectRatio: img ? "4/3" : "16/9", maxHeight: "78vh" }}
+                      style={{
+                        aspectRatio: img ? "4/3" : "16/9",
+                        maxHeight: "78vh",
+                      }}
                       onClick={ph}
                     />
                   </div>
@@ -858,16 +1342,31 @@ export default function NiqsUIProject() {
               <FadeUp>
                 <SLabel n="07" t="PORTAL & ADMIN" />
                 <H2 white="Built for the" accent="people who run NIQS" />
-                <div className="mt-5 mb-8 h-[2px] w-16 rounded-full" style={{ background: GR }} />
+                <div
+                  className="mt-5 mb-8 h-[2px] w-16 rounded-full"
+                  style={{ background: GR }}
+                />
                 <div className="space-y-5 text-[15px] sm:text-[16px] leading-[1.65] text-white/55">
-                  <p>The public website is the front door. The portal and admin dashboard are where the institution actually operates day-to-day — and they are designed to a different bar: clarity over flourish, density over decoration, repeated use over first-impression.</p>
-                  <p>A NIQS staff member who logs into the admin dashboard isn't looking for a hero treatment. They're trying to publish an announcement, approve a membership upgrade, upload a CPD recording, or export a chapter list to Excel before a 4pm deadline. The interface respects that.</p>
+                  <p>
+                    The public website is the front door. The portal and admin
+                    dashboard are where the institution actually operates
+                    day-to-day — and they are designed to a different bar:
+                    clarity over flourish, density over decoration, repeated use
+                    over first-impression.
+                  </p>
+                  <p>
+                    A NIQS staff member who logs into the admin dashboard isn't
+                    looking for a hero treatment. They're trying to publish an
+                    announcement, approve a membership upgrade, upload a CPD
+                    recording, or export a chapter list to Excel before a 4pm
+                    deadline. The interface respects that.
+                  </p>
                 </div>
               </FadeUp>
               <SlideIn direction="right" delay={0.1}>
                 <TiltFrame
-                  src={imgScreenExams}
-                  alt="The professional examination flow — one of the member-facing surfaces the portal serves."
+                  src={asset("niqs/portal-dashboard") || imgScreenExams}
+                  alt="The member portal dashboard — membership status, category and chapter in one place."
                   className="w-full"
                 />
               </SlideIn>
@@ -877,15 +1376,34 @@ export default function NiqsUIProject() {
             <FadeUp delay={0.1} className="mt-10">
               <div className="grid sm:grid-cols-2 gap-4">
                 {[
-                  { title: "Member portal", desc: "secure login, profile dashboard (membership category, chapter, status, dates), members-only digital library access, CPD records, event registrations" },
-                  { title: "Admin dashboard", desc: "member database (search/filter/edit/export), events creation, news/publications publishing, library uploads with access controls, staff accounts with role-based permissions" },
-                  { title: "Role-based access", desc: "three tiers (Admin / Staff / Member) governing every screen, every action, every dataset" },
-                  { title: "Digital library", desc: "public-facing section (press releases, public publications, newsletters) and members-only section (CPD recordings, NIQS templates, standards, searchable catalogue with tags)" },
+                  {
+                    title: "Member portal",
+                    desc: "secure login, profile dashboard (membership category, chapter, status, dates), members-only digital library access, CPD records, event registrations",
+                  },
+                  {
+                    title: "Admin dashboard",
+                    desc: "member database (search/filter/edit/export), events creation, news/publications publishing, library uploads with access controls, staff accounts with role-based permissions",
+                  },
+                  {
+                    title: "Role-based access",
+                    desc: "three tiers (Admin / Staff / Member) governing every screen, every action, every dataset",
+                  },
+                  {
+                    title: "Digital library",
+                    desc: "public-facing section (press releases, public publications, newsletters) and members-only section (CPD recordings, NIQS templates, standards, searchable catalogue with tags)",
+                  },
                 ].map(({ title, desc }) => (
-                  <div key={title} className="flex items-start gap-3 rounded-xl border border-white/6 bg-white/[0.025] px-5 py-4">
-                    <span className="mt-[6px] w-2 h-2 rounded-full shrink-0" style={{ background: GR }} />
+                  <div
+                    key={title}
+                    className="flex items-start gap-3 rounded-xl border border-white/6 bg-white/[0.025] px-5 py-4"
+                  >
+                    <span
+                      className="mt-[6px] w-2 h-2 rounded-full shrink-0"
+                      style={{ background: GR }}
+                    />
                     <p className="text-[15px] sm:text-[16px] leading-[1.6] text-white/55">
-                      <span className="text-white font-semibold">{title}</span> — {desc}
+                      <span className="text-white font-semibold">{title}</span>{" "}
+                      — {desc}
                     </p>
                   </div>
                 ))}
@@ -901,7 +1419,14 @@ export default function NiqsUIProject() {
               <SLabel n="08" t="FLYER DESIGN ENGINE" />
               <H2 white="The design tool that" accent="replaced the designer" />
               <p className="mt-5 text-[15px] sm:text-[16px] leading-[1.65] text-white/55 max-w-[660px] mb-12">
-                The Flyer Design Engine is the single most-used output of this project. Built into the admin panel, it lets any NIQS staff member produce on-brand announcements, recognitions, event notices, and press updates by editing details on pre-designed templates — no Photoshop, no Canva, no designer required. Every output is wired to the brand system: colours, typography, logo placement, and approved photography treatments are locked. Staff can't break the brand even if they try.
+                The Flyer Design Engine is the single most-used output of this
+                project. Built into the admin panel, it lets any NIQS staff
+                member produce on-brand announcements, recognitions, event
+                notices, and press updates by editing details on pre-designed
+                templates — no Photoshop, no Canva, no designer required. Every
+                output is wired to the brand system: colours, typography, logo
+                placement, and approved photography treatments are locked. Staff
+                can't break the brand even if they try.
               </p>
             </FadeUp>
 
@@ -909,24 +1434,38 @@ export default function NiqsUIProject() {
               <StaggerGrid className="grid sm:grid-cols-3 gap-4 mb-8">
                 {[
                   {
-                    n: "01", title: "Template Library", color: GR,
+                    n: "01",
+                    title: "Template Library",
+                    color: GR,
                     body: "Pre-designed templates for the recurring communication types — Announcements, Events, Recognitions, Press Updates. Each template is built from the brand system, so its typography, palette, and logo placement are already correct.",
                   },
                   {
-                    n: "02", title: "Detail Editing", color: "#60A5FA",
+                    n: "02",
+                    title: "Detail Editing",
+                    color: "#60A5FA",
                     body: "Staff edit only the editable fields — title, body copy, date, image, signatory. Every other element (font, colour, layout, logo) is locked. The brand cannot drift.",
                   },
                   {
-                    n: "03", title: "Export", color: NIQS_GOLD,
+                    n: "03",
+                    title: "Export",
+                    color: NIQS_GOLD,
                     body: "One-click export to print-ready PDF or social-ready PNG. Output lands in the staff member's downloads in seconds. From idea to publishable artifact: under a minute.",
                   },
                 ].map(({ n, title, color, body }) => (
                   <StaggerItem key={n}>
                     <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-5 h-full flex flex-col gap-3">
-                      <span className="w-8 h-8 rounded-xl flex items-center justify-center text-sm font-black"
-                        style={{ background: `${color}20`, color }}>{n}</span>
-                      <p className="text-[15px] font-semibold text-white">{title}</p>
-                      <p className="text-[15px] leading-[1.65] text-white/50 flex-1">{body}</p>
+                      <span
+                        className="w-8 h-8 rounded-xl flex items-center justify-center text-sm font-black"
+                        style={{ background: `${color}20`, color }}
+                      >
+                        {n}
+                      </span>
+                      <p className="text-[15px] font-semibold text-white">
+                        {title}
+                      </p>
+                      <p className="text-[15px] leading-[1.65] text-white/50 flex-1">
+                        {body}
+                      </p>
                     </div>
                   </StaggerItem>
                 ))}
@@ -934,17 +1473,44 @@ export default function NiqsUIProject() {
             </FadeUp>
 
             <FadeUp delay={0.15}>
-              <div className="rounded-2xl border p-6 sm:p-8 mb-8" style={{ borderColor: `${GR}44`, background: `${GR}0D` }}>
-                <p className="text-[9px] tracking-[0.3em] uppercase mb-3" style={{ color: GR }}>THE OPERATIONAL IMPACT</p>
-                <p className="text-xl sm:text-2xl font-bold text-white mb-5">Before and after the Engine</p>
+              <div
+                className="rounded-2xl border p-6 sm:p-8 mb-8"
+                style={{ borderColor: `${GR}44`, background: `${GR}0D` }}
+              >
+                <p
+                  className="text-[9px] tracking-[0.3em] uppercase mb-3"
+                  style={{ color: GR }}
+                >
+                  THE OPERATIONAL IMPACT
+                </p>
+                <p className="text-xl sm:text-2xl font-bold text-white mb-5">
+                  Before and after the Engine
+                </p>
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <p className="text-[11px] font-bold uppercase tracking-widest text-[#E05252] mb-2">BEFORE</p>
-                    <p className="text-[15px] leading-[1.7] text-white/55">Every flyer required a designer. ~12 flyers per week at the National Secretariat alone, plus chapter-level requests. The volume bottlenecked design output and starved the secretariat of timely communications.</p>
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-[#E05252] mb-2">
+                      BEFORE
+                    </p>
+                    <p className="text-[15px] leading-[1.7] text-white/55">
+                      Every flyer required a designer. ~12 flyers per week at
+                      the National Secretariat alone, plus chapter-level
+                      requests. The volume bottlenecked design output and
+                      starved the secretariat of timely communications.
+                    </p>
                   </div>
                   <div>
-                    <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: GR }}>AFTER</p>
-                    <p className="text-[15px] leading-[1.7] text-white/55">Staff produce on-brand flyers in under a minute. The design team focuses on higher-order work (new templates, brand evolution, custom campaigns) instead of redrawing the same recognition flyer for the fortieth time.</p>
+                    <p
+                      className="text-[11px] font-bold uppercase tracking-widest mb-2"
+                      style={{ color: GR }}
+                    >
+                      AFTER
+                    </p>
+                    <p className="text-[15px] leading-[1.7] text-white/55">
+                      Staff produce on-brand flyers in under a minute. The
+                      design team focuses on higher-order work (new templates,
+                      brand evolution, custom campaigns) instead of redrawing
+                      the same recognition flyer for the fortieth time.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -952,8 +1518,8 @@ export default function NiqsUIProject() {
 
             <FadeUp delay={0.2}>
               <TiltFrame
-                src={imgSocialMedia}
-                alt="On-brand outputs from the template system — the kind of communications the Flyer Engine puts in staff hands."
+                src={asset("niqs/flyer-engine") || imgSocialMedia}
+                alt="The Flyer Design Engine in the admin panel — a staff member editing a locked template."
                 className="w-full"
               />
             </FadeUp>
@@ -962,41 +1528,45 @@ export default function NiqsUIProject() {
 
         {/* ══ 09 — INFORMATION ARCHITECTURE ══ */}
         <section className="py-16 sm:py-24 px-4 sm:px-8 lg:px-16 border-t border-white/5">
-          <div className="max-w-[1100px] mx-auto">
+          <div className="max-w-[1560px] mx-auto">
             <FadeUp>
               <SLabel n="09" t="INFORMATION ARCHITECTURE" />
               <H2 white="The full digital" accent="ecosystem" />
               <p className="mt-5 text-[15px] sm:text-[16px] leading-[1.65] text-white/55 max-w-[560px] mb-10">
-                Three surfaces, three audiences, one connected system. Public website serves the world; member portal serves the membership; admin dashboard serves the secretariat. Every screen, every flow, organised below.
+                Three surfaces, three audiences, one connected system. Public
+                website serves the world; member portal serves the membership;
+                admin dashboard serves the secretariat. Every screen, every
+                flow, organised below.
               </p>
             </FadeUp>
 
             <FadeUp delay={0.1}>
-              <StaggerGrid className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {[
-                  { name: "Home",                    color: GR,         items: ["Hero", "Stats", "Services", "News", "Events", "Quote", "CTA"] },
-                  { name: "About NIQS",              color: "#3B82F6",  items: ["About", "President", "Council", "NPC", "Past Presidents", "Chapters", "WAQSN", "YQSF", "Reciprocity", "Brand Materials"] },
-                  { name: "Membership",              color: "#F59E0B",  items: ["Requirements", "QS Search", "Portal 🔒", "Induction Letter 🔒", "Upgrade Letter 🔒"] },
-                  { name: "Exams",                   color: "#A78BFA",  items: ["Examinations", "Published Results", "Interview 🔒", "TPC/GDE 🔒", "Logbook 🔒"] },
-                  { name: "Research & Devt",         color: "#EC4899",  items: ["Workshops", "Webinars", "Publications", "Journal"] },
-                  { name: "News",                    color: "#06B6D4",  items: ["Latest News", "Events Calendar", "QS Connect", "Article Template"] },
-                  { name: "Jobs / Payment / Contact",color: "#F97316",  items: ["Jobs board", "Payment portal 🔒", "Secretariat contact"] },
-                  { name: "Member Portal",           color: "#6B7280",  items: ["Dashboard", "Profile", "Membership Status", "Library Access", "Event Registrations", "CPD Records"] },
-                  { name: "Admin Dashboard",         color: NIQS_GOLD,  items: ["Member DB", "Events", "News", "Library Uploads", "Staff Accounts", "Flyer Engine", "Audit Logs"] },
-                ].map(({ name, color, items }) => (
-                  <StaggerItem key={name}>
-                    <div className="rounded-xl border border-white/8 bg-white/[0.02] p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="w-2 h-2 rounded-full shrink-0" style={{ background: color }} />
-                        <p className="text-[13px] font-semibold text-white leading-tight">{name}</p>
-                      </div>
-                      {items.map((it) => (
-                        <p key={it} className="text-[10px] text-white/35 leading-relaxed">{it}</p>
-                      ))}
-                    </div>
-                  </StaggerItem>
-                ))}
-              </StaggerGrid>
+              <SitemapTree
+                accent={GR}
+                kicker="Public website"
+                title="Seven sections, one for each thing a visitor comes for"
+                sub="Locked routes sit inside the section they belong to, not in a separate members area"
+                nodes={PUBLIC_IA}
+              />
+            </FadeUp>
+
+            <FadeUp delay={0.14} className="mt-5">
+              <div className="grid gap-5 lg:grid-cols-2">
+                <SitemapTree
+                  accent="#3B82F6"
+                  kicker="Member portal"
+                  title="What a signed-in member sees"
+                  cols="sm:grid-cols-2"
+                  nodes={PORTAL_IA}
+                />
+                <SitemapTree
+                  accent={NIQS_GOLD}
+                  kicker="Admin dashboard"
+                  title="What the secretariat runs"
+                  cols="sm:grid-cols-2"
+                  nodes={ADMIN_IA}
+                />
+              </div>
             </FadeUp>
 
             <FadeUp delay={0.15} className="mt-5">
@@ -1008,7 +1578,9 @@ export default function NiqsUIProject() {
                   i
                 </span>
                 <p className="text-[15px] text-white/45 leading-relaxed">
-                  The full IA map covering all 7 public sections, 5 portal screens, and 9 admin modules is available as a separate Figma frame in the design handover.
+                  The full IA map covering all 7 public sections, 5 portal
+                  screens, and 9 admin modules is available as a separate Figma
+                  frame in the design handover.
                 </p>
               </div>
             </FadeUp>
@@ -1022,7 +1594,9 @@ export default function NiqsUIProject() {
               <SLabel n="10" t="KEY DESIGN DECISIONS" />
               <H2 white="The principled" accent="calls behind the rebuild" />
               <p className="mt-5 text-[15px] sm:text-[16px] leading-[1.65] text-white/55 max-w-[520px] mb-10">
-                Every redesign is a series of "why this, not that?" choices. These are the principled calls behind the NIQS rebuild — and the inherited elements that were deliberately preserved.
+                Every redesign is a series of "why this, not that?" choices.
+                These are the principled calls behind the NIQS rebuild — and the
+                inherited elements that were deliberately preserved.
               </p>
             </FadeUp>
 
@@ -1067,8 +1641,12 @@ export default function NiqsUIProject() {
                     >
                       {n}
                     </span>
-                    <p className="text-[15px] font-semibold text-white leading-snug">{q}</p>
-                    <p className="text-[15px] sm:text-[16px] leading-[1.65] text-white/50 flex-1">{a}</p>
+                    <p className="text-[15px] font-semibold text-white leading-snug">
+                      {q}
+                    </p>
+                    <p className="text-[15px] sm:text-[16px] leading-[1.65] text-white/50 flex-1">
+                      {a}
+                    </p>
                   </div>
                 </StaggerItem>
               ))}
@@ -1090,13 +1668,23 @@ export default function NiqsUIProject() {
               <FadeUp delay={0.1}>
                 <SLabel n="11" t="TESTING & ITERATION" />
                 <H2 white="What the" accent="reviews surfaced" />
-                <div className="mt-5 mb-8 h-[2px] w-16 rounded-full" style={{ background: GR }} />
+                <div
+                  className="mt-5 mb-8 h-[2px] w-16 rounded-full"
+                  style={{ background: GR }}
+                />
                 <div className="space-y-5 text-[15px] sm:text-[16px] leading-[1.7] text-white/55 mb-8">
-                  <p>Designs went through formal stakeholder review with the NIQS National Secretariat — primary approver and backup approver, with 48–72 hour design review windows defined in the MoU. Two revision cycles per major deliverable.</p>
+                  <p>
+                    Designs went through formal stakeholder review with the NIQS
+                    National Secretariat — primary approver and backup approver,
+                    with 48–72 hour design review windows defined in the MoU.
+                    Two revision cycles per major deliverable.
+                  </p>
                   <p>Three iteration themes shaped the final designs.</p>
                 </div>
                 <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-5">
-                  <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-4">KEY REVISION AREAS</p>
+                  <p className="text-[9px] tracking-[0.3em] uppercase text-white/30 mb-4">
+                    KEY REVISION AREAS
+                  </p>
                   <ul className="space-y-4">
                     {[
                       {
@@ -1113,9 +1701,15 @@ export default function NiqsUIProject() {
                       },
                     ].map(({ title, desc }) => (
                       <li key={title} className="flex items-start gap-3">
-                        <span className="mt-[6px] w-1.5 h-1.5 rounded-full shrink-0" style={{ background: GR }} />
+                        <span
+                          className="mt-[6px] w-1.5 h-1.5 rounded-full shrink-0"
+                          style={{ background: GR }}
+                        />
                         <p className="text-[15px] sm:text-[16px] leading-[1.65] text-white/55">
-                          <span className="text-white font-semibold">{title}</span> — {desc}
+                          <span className="text-white font-semibold">
+                            {title}
+                          </span>{" "}
+                          — {desc}
                         </p>
                       </li>
                     ))}
@@ -1133,25 +1727,54 @@ export default function NiqsUIProject() {
               <SLabel n="12" t="IMPACT" />
               <H2 white="Measuring the" accent="transformation" />
               <p className="mt-5 text-[15px] sm:text-[16px] leading-[1.65] text-white/55 max-w-[560px] mb-10">
-                The success of this project is measured by what the institution can now do that it couldn't before — and by the operational time the design system gives back to the secretariat.
+                The success of this project is measured by what the institution
+                can now do that it couldn't before — and by the operational time
+                the design system gives back to the secretariat.
               </p>
             </FadeUp>
 
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-10">
               <StaggerGrid className="space-y-3">
                 {[
-                  { metric: "Self-serve communications",             color: GR,         desc: "Secretariat staff produce on-brand flyers in under a minute. Eliminates the designer-bottleneck for the ~12 weekly recurring outputs." },
-                  { metric: "Member-portal access",                  color: "#60A5FA",  desc: "First time NIQS members can log in and self-serve membership status, CPD records, event registrations, and digital library access." },
-                  { metric: "Brand consistency across 37 chapters",  color: "#A78BFA",  desc: "Working brand guideline + templates pack gives every state chapter a single source of truth. National and chapter communications now read as one institution." },
-                  { metric: "Institutional-grade digital presence",  color: "#F59E0B",  desc: "The first impression NIQS makes on regulators, partners, and the public now matches the institution's stature." },
-                  { metric: "A scalable design system",              color: "#EC4899",  desc: "Every future NIQS digital product — new modules, integrations, sub-platforms — inherits a working system rather than starting from scratch." },
+                  {
+                    metric: "Self-serve communications",
+                    color: GR,
+                    desc: "Secretariat staff produce on-brand flyers in under a minute. Eliminates the designer-bottleneck for the ~12 weekly recurring outputs.",
+                  },
+                  {
+                    metric: "Member-portal access",
+                    color: "#60A5FA",
+                    desc: "First time NIQS members can log in and self-serve membership status, CPD records, event registrations, and digital library access.",
+                  },
+                  {
+                    metric: "Brand consistency across 37 chapters",
+                    color: "#A78BFA",
+                    desc: "Working brand guideline + templates pack gives every state chapter a single source of truth. National and chapter communications now read as one institution.",
+                  },
+                  {
+                    metric: "Institutional-grade digital presence",
+                    color: "#F59E0B",
+                    desc: "The first impression NIQS makes on regulators, partners, and the public now matches the institution's stature.",
+                  },
+                  {
+                    metric: "A scalable design system",
+                    color: "#EC4899",
+                    desc: "Every future NIQS digital product — new modules, integrations, sub-platforms — inherits a working system rather than starting from scratch.",
+                  },
                 ].map(({ metric, color, desc }) => (
                   <StaggerItem key={metric}>
                     <div className="rounded-xl border border-white/8 bg-white/[0.02] px-5 py-4 flex items-start gap-4">
-                      <span className="mt-1.5 w-3 h-3 rounded-full shrink-0" style={{ background: color }} />
+                      <span
+                        className="mt-1.5 w-3 h-3 rounded-full shrink-0"
+                        style={{ background: color }}
+                      />
                       <div>
-                        <p className="text-[14px] font-semibold text-white mb-1">{metric}</p>
-                        <p className="text-[15px] leading-[1.65] text-white/50">{desc}</p>
+                        <p className="text-[14px] font-semibold text-white mb-1">
+                          {metric}
+                        </p>
+                        <p className="text-[15px] leading-[1.65] text-white/50">
+                          {desc}
+                        </p>
                       </div>
                     </div>
                   </StaggerItem>
@@ -1179,9 +1802,35 @@ export default function NiqsUIProject() {
             <FadeUp delay={0.1} className="mt-8">
               <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-8 sm:p-10">
                 <div className="space-y-6 text-[15px] sm:text-[16px] leading-[1.75] text-white/60 mb-8">
-                  <p>NIQS reinforced something I'd been circling for a while: a brand redesign for an institution is fundamentally different from a brand redesign for a startup. Institutions have weight that the design must protect — fifty-six years of recognition, of letterhead, of certificate stamps, of conference programmes — and the work is to <em>update without erasing</em>. Every choice on this project was filtered through that lens.</p>
-                  <p>The Flyer Design Engine was the clearest reminder that the most useful design work is sometimes invisible. A brand guideline lives on a designer's shelf; a templates pack lives in a designer's folder. A design <em>engine</em> lives inside the workflow of the people the institution actually depends on day-to-day. The leverage on that decision will compound for years.</p>
-                  <p>This was also the largest single-client engagement of my career so far — a signed MoU, a six-figure naira budget, an institutional approval workflow, a developer partnership, and a real handover. It reinforced that the design discipline scales when it's paired with the infrastructure to deliver it. ADLM Studio is built around that pairing, and NIQS is the first full institutional expression of what that partnership can produce.</p>
+                  <p>
+                    NIQS reinforced something I'd been circling for a while: a
+                    brand redesign for an institution is fundamentally different
+                    from a brand redesign for a startup. Institutions have
+                    weight that the design must protect — fifty-six years of
+                    recognition, of letterhead, of certificate stamps, of
+                    conference programmes — and the work is to{" "}
+                    <em>update without erasing</em>. Every choice on this
+                    project was filtered through that lens.
+                  </p>
+                  <p>
+                    The Flyer Design Engine was the clearest reminder that the
+                    most useful design work is sometimes invisible. A brand
+                    guideline lives on a designer's shelf; a templates pack
+                    lives in a designer's folder. A design <em>engine</em> lives
+                    inside the workflow of the people the institution actually
+                    depends on day-to-day. The leverage on that decision will
+                    compound for years.
+                  </p>
+                  <p>
+                    This was also the largest single-client engagement of my
+                    career so far — a signed MoU, a six-figure naira budget, an
+                    institutional approval workflow, a developer partnership,
+                    and a real handover. It reinforced that the design
+                    discipline scales when it's paired with the infrastructure
+                    to deliver it. ADLM Studio is built around that pairing, and
+                    NIQS is the first full institutional expression of what that
+                    partnership can produce.
+                  </p>
                 </div>
                 <div className="border-t border-white/8 pt-6">
                   <div className="inline-flex items-center gap-3 rounded-2xl border border-white/8 bg-white/[0.03] px-5 py-4">
@@ -1192,9 +1841,15 @@ export default function NiqsUIProject() {
                       R
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-white">Richard Enoch</p>
-                      <p className="text-[11px]" style={{ color: GR }}>Creative Lead · ADLM Studio</p>
-                      <p className="text-[10px] text-white/35">NIQS Digital Transformation · 2026</p>
+                      <p className="text-sm font-bold text-white">
+                        Richard Enoch
+                      </p>
+                      <p className="text-[11px]" style={{ color: GR }}>
+                        Creative Lead · ADLM Studio
+                      </p>
+                      <p className="text-[10px] text-white/35">
+                        NIQS Digital Transformation · 2026
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -1212,28 +1867,79 @@ export default function NiqsUIProject() {
           description="Screens, templates, and merch from across the NIQS system — more landing here as the build progresses."
           color={GR}
           images={[
-            { src: imgScreenAbout,   alt: "Website — About NIQS page",        label: "ABOUT PAGE" },
-            { src: imgScreenSearch2, alt: "Website — public QS search",       label: "QS SEARCH" },
-            { src: imgScreenExams,   alt: "Website — professional examination", label: "EXAMS" },
-            { src: imgSocialMedia,   alt: "Social media template designs",    label: "SOCIAL MEDIA" },
-            { src: imgHoodie,        alt: "Hoodie — navy branded hoodie",     label: "HOODIE — NAVY" },
-            { src: imgToteBag,       alt: "Tote bag — branded tote",          label: "TOTE BAG" },
-            { src: imgCup,           alt: "Cup — branded ceramic mug",        label: "CUP" },
-            { src: imgJournal,       alt: "Notebook — branded journal",       label: "NOTEBOOK" },
-            { src: imgShirt,         alt: "T-shirt — branded tee",            label: "T-SHIRT" },
-            { src: imgCapBlue,       alt: "Cap — navy branded cap",           label: "CAP — NAVY" },
-            { src: imgFolder,        alt: "Folder — branded document folder", label: "FOLDER DESIGN" },
-            { src: imgHoodieWhite,   alt: "Hoodie — white branded hoodie",    label: "HOODIE — WHITE" },
-            { src: imgCapWhite,      alt: "Cap — white branded cap",          label: "CAP — WHITE" },
-            { src: imgBottle,        alt: "Bottle — branded water bottle",    label: "BOTTLE" },
-            { src: imgToteBagLadies, alt: "Tote bag — ladies' branded tote",  label: "TOTE BAG — LADIES" },
+            {
+              src: imgScreenAbout,
+              alt: "Website — About NIQS page",
+              label: "ABOUT PAGE",
+            },
+            {
+              src: imgScreenSearch2,
+              alt: "Website — public QS search",
+              label: "QS SEARCH",
+            },
+            {
+              src: imgScreenExams,
+              alt: "Website — professional examination",
+              label: "EXAMS",
+            },
+            {
+              src: imgSocialMedia,
+              alt: "Social media template designs",
+              label: "SOCIAL MEDIA",
+            },
+            {
+              src: imgHoodie,
+              alt: "Hoodie — navy branded hoodie",
+              label: "HOODIE — NAVY",
+            },
+            {
+              src: imgToteBag,
+              alt: "Tote bag — branded tote",
+              label: "TOTE BAG",
+            },
+            { src: imgCup, alt: "Cup — branded ceramic mug", label: "CUP" },
+            {
+              src: imgJournal,
+              alt: "Notebook — branded journal",
+              label: "NOTEBOOK",
+            },
+            { src: imgShirt, alt: "T-shirt — branded tee", label: "T-SHIRT" },
+            {
+              src: imgCapBlue,
+              alt: "Cap — navy branded cap",
+              label: "CAP — NAVY",
+            },
+            {
+              src: imgFolder,
+              alt: "Folder — branded document folder",
+              label: "FOLDER DESIGN",
+            },
+            {
+              src: imgHoodieWhite,
+              alt: "Hoodie — white branded hoodie",
+              label: "HOODIE — WHITE",
+            },
+            {
+              src: imgCapWhite,
+              alt: "Cap — white branded cap",
+              label: "CAP — WHITE",
+            },
+            {
+              src: imgBottle,
+              alt: "Bottle — branded water bottle",
+              label: "BOTTLE",
+            },
+            {
+              src: imgToteBagLadies,
+              alt: "Tote bag — ladies' branded tote",
+              label: "TOTE BAG — LADIES",
+            },
           ]}
         />
 
         {/* ══ 15 — FOOTER ══ */}
         <OtherProj currentSlug="niqs" currentKind="ui" />
         <BuildSection />
-
       </div>
     </div>
   );

@@ -1,5 +1,11 @@
 // src/components/home/WorkImg.jsx
-import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 
 import wi1 from "../../assets/workImg/WI1.png";
 import wi2 from "../../assets/workImg/WI2.jpg";
@@ -32,26 +38,32 @@ const WorkImg = () => {
   const setWidth = n * SLOT_OFFSET; // width of one logical set
 
   // Repeat cards enough times to fill even ultra-wide screens (4 copies = 20 cards ≈ 7200px)
-  const repeatedCards = useMemo(() => [...cards, ...cards, ...cards, ...cards], []);
+  const repeatedCards = useMemo(
+    () => [...cards, ...cards, ...cards, ...cards],
+    [],
+  );
 
   const [activeIndexFloat, setActiveIndexFloat] = useState(0);
 
-  const animate = useCallback((timestamp) => {
-    if (!lastTimeRef.current) lastTimeRef.current = timestamp;
-    const dt = timestamp - lastTimeRef.current;
-    lastTimeRef.current = timestamp;
+  const animate = useCallback(
+    (timestamp) => {
+      if (!lastTimeRef.current) lastTimeRef.current = timestamp;
+      const dt = timestamp - lastTimeRef.current;
+      lastTimeRef.current = timestamp;
 
-    positionRef.current += SPEED * dt;
+      positionRef.current += SPEED * dt;
 
-    const offsetX = -(positionRef.current % setWidth);
-    if (trackRef.current) {
-      trackRef.current.style.transform = `translate3d(${offsetX}px, 0, 0)`;
-    }
+      const offsetX = -(positionRef.current % setWidth);
+      if (trackRef.current) {
+        trackRef.current.style.transform = `translate3d(${offsetX}px, 0, 0)`;
+      }
 
-    setActiveIndexFloat((positionRef.current / SLOT_OFFSET) % n);
+      setActiveIndexFloat((positionRef.current / SLOT_OFFSET) % n);
 
-    rafRef.current = requestAnimationFrame(animate);
-  }, [setWidth, n]);
+      rafRef.current = requestAnimationFrame(animate);
+    },
+    [setWidth, n],
+  );
 
   useEffect(() => {
     if (isHovered) {

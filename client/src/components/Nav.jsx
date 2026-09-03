@@ -4,12 +4,18 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { buttonClasses } from "./ui";
 
+/* The two core disciplines now have pages of their own rather than a filtered
+   grid, so they route straight there. Graphic and web still open the grid on
+   the right tab — there is no separate argument to make for them yet. */
 const PROJECT_CATEGORIES = [
-  { label: "Brand Identity Designs", icon: "✦" },
-  { label: "Product UI/UX Designs",  icon: "◈" },
-  { label: "Graphic Designs",         icon: "◇" },
-  { label: "Websites Designs",        icon: "⬡" },
+  { label: "Brand Identity Designs", icon: "✦", to: "/brand-identity" },
+  { label: "Product UI/UX Designs", icon: "◈", to: "/product-design" },
+  { label: "Graphic Designs", icon: "◇" },
+  { label: "Websites Designs", icon: "⬡" },
 ];
+
+const categoryHref = (cat) =>
+  cat.to || `/projects?tab=${encodeURIComponent(cat.label)}`;
 
 const Nav = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -20,10 +26,16 @@ const Nav = () => {
   const dropdownRef = useRef(null);
   const projectsRef = useRef(null);
 
-  const closeMenu = () => { setMenuOpen(false); setMobileProjectsOpen(false); };
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setMobileProjectsOpen(false);
+  };
 
   // Close on route change
-  useEffect(() => { closeMenu(); setProjectsOpen(false); }, [location.pathname]);
+  useEffect(() => {
+    closeMenu();
+    setProjectsOpen(false);
+  }, [location.pathname]);
 
   // Close on outside click
   useEffect(() => {
@@ -41,10 +53,14 @@ const Nav = () => {
     };
   }, [menuOpen]);
 
+  /* Two audiences, two destinations, both in the top row. "Résumé" is the
+     recruiter's door and "Rate Card" is the client's; burying either one costs
+     the visit. */
   const navLinks = [
     { to: "/", label: "Home" },
     { to: "/about", label: "About" },
     { to: "/projects", label: "Projects" },
+    { to: "/resume", label: "Résumé" },
     { to: "/rate-details", label: "Rate Card" },
   ];
 
@@ -76,7 +92,7 @@ const Nav = () => {
         </Link>
 
         {/* Center links – desktop */}
-        <nav className="hidden md:flex items-center gap-10 text-xs font-medium text-white/80">
+        <nav className="hidden md:flex items-center gap-7 lg:gap-10 text-xs font-medium text-white/80">
           {navLinks.map((link) =>
             link.label === "Projects" ? (
               <div
@@ -91,9 +107,25 @@ const Nav = () => {
                   className={`flex items-center gap-1 transition-colors ${isActive(link.to) ? "text-white" : "hover:text-white"}`}
                 >
                   {link.label}
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"
-                    style={{ transition: "transform 0.2s", transform: projectsOpen ? "rotate(180deg)" : "rotate(0deg)" }}>
-                    <path d="M1 3l4 4 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="currentColor"
+                    style={{
+                      transition: "transform 0.2s",
+                      transform: projectsOpen
+                        ? "rotate(180deg)"
+                        : "rotate(0deg)",
+                    }}
+                  >
+                    <path
+                      d="M1 3l4 4 4-4"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      fill="none"
+                      strokeLinecap="round"
+                    />
                   </svg>
                 </Link>
 
@@ -103,7 +135,10 @@ const Nav = () => {
                       initial={{ opacity: 0, y: -6 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -6 }}
-                      transition={{ duration: 0.18, ease: [0.22, 0.61, 0.36, 1] }}
+                      transition={{
+                        duration: 0.18,
+                        ease: [0.22, 0.61, 0.36, 1],
+                      }}
                       className="absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 w-56 rounded-2xl border border-white/10 bg-black/90 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.85)] overflow-hidden"
                     >
                       <div className="p-1.5">
@@ -112,21 +147,25 @@ const Nav = () => {
                             key={cat.label}
                             onClick={() => {
                               setProjectsOpen(false);
-                              navigate(`/projects?tab=${encodeURIComponent(cat.label)}`);
+                              navigate(categoryHref(cat));
                             }}
                             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left text-[11px] font-medium text-white/70 hover:text-white hover:bg-white/8 transition-colors"
                           >
-                            <span className="text-lime-400 text-[13px] leading-none">{cat.icon}</span>
+                            <span className="text-lime-400 text-[13px] leading-none">
+                              {cat.icon}
+                            </span>
                             {cat.label}
                           </button>
                         ))}
-                        <div className="mx-3 my-1 h-px bg-white/[0.06]"/>
+                        <div className="mx-3 my-1 h-px bg-white/[0.06]" />
                         <Link
                           to="/projects"
                           onClick={() => setProjectsOpen(false)}
                           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[11px] font-medium text-white/50 hover:text-white hover:bg-white/8 transition-colors"
                         >
-                          <span className="text-white/30 text-[13px] leading-none">⊞</span>
+                          <span className="text-white/30 text-[13px] leading-none">
+                            ⊞
+                          </span>
                           View all projects
                         </Link>
                       </div>
@@ -142,22 +181,16 @@ const Nav = () => {
               >
                 {link.label}
               </Link>
-            )
+            ),
           )}
         </nav>
 
         {/* Right buttons – desktop */}
         <div className="hidden sm:flex items-center gap-3">
-          <Link
-            to="/projects"
-            className={buttonClasses("secondary", "sm")}
-          >
+          <Link to="/projects" className={buttonClasses("secondary", "sm")}>
             View Works
           </Link>
-          <Link
-            to="/contact"
-            className={buttonClasses("primary", "sm")}
-          >
+          <Link to="/contact" className={buttonClasses("primary", "sm")}>
             Contact
           </Link>
         </div>
@@ -212,9 +245,7 @@ const Nav = () => {
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.2, ease: [0.22, 0.61, 0.36, 1] }}
           >
-            <div
-              className="rounded-2xl border border-white/10 bg-black/90 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.85)] overflow-hidden"
-            >
+            <div className="rounded-2xl border border-white/10 bg-black/90 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.85)] overflow-hidden">
               {/* Nav links */}
               <nav className="flex flex-col py-2">
                 {navLinks.map((link) =>
@@ -225,9 +256,25 @@ const Nav = () => {
                         className={`w-full flex items-center justify-between px-5 py-3.5 text-sm font-medium transition-colors ${isActive(link.to) ? "text-white bg-white/5" : "text-white/70 hover:text-white hover:bg-white/5"}`}
                       >
                         <span>Projects</span>
-                        <svg width="12" height="12" viewBox="0 0 10 10" fill="currentColor"
-                          style={{ transition: "transform 0.2s", transform: mobileProjectsOpen ? "rotate(180deg)" : "rotate(0deg)" }}>
-                          <path d="M1 3l4 4 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 10 10"
+                          fill="currentColor"
+                          style={{
+                            transition: "transform 0.2s",
+                            transform: mobileProjectsOpen
+                              ? "rotate(180deg)"
+                              : "rotate(0deg)",
+                          }}
+                        >
+                          <path
+                            d="M1 3l4 4 4-4"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            fill="none"
+                            strokeLinecap="round"
+                          />
                         </svg>
                       </button>
                       <AnimatePresence>
@@ -236,7 +283,10 @@ const Nav = () => {
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: "auto", opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.2, ease: [0.22, 0.61, 0.36, 1] }}
+                            transition={{
+                              duration: 0.2,
+                              ease: [0.22, 0.61, 0.36, 1],
+                            }}
                             className="overflow-hidden bg-white/[0.03]"
                           >
                             {PROJECT_CATEGORIES.map((cat) => (
@@ -244,11 +294,13 @@ const Nav = () => {
                                 key={cat.label}
                                 onClick={() => {
                                   closeMenu();
-                                  navigate(`/projects?tab=${encodeURIComponent(cat.label)}`);
+                                  navigate(categoryHref(cat));
                                 }}
                                 className="w-full flex items-center gap-3 px-7 py-2.5 text-xs font-medium text-white/60 hover:text-white hover:bg-white/5 transition-colors"
                               >
-                                <span className="text-lime-400">{cat.icon}</span>
+                                <span className="text-lime-400">
+                                  {cat.icon}
+                                </span>
                                 {cat.label}
                               </button>
                             ))}
@@ -276,7 +328,7 @@ const Nav = () => {
                         <span className="h-1.5 w-1.5 rounded-full bg-lime-400" />
                       )}
                     </Link>
-                  )
+                  ),
                 )}
               </nav>
 
@@ -285,14 +337,22 @@ const Nav = () => {
                 <Link
                   to="/projects"
                   onClick={closeMenu}
-                  className={buttonClasses("secondary", "sm", "flex-1 text-center")}
+                  className={buttonClasses(
+                    "secondary",
+                    "sm",
+                    "flex-1 text-center",
+                  )}
                 >
                   View Works
                 </Link>
                 <Link
                   to="/contact"
                   onClick={closeMenu}
-                  className={buttonClasses("primary", "sm", "flex-1 text-center")}
+                  className={buttonClasses(
+                    "primary",
+                    "sm",
+                    "flex-1 text-center",
+                  )}
                 >
                   Contact
                 </Link>

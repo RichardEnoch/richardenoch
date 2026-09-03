@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  AnimatePresence,
+} from "framer-motion";
 import abtImg from "../assets/abtImg.jpg";
 import { buttonClasses } from "./ui";
 
@@ -38,26 +43,27 @@ const SOCIALS = [
 ];
 
 const NAVIGATE_LINKS = [
-  { label: "Home",      to: "/" },
-  { label: "About",     to: "/about" },
-  { label: "Projects",  to: "/projects" },
+  { label: "Home", to: "/" },
+  { label: "About", to: "/about" },
+  { label: "Résumé", to: "/resume" },
+  { label: "Projects", to: "/projects" },
   { label: "Rate Card", to: "/rate-details" },
-  { label: "Contact",   to: "/contact" },
+  { label: "Contact", to: "/contact" },
   { label: "Leave a Testimonial", to: "/testimonial" },
 ];
 
 const WORK_COL_A = [
-  { label: "Website Design",   to: "/website-design" },
-  { label: "Graphic Design",   to: "/graphic-design" },
-  { label: "UI / UX Projects", to: "/projects" },
-  { label: "Book a Flyer",     to: "/book-flyer" },
+  { label: "Website Design", to: "/website-design" },
+  { label: "Graphic Design", to: "/graphic-design" },
+  { label: "Product Design", to: "/product-design" },
+  { label: "Book a Flyer", to: "/book-flyer" },
 ];
 
 const WORK_COL_B = [
-  { label: "Brand Identity",      to: "/projects" },
-  { label: "Publication Design",  to: null },
+  { label: "Brand Identity", to: "/brand-identity" },
+  { label: "Publication Design", to: null },
   { label: "Presentation Design", to: "/presentation-design" },
-  { label: "Book a Website",      to: "/book-website" },
+  { label: "Book a Website", to: "/book-website" },
 ];
 
 /* ── MAGNETIC LINK ── */
@@ -69,14 +75,17 @@ const MagneticLink = ({ to, children, style, disabled }) => {
   const sy = useSpring(y, { stiffness: 220, damping: 14, mass: 0.6 });
   const [hovered, setHovered] = useState(false);
 
-  const onMove = useCallback((e) => {
-    if (!ref.current || disabled) return;
-    const rect = ref.current.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    x.set((e.clientX - cx) * 0.38);
-    y.set((e.clientY - cy) * 0.38);
-  }, [x, y, disabled]);
+  const onMove = useCallback(
+    (e) => {
+      if (!ref.current || disabled) return;
+      const rect = ref.current.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      x.set((e.clientX - cx) * 0.38);
+      y.set((e.clientY - cy) * 0.38);
+    },
+    [x, y, disabled],
+  );
 
   const onLeave = useCallback(() => {
     x.set(0);
@@ -87,20 +96,55 @@ const MagneticLink = ({ to, children, style, disabled }) => {
   return (
     <motion.div
       ref={ref}
-      style={{ x: sx, y: sy, display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}
+      style={{
+        x: sx,
+        y: sy,
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+        marginBottom: 14,
+      }}
       onMouseMove={onMove}
       onMouseEnter={() => !disabled && setHovered(true)}
       onMouseLeave={onLeave}
     >
       {disabled ? (
-        <span style={{ ...style, color: "rgba(255,255,255,0.2)", cursor: "default" }}>{children}</span>
+        <span
+          style={{
+            ...style,
+            color: "rgba(255,255,255,0.2)",
+            cursor: "default",
+          }}
+        >
+          {children}
+        </span>
       ) : (
-        <Link to={to} style={{ ...style, color: hovered ? "#a3e635" : "#e5e7eb", transition: "color 0.18s" }}>
+        <Link
+          to={to}
+          style={{
+            ...style,
+            color: hovered ? "#a3e635" : "#e5e7eb",
+            transition: "color 0.18s",
+          }}
+        >
           {children}
         </Link>
       )}
       {disabled && (
-        <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "#4b5563", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 4, padding: "1px 5px", textTransform: "uppercase", flexShrink: 0 }}>
+        <span
+          style={{
+            fontSize: 9,
+            fontWeight: 700,
+            letterSpacing: "0.06em",
+            color: "#4b5563",
+            background: "rgba(255,255,255,0.05)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: 4,
+            padding: "1px 5px",
+            textTransform: "uppercase",
+            flexShrink: 0,
+          }}
+        >
           Soon
         </span>
       )}
@@ -120,7 +164,10 @@ const WatermarkSvg = () => {
       if (!svg || !text) return;
       try {
         const bbox = text.getBBox();
-        svg.setAttribute("viewBox", `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`);
+        svg.setAttribute(
+          "viewBox",
+          `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`,
+        );
       } catch (e) {}
     };
     if (document.fonts?.ready) document.fonts.ready.then(fit);
@@ -147,7 +194,12 @@ const WatermarkSvg = () => {
         viewBox="0 95 1400 175"
         preserveAspectRatio="xMidYMid meet"
         xmlns="http://www.w3.org/2000/svg"
-        style={{ display: "block", width: "100%", height: "auto", overflow: "visible" }}
+        style={{
+          display: "block",
+          width: "100%",
+          height: "auto",
+          overflow: "visible",
+        }}
       >
         <text
           ref={textRef}
@@ -180,35 +232,38 @@ const RightCard = ({ children, easterEgg, revealRef }) => {
   const sRotX = useSpring(rotX, { stiffness: 140, damping: 22, mass: 0.8 });
   const sRotY = useSpring(rotY, { stiffness: 140, damping: 22, mass: 0.8 });
 
-  const handleMouseMove = useCallback((e) => {
-    if (!cardRef.current) return;
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => {
+  const handleMouseMove = useCallback(
+    (e) => {
       if (!cardRef.current) return;
-      const rect = cardRef.current.getBoundingClientRect();
-      const px = (e.clientX - rect.left) / rect.width;
-      const py = (e.clientY - rect.top) / rect.height;
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        if (!cardRef.current) return;
+        const rect = cardRef.current.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width;
+        const py = (e.clientY - rect.top) / rect.height;
 
-      // 3D tilt
-      rotX.set((py - 0.5) * -9);
-      rotY.set((px - 0.5) * 12);
+        // 3D tilt
+        rotX.set((py - 0.5) * -9);
+        rotY.set((px - 0.5) * 12);
 
-      // spotlight glow
-      if (glowRef.current) {
-        glowRef.current.style.background = `radial-gradient(560px circle at ${px * 100}% ${py * 100}%, rgba(132,204,22,0.09) 0%, rgba(132,204,22,0.04) 35%, transparent 65%)`;
-      }
+        // spotlight glow
+        if (glowRef.current) {
+          glowRef.current.style.background = `radial-gradient(560px circle at ${px * 100}% ${py * 100}%, rgba(132,204,22,0.09) 0%, rgba(132,204,22,0.04) 35%, transparent 65%)`;
+        }
 
-      // specular sheen
-      if (sheenRef.current) {
-        sheenRef.current.style.background = `radial-gradient(300px circle at ${px * 100}% ${py * 100}%, rgba(255,255,255,0.045) 0%, transparent 60%)`;
-      }
+        // specular sheen
+        if (sheenRef.current) {
+          sheenRef.current.style.background = `radial-gradient(300px circle at ${px * 100}% ${py * 100}%, rgba(255,255,255,0.045) 0%, transparent 60%)`;
+        }
 
-      // image reveal spotlight
-      if (revealRef?.current) {
-        revealRef.current.style.background = `radial-gradient(280px circle at ${px * 100}% ${py * 100}%, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 70%)`;
-      }
-    });
-  }, [rotX, rotY, revealRef]);
+        // image reveal spotlight
+        if (revealRef?.current) {
+          revealRef.current.style.background = `radial-gradient(280px circle at ${px * 100}% ${py * 100}%, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 70%)`;
+        }
+      });
+    },
+    [rotX, rotY, revealRef],
+  );
 
   const handleMouseLeave = useCallback(() => {
     rotX.set(0);
@@ -216,10 +271,16 @@ const RightCard = ({ children, easterEgg, revealRef }) => {
     setInside(false);
     if (glowRef.current) glowRef.current.style.background = "transparent";
     if (sheenRef.current) sheenRef.current.style.background = "transparent";
-    if (revealRef?.current) revealRef.current.style.background = "rgba(0,0,0,0.6)";
+    if (revealRef?.current)
+      revealRef.current.style.background = "rgba(0,0,0,0.6)";
   }, [rotX, rotY, revealRef]);
 
-  useEffect(() => () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); }, []);
+  useEffect(
+    () => () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    },
+    [],
+  );
 
   return (
     <motion.div
@@ -254,18 +315,67 @@ const RightCard = ({ children, easterEgg, revealRef }) => {
       }}
     >
       {/* spotlight glow */}
-      <div ref={glowRef} aria-hidden="true" style={{ position: "absolute", inset: 0, borderRadius: 28, pointerEvents: "none", zIndex: 0 }} />
+      <div
+        ref={glowRef}
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          borderRadius: 28,
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
       {/* specular sheen */}
-      <div ref={sheenRef} aria-hidden="true" style={{ position: "absolute", inset: 0, borderRadius: 28, pointerEvents: "none", zIndex: 0 }} />
+      <div
+        ref={sheenRef}
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          borderRadius: 28,
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
       {/* pulse dots */}
       <svg
         aria-hidden="true"
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", borderRadius: 28, pointerEvents: "none", zIndex: 0, opacity: inside ? 1 : 0, transition: "opacity 0.4s ease" }}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          borderRadius: 28,
+          pointerEvents: "none",
+          zIndex: 0,
+          opacity: inside ? 1 : 0,
+          transition: "opacity 0.4s ease",
+        }}
         xmlns="http://www.w3.org/2000/svg"
       >
-        {[[14,22],[38,68],[62,15],[80,44],[25,85],[55,55],[90,20],[70,78],[10,50],[45,92]].map(([cx, cy], i) => (
-          <circle key={i} cx={`${cx}%`} cy={`${cy}%`} r="1.2" fill="rgba(132,204,22,0.55)"
-            style={{ animation: `footerPulse ${1.8 + (i % 4) * 0.4}s ease-in-out ${i * 0.18}s infinite alternate` }} />
+        {[
+          [14, 22],
+          [38, 68],
+          [62, 15],
+          [80, 44],
+          [25, 85],
+          [55, 55],
+          [90, 20],
+          [70, 78],
+          [10, 50],
+          [45, 92],
+        ].map(([cx, cy], i) => (
+          <circle
+            key={i}
+            cx={`${cx}%`}
+            cy={`${cy}%`}
+            r="1.2"
+            fill="rgba(132,204,22,0.55)"
+            style={{
+              animation: `footerPulse ${1.8 + (i % 4) * 0.4}s ease-in-out ${i * 0.18}s infinite alternate`,
+            }}
+          />
         ))}
       </svg>
       {children}
@@ -293,7 +403,10 @@ const Footer = () => {
       }
     };
     window.addEventListener("keydown", onKey);
-    return () => { window.removeEventListener("keydown", onKey); clearTimeout(eggTimerRef.current); };
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      clearTimeout(eggTimerRef.current);
+    };
   }, []);
 
   const linkStyle = {
@@ -305,42 +418,199 @@ const Footer = () => {
   };
 
   return (
-    <footer className="w-full bg-black pb-2 pt-16 relative" style={{ overflowX: "clip" }}>
+    <footer
+      className="w-full bg-black pb-2 pt-16 relative"
+      style={{ overflowX: "clip" }}
+    >
       <div
-        style={{ maxWidth: "1700px", margin: "0 auto", display: "grid", gridTemplateColumns: "380px 1fr", gap: "16px", alignItems: "stretch", padding: "0 32px", position: "relative", zIndex: 1 }}
+        style={{
+          maxWidth: "1700px",
+          margin: "0 auto",
+          display: "grid",
+          gridTemplateColumns: "380px 1fr",
+          gap: "16px",
+          alignItems: "stretch",
+          padding: "0 32px",
+          position: "relative",
+          zIndex: 1,
+        }}
         className="footer-grid"
       >
         {/* ── LEFT CARD ── */}
-        <div style={{ position: "relative", minHeight: "340px", borderRadius: "28px", padding: "32px", overflow: "hidden", background: "#050505", boxShadow: "0 12px 40px rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-          <video src={VIDEO_SRC} autoPlay muted loop playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0, pointerEvents: "none", opacity: 0.55 }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.72) 45%, rgba(0,0,0,0.45) 100%)", zIndex: 1 }} />
+        <div
+          style={{
+            position: "relative",
+            minHeight: "340px",
+            borderRadius: "28px",
+            padding: "32px",
+            overflow: "hidden",
+            background: "#050505",
+            boxShadow: "0 12px 40px rgba(0,0,0,0.5)",
+            border: "1px solid rgba(255,255,255,0.06)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
+          <video
+            src={VIDEO_SRC}
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              zIndex: 0,
+              pointerEvents: "none",
+              opacity: 0.55,
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.72) 45%, rgba(0,0,0,0.45) 100%)",
+              zIndex: 1,
+            }}
+          />
 
           {/* Logo */}
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", position: "relative", zIndex: 2 }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(132,204,22,0.15)", border: "1.5px solid rgba(132,204,22,0.8)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 700, color: "#a3e635", letterSpacing: "-0.02em", flexShrink: 0 }}>R</div>
-            <span style={{ fontSize: 22, fontWeight: 700, color: "#ffffff", letterSpacing: "-0.02em" }}>Richard Enoch</span>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              position: "relative",
+              zIndex: 2,
+            }}
+          >
+            <div
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 8,
+                background: "rgba(132,204,22,0.15)",
+                border: "1.5px solid rgba(132,204,22,0.8)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 15,
+                fontWeight: 700,
+                color: "#a3e635",
+                letterSpacing: "-0.02em",
+                flexShrink: 0,
+              }}
+            >
+              R
+            </div>
+            <span
+              style={{
+                fontSize: 22,
+                fontWeight: 700,
+                color: "#ffffff",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Richard Enoch
+            </span>
           </div>
 
           {/* Tagline */}
-          <div style={{ marginTop: "auto", marginBottom: 28, position: "relative", zIndex: 2 }}>
-            <p style={{ fontSize: 19, fontWeight: 400, color: "#ffffff", lineHeight: 1.45 }}>
-              Crafting brands and interfaces<br />
-              <span style={{ color: "rgba(255,255,255,0.55)" }}>that leave a lasting impression.</span>
+          <div
+            style={{
+              marginTop: "auto",
+              marginBottom: 28,
+              position: "relative",
+              zIndex: 2,
+            }}
+          >
+            <p
+              style={{
+                fontSize: 19,
+                fontWeight: 400,
+                color: "#ffffff",
+                lineHeight: 1.45,
+              }}
+            >
+              Crafting brands and interfaces
+              <br />
+              <span style={{ color: "rgba(255,255,255,0.55)" }}>
+                that leave a lasting impression.
+              </span>
             </p>
           </div>
 
           {/* Socials */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, position: "relative", zIndex: 2 }}>
-            <span style={{ fontFamily: "'Caveat', cursive", fontSize: 17, fontWeight: 600, color: "rgba(255,255,255,0.85)", letterSpacing: "0.3px" }}>Stay in touch!</span>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 12,
+              position: "relative",
+              zIndex: 2,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "'Caveat', cursive",
+                fontSize: 17,
+                fontWeight: 600,
+                color: "rgba(255,255,255,0.85)",
+                letterSpacing: "0.3px",
+              }}
+            >
+              Stay in touch!
+            </span>
             <div style={{ display: "flex", gap: 7 }}>
               {SOCIALS.map((s) => (
-                <a key={s.label} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label}
-                  style={{ width: 36, height: 36, borderRadius: 9, background: "#0e1014", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 18px rgba(0,0,0,0.35)", transition: "background 0.2s, transform 0.15s, box-shadow 0.2s", flexShrink: 0 }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "#000"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 10px 28px rgba(0,0,0,0.5)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "#0e1014"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 18px rgba(0,0,0,0.35)"; }}
-                  onTouchStart={(e) => { e.currentTarget.style.background = "#000"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                  onTouchEnd={(e) => { e.currentTarget.style.background = "#0e1014"; e.currentTarget.style.transform = "translateY(0)"; }}
-                >{s.icon}</a>
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={s.label}
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: 9,
+                    background: "#0e1014",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 6px 18px rgba(0,0,0,0.35)",
+                    transition:
+                      "background 0.2s, transform 0.15s, box-shadow 0.2s",
+                    flexShrink: 0,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#000";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow =
+                      "0 10px 28px rgba(0,0,0,0.5)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#0e1014";
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow =
+                      "0 6px 18px rgba(0,0,0,0.35)";
+                  }}
+                  onTouchStart={(e) => {
+                    e.currentTarget.style.background = "#000";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                  }}
+                  onTouchEnd={(e) => {
+                    e.currentTarget.style.background = "#0e1014";
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }}
+                >
+                  {s.icon}
+                </a>
               ))}
             </div>
           </div>
@@ -349,16 +619,81 @@ const Footer = () => {
         {/* ── RIGHT CARD ── */}
         <RightCard easterEgg={easterEgg} revealRef={revealRef}>
           {/* Floating illustration */}
-          <div className="footer-float-icon" style={{ position: "absolute", top: -72, right: 40, zIndex: 10, display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 6 }}>
-            <img src="/flower-glass-spectrum.png" alt="Flower Glass Spectrum"
-              style={{ width: 130, height: 130, objectFit: "contain", filter: "drop-shadow(0 16px 32px rgba(0,0,0,0.45))", transform: "rotate(-6deg)" }} />
-            <div style={{ display: "flex", gap: 6, alignItems: "center", transform: "rotate(-4deg)", marginTop: 2 }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" style={{ color: "#6b7280", flexShrink: 0 }}>
-                <path d="M3 20 C 6 14, 10 9, 18 5" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M18 5 L 12 5" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M18 5 L 18 11" stroke="currentColor" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <div
+            className="footer-float-icon"
+            style={{
+              position: "absolute",
+              top: -72,
+              right: 40,
+              zIndex: 10,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: 6,
+            }}
+          >
+            <img
+              src="/flower-glass-spectrum.png"
+              alt="Flower Glass Spectrum"
+              style={{
+                width: 130,
+                height: 130,
+                objectFit: "contain",
+                filter: "drop-shadow(0 16px 32px rgba(0,0,0,0.45))",
+                transform: "rotate(-6deg)",
+              }}
+            />
+            <div
+              style={{
+                display: "flex",
+                gap: 6,
+                alignItems: "center",
+                transform: "rotate(-4deg)",
+                marginTop: 2,
+              }}
+            >
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                style={{ color: "#6b7280", flexShrink: 0 }}
+              >
+                <path
+                  d="M3 20 C 6 14, 10 9, 18 5"
+                  stroke="currentColor"
+                  fill="none"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M18 5 L 12 5"
+                  stroke="currentColor"
+                  fill="none"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M18 5 L 18 11"
+                  stroke="currentColor"
+                  fill="none"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
-              <span style={{ fontFamily: "'Caveat', cursive", fontSize: 20, fontWeight: 600, color: "#6b7280", whiteSpace: "nowrap" }}>Available for work!</span>
+              <span
+                style={{
+                  fontFamily: "'Caveat', cursive",
+                  fontSize: 20,
+                  fontWeight: 600,
+                  color: "#6b7280",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Available for work!
+              </span>
             </div>
           </div>
 
@@ -387,21 +722,38 @@ const Footer = () => {
               }}
             />
             {/* cursor-reveal overlay — nearly black at rest, lifts where cursor passes */}
-            <div ref={revealRef} style={{
-              position: "absolute",
-              inset: 0,
-              background: "rgba(0,0,0,0.6)",
-              transition: "background 0.05s linear",
-            }} />
+            <div
+              ref={revealRef}
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: "rgba(0,0,0,0.6)",
+                transition: "background 0.05s linear",
+              }}
+            />
           </div>
 
           {/* Nav columns */}
           <div style={{ paddingTop: 8, position: "relative", zIndex: 1 }}>
-            <div className="footer-nav-cols" style={{ display: "flex", gap: 88 }}>
-
+            <div
+              className="footer-nav-cols"
+              style={{ display: "flex", gap: 88 }}
+            >
               {/* Navigate */}
               <div>
-                <span style={{ fontFamily: "'Caveat', cursive", fontSize: 22, fontWeight: 600, fontStyle: "italic", color: "#4b5563", marginBottom: 16, display: "block" }}>Navigate</span>
+                <span
+                  style={{
+                    fontFamily: "'Caveat', cursive",
+                    fontSize: 22,
+                    fontWeight: 600,
+                    fontStyle: "italic",
+                    color: "#4b5563",
+                    marginBottom: 16,
+                    display: "block",
+                  }}
+                >
+                  Navigate
+                </span>
                 {NAVIGATE_LINKS.map((link) => (
                   <MagneticLink key={link.label} to={link.to} style={linkStyle}>
                     {link.label}
@@ -411,37 +763,83 @@ const Footer = () => {
 
               {/* Work — two sub-columns grouped tightly */}
               <div style={{ display: "flex", flexDirection: "column" }}>
-                <span style={{ fontFamily: "'Caveat', cursive", fontSize: 22, fontWeight: 600, fontStyle: "italic", color: "#4b5563", marginBottom: 16, display: "block" }}>Work</span>
+                <span
+                  style={{
+                    fontFamily: "'Caveat', cursive",
+                    fontSize: 22,
+                    fontWeight: 600,
+                    fontStyle: "italic",
+                    color: "#4b5563",
+                    marginBottom: 16,
+                    display: "block",
+                  }}
+                >
+                  Work
+                </span>
                 <div style={{ display: "flex", gap: 24 }}>
                   <div>
                     {WORK_COL_A.map((link) => (
-                      <MagneticLink key={link.label} to={link.to} style={linkStyle}>
+                      <MagneticLink
+                        key={link.label}
+                        to={link.to}
+                        style={linkStyle}
+                      >
                         {link.label}
                       </MagneticLink>
                     ))}
                   </div>
                   <div>
                     {WORK_COL_B.map((link) => (
-                      <MagneticLink key={link.label} to={link.to} style={linkStyle} disabled={!link.to}>
+                      <MagneticLink
+                        key={link.label}
+                        to={link.to}
+                        style={linkStyle}
+                        disabled={!link.to}
+                      >
                         {link.label}
                       </MagneticLink>
                     ))}
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
 
           {/* Bottom row */}
-          <div className="footer-bottom-row" style={{ display: "flex", flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between", marginTop: 48, position: "relative", zIndex: 1 }}>
+          <div
+            className="footer-bottom-row"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "flex-end",
+              justifyContent: "space-between",
+              marginTop: 48,
+              position: "relative",
+              zIndex: 1,
+            }}
+          >
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12.5, fontWeight: 500, color: "#4b5563", margin: 0 }}>
+              <p
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 12.5,
+                  fontWeight: 500,
+                  color: "#4b5563",
+                  margin: 0,
+                }}
+              >
                 © {new Date().getFullYear()} Richard Enoch. All rights reserved.
               </p>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 14, alignItems: "flex-start" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 14,
+                alignItems: "flex-start",
+              }}
+            >
               <AnimatePresence mode="wait">
                 {easterEgg ? (
                   <motion.h4
@@ -450,10 +848,25 @@ const Footer = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.3 }}
-                    style={{ fontSize: 15, fontWeight: 400, color: "#a3e635", lineHeight: 1.45, fontFamily: "'DM Sans', sans-serif", margin: 0 }}
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 400,
+                      color: "#a3e635",
+                      lineHeight: 1.45,
+                      fontFamily: "'DM Sans', sans-serif",
+                      margin: 0,
+                    }}
                   >
-                    Oh hey — glad you found this. 👋<br />
-                    <strong style={{ display: "block", fontSize: 19, fontWeight: 700, color: "#d9f99d" }}>
+                    Oh hey — glad you found this. 👋
+                    <br />
+                    <strong
+                      style={{
+                        display: "block",
+                        fontSize: 19,
+                        fontWeight: 700,
+                        color: "#d9f99d",
+                      }}
+                    >
                       Let&apos;s talk.
                     </strong>
                   </motion.h4>
@@ -464,10 +877,25 @@ const Footer = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.3 }}
-                    style={{ fontSize: 15, fontWeight: 400, color: "#6b7280", lineHeight: 1.45, fontFamily: "'DM Sans', sans-serif", margin: 0 }}
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 400,
+                      color: "#6b7280",
+                      lineHeight: 1.45,
+                      fontFamily: "'DM Sans', sans-serif",
+                      margin: 0,
+                    }}
                   >
-                    Have a project in mind?<br />
-                    <strong style={{ display: "block", fontSize: 19, fontWeight: 700, color: "#f9fafb" }}>
+                    Have a project in mind?
+                    <br />
+                    <strong
+                      style={{
+                        display: "block",
+                        fontSize: 19,
+                        fontWeight: 700,
+                        color: "#f9fafb",
+                      }}
+                    >
                       Let&apos;s build something great.
                     </strong>
                   </motion.h4>
@@ -475,13 +903,25 @@ const Footer = () => {
               </AnimatePresence>
 
               <motion.div
-                animate={easterEgg ? { scale: [1, 1.05, 1], boxShadow: ["0 6px 20px rgba(132,204,22,0.35)", "0 8px 32px rgba(132,204,22,0.7)", "0 6px 20px rgba(132,204,22,0.35)"] } : {}}
-                transition={{ duration: 0.6, repeat: easterEgg ? Infinity : 0, repeatType: "loop" }}
+                animate={
+                  easterEgg
+                    ? {
+                        scale: [1, 1.05, 1],
+                        boxShadow: [
+                          "0 6px 20px rgba(132,204,22,0.35)",
+                          "0 8px 32px rgba(132,204,22,0.7)",
+                          "0 6px 20px rgba(132,204,22,0.35)",
+                        ],
+                      }
+                    : {}
+                }
+                transition={{
+                  duration: 0.6,
+                  repeat: easterEgg ? Infinity : 0,
+                  repeatType: "loop",
+                }}
               >
-                <Link
-                  to="/contact"
-                  className={buttonClasses("primary", "md")}
-                >
+                <Link to="/contact" className={buttonClasses("primary", "md")}>
                   {easterEgg ? "Yes, let's go →" : "Get in Touch"}
                 </Link>
               </motion.div>

@@ -76,7 +76,11 @@ export default function GraphicHero({ data }) {
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1], delay: 0.15 }}
+            transition={{
+              duration: 0.7,
+              ease: [0.22, 0.61, 0.36, 1],
+              delay: 0.15,
+            }}
             className="
               mt-5 font-['Outfit'] font-semibold tracking-[-0.05em]
               text-transparent bg-clip-text
@@ -94,7 +98,11 @@ export default function GraphicHero({ data }) {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1], delay: 0.35 }}
+            transition={{
+              duration: 0.7,
+              ease: [0.22, 0.61, 0.36, 1],
+              delay: 0.35,
+            }}
             className="
               mt-4 max-w-[560px]
              

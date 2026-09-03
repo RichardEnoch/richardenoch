@@ -31,9 +31,11 @@ const Hero = () => (
 
     {/* CONTENT */}
     <div className="relative z-10 flex h-screen min-h-[600px] flex-col items-center justify-end pb-20 px-4 text-center">
-
       {/* pill */}
-      <motion.div className="relative inline-flex rounded-full" {...fadeUp(0.25)}>
+      <motion.div
+        className="relative inline-flex rounded-full"
+        {...fadeUp(0.25)}
+      >
         <div className="absolute inset-0 rounded-full border border-white/10" />
         <motion.div
           className="absolute inset-0 rounded-full"
@@ -41,7 +43,8 @@ const Hero = () => (
             padding: "1.5px",
             background:
               "conic-gradient(from 0deg, transparent 0%, transparent 73%, rgba(132,204,22,0.15) 78%, rgba(132,204,22,0.6) 82%, #84cc16 84%, #e8ffb0 85.5%, #84cc16 87%, rgba(132,204,22,0.6) 89%, rgba(132,204,22,0.15) 93%, transparent 97%)",
-            WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            WebkitMask:
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
             WebkitMaskComposite: "xor",
             maskComposite: "exclude",
             filter: "blur(0.4px)",
@@ -76,14 +79,23 @@ const Hero = () => (
       <motion.div
         className="mt-10 flex flex-col items-center gap-1.5 cursor-default select-none"
         {...fadeUp(1.2)}
-        onClick={() => window.scrollBy({ top: window.innerHeight * 0.8, behavior: "smooth" })}
+        onClick={() =>
+          window.scrollBy({ top: window.innerHeight * 0.8, behavior: "smooth" })
+        }
       >
-        <span className="text-[10px] tracking-[0.2em] uppercase text-neutral-500 font-medium">Scroll</span>
+        <span className="text-[10px] tracking-[0.2em] uppercase text-neutral-500 font-medium">
+          Scroll
+        </span>
         <div className="relative h-9 w-[1.5px] overflow-hidden rounded-full bg-neutral-700">
           <motion.div
             className="absolute top-0 left-0 w-full rounded-full bg-lime-400"
             animate={{ y: ["0%", "100%"] }}
-            transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut", repeatDelay: 0.3 }}
+            transition={{
+              duration: 1.2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              repeatDelay: 0.3,
+            }}
             style={{ height: "45%" }}
           />
         </div>

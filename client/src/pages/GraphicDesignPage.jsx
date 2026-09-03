@@ -32,8 +32,13 @@ const HeroBg = findAsset("heroimg.png");
 const OverviewImg = findAsset("overviewimg.png");
 
 const HERO_BG_TWEAK = {
-  fit: "cover", scale: 1.0, posX: 58, posY: 22,
-  translateX: 0, translateY: 0, opacity: 0.99,
+  fit: "cover",
+  scale: 1.0,
+  posX: 58,
+  posY: 22,
+  translateX: 0,
+  translateY: 0,
+  opacity: 0.99,
 };
 
 /* ── gallery: Richard's flyer and social design work, sourced from
@@ -48,7 +53,7 @@ const HERO_BG_TWEAK = {
    so it shows the flyer body of work — all of it. ── */
 const GALLERY_ASSETS = import.meta.glob(
   "../assets/FlyerSamples/*.{png,jpg,jpeg,webp}",
-  { eager: true, import: "default" }
+  { eager: true, import: "default" },
 );
 
 // Fisher–Yates shuffle (runs once at load → random per visit, stable per session)
@@ -64,7 +69,7 @@ function shuffle(arr) {
 function buildGallery() {
   const all = Object.entries(GALLERY_ASSETS)
     .filter(([path]) => !/\.thumb\.webp$/i.test(path)) // tiles resolve their own thumb
-    .map(([path, src], idx) => ({ id: `gfx-${idx}`, src }));
+    .map(([, src], idx) => ({ id: `gfx-${idx}`, src }));
   // Shuffled so the page opens differently each visit, but nothing is dropped.
   return shuffle(all);
 }

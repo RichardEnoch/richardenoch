@@ -217,9 +217,7 @@ function PersonaCard({
           />
         ) : (
           <div className="absolute inset-0 bg-[radial-gradient(75%_75%_at_40%_35%,rgba(255,255,255,0.07)_0%,rgba(0,0,0,0.88)_72%)] flex items-center justify-center">
-            <span className="text-xs text-white/40">
-              No image
-            </span>
+            <span className="text-xs text-white/40">No image</span>
           </div>
         )}
 

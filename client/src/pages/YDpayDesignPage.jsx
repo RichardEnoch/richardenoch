@@ -31,8 +31,13 @@ const HeroBg = findAsset("heroimg.png");
 const OverviewImg = findAsset("overviewimg.png");
 
 const HERO_BG_TWEAK = {
-  fit: "cover", scale: 1.0, posX: 58, posY: 22,
-  translateX: 0, translateY: 0, opacity: 0.99,
+  fit: "cover",
+  scale: 1.0,
+  posX: 58,
+  posY: 22,
+  translateX: 0,
+  translateY: 0,
+  opacity: 0.99,
 };
 
 const YDPAY_ASSETS = import.meta.glob(
@@ -40,10 +45,14 @@ const YDPAY_ASSETS = import.meta.glob(
   { eager: true, import: "default" },
 );
 
-const GALLERY = Object.entries(YDPAY_ASSETS).map(([path, src], idx) => ({
-  id: `ydpay-${idx}`,
-  src,
-}));
+/* Every source here has a 640px `name.thumb.webp` sibling generated beside
+   it, and the glob above matches .webp — so without this filter the gallery
+   listed each design twice, once at full size and once as its own tile. The
+   tiles resolve their thumb through `thumbFor()`, so only the full-size files
+   belong in the list. */
+const GALLERY = Object.entries(YDPAY_ASSETS)
+  .filter(([path]) => !/\.thumb\.webp$/i.test(path))
+  .map(([, src], idx) => ({ id: `ydpay-${idx}`, src }));
 
 const DATA = {
   backLabel: "Back to Portfolio",

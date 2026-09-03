@@ -1,6 +1,7 @@
 // src/pages/Home.jsx
 import React from "react";
 import Hero from "../components/Home/Hero";
+import TwoDoors from "../components/Home/TwoDoors";
 import PickACard from "../components/Home/PickACard";
 import AboutMe from "../components/Home/AboutMe";
 import Services from "../components/Home/Services";
@@ -17,16 +18,21 @@ const Home = () => {
     <div className="text-white bg-[#050505]">
       <PageMeta
         title="Home"
-        description="Portfolio of Richard Enoch — visual designer and product thinker with 6 years across brand identity, UI/UX, and construction technology."
+        description="Portfolio of Richard Enoch — brand identity and product designer. Six years in design, three in product, across fintech, publishing, interiors, professional bodies and construction technology."
         url="/"
       />
       <Hero />
+      {/* The fork sits directly under the hero. A recruiter should not have to
+          scroll past a service menu to find out there is a résumé. */}
+      <TwoDoors />
       <PickACard />
       <AboutMe />
       <Partners />
       <Services />
       <WorkExp />
       <DesignProcess />
+      {/* Testimonials are held back until real ones exist. See
+          components/Home/Testimonials.jsx. */}
       <Testimonials />
       <FaqSection />
       <BuildSection />

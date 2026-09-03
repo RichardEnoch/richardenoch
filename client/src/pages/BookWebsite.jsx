@@ -3,35 +3,92 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import PageMeta from "../components/common/PageMeta";
-import { Button, Input, Textarea, Field, buttonClasses } from "../components/ui";
+import {
+  Button,
+  Input,
+  Textarea,
+  Field,
+  buttonClasses,
+} from "../components/ui";
 import { fetchJson } from "../api/http";
 
 /* Display fallback for server/config/websitePlans.js — live values come
    from /api/website-requests/plans and the server recomputes on submit. */
 const DEFAULT_PLANS = {
   starter: {
-    label: "Starter", pages: "Up to 5 pages", priceNGN: 200000, from: false,
+    label: "Starter",
+    pages: "Up to 5 pages",
+    priceNGN: 200000,
+    from: false,
     timeline: "2–3 weeks",
-    deliverables: ["Up to 5 custom-designed pages", "Mobile-first responsive build", "Contact form + WhatsApp link", "Basic on-page SEO", "2 revision rounds"],
+    deliverables: [
+      "Up to 5 custom-designed pages",
+      "Mobile-first responsive build",
+      "Contact form + WhatsApp link",
+      "Basic on-page SEO",
+      "2 revision rounds",
+    ],
   },
   business: {
-    label: "Business", pages: "Up to 10 pages", priceNGN: 380000, from: false,
+    label: "Business",
+    pages: "Up to 10 pages",
+    priceNGN: 380000,
+    from: false,
     timeline: "3–5 weeks",
-    deliverables: ["Up to 10 custom-designed pages", "Everything in Starter", "Blog / CMS — edit your own content", "Analytics + SEO for every page", "3 revision rounds"],
+    deliverables: [
+      "Up to 10 custom-designed pages",
+      "Everything in Starter",
+      "Blog / CMS — edit your own content",
+      "Analytics + SEO for every page",
+      "3 revision rounds",
+    ],
   },
   premium: {
-    label: "Premium", pages: "15+ pages / custom", priceNGN: 650000, from: true,
+    label: "Premium",
+    pages: "15+ pages / custom",
+    priceNGN: 650000,
+    from: true,
     timeline: "Scoped per project",
-    deliverables: ["15+ pages or a custom web app", "Everything in Business", "Store, booking, payments, or member area", "Source files + handover docs", "Revisions until launch-ready"],
+    deliverables: [
+      "15+ pages or a custom web app",
+      "Everything in Business",
+      "Store, booking, payments, or member area",
+      "Source files + handover docs",
+      "Revisions until launch-ready",
+    ],
   },
 };
 const PLAN_ORDER = ["starter", "business", "premium"];
 const N = (v) => `₦${Number(v).toLocaleString("en-NG")}`;
 
-const PURPOSES = ["Showcase my business", "Sell products", "Get bookings / enquiries", "Portfolio", "Blog / publication", "Community / member area"];
-const FEATURES = ["Blog / CMS", "Online store", "Booking / scheduling", "Payments", "Gallery", "Newsletter", "Member login", "Live chat / WhatsApp"];
-const CONTENT_STATUS = ["Content is ready", "Partially ready", "I need help with content"];
-const DOMAIN_STATUS = ["I have domain & hosting", "I have the domain only", "I need both"];
+const PURPOSES = [
+  "Showcase my business",
+  "Sell products",
+  "Get bookings / enquiries",
+  "Portfolio",
+  "Blog / publication",
+  "Community / member area",
+];
+const FEATURES = [
+  "Blog / CMS",
+  "Online store",
+  "Booking / scheduling",
+  "Payments",
+  "Gallery",
+  "Newsletter",
+  "Member login",
+  "Live chat / WhatsApp",
+];
+const CONTENT_STATUS = [
+  "Content is ready",
+  "Partially ready",
+  "I need help with content",
+];
+const DOMAIN_STATUS = [
+  "I have domain & hosting",
+  "I have the domain only",
+  "I need both",
+];
 
 const F = ({ label, optional, children }) => (
   <Field
@@ -52,12 +109,16 @@ const Chips = ({ options, value, onChange, multi }) => {
   return (
     <div className="flex flex-wrap gap-2.5">
       {options.map((v) => (
-        <button key={v} type="button" onClick={() => toggle(v)}
+        <button
+          key={v}
+          type="button"
+          onClick={() => toggle(v)}
           className={`rounded-[10px] border px-4 py-2 text-[13px] transition ${
             isOn(v)
               ? "border-lime-400 bg-lime-400/10 font-medium text-lime-300"
               : "border-white/10 bg-white/[0.03] font-light text-neutral-400 hover:border-lime-400/40"
-          }`}>
+          }`}
+        >
           {v}
         </button>
       ))}
@@ -74,8 +135,15 @@ const BookWebsite = () => {
     return DEFAULT_PLANS[p] ? p : "";
   });
   const [form, setForm] = useState({
-    name: "", email: "", phone: "", brand: "", about: "", pages: "",
-    references: "", duration: "", notes: "",
+    name: "",
+    email: "",
+    phone: "",
+    brand: "",
+    about: "",
+    pages: "",
+    references: "",
+    duration: "",
+    notes: "",
   });
   const [purpose, setPurpose] = useState([]);
   const [features, setFeatures] = useState([]);
@@ -90,7 +158,9 @@ const BookWebsite = () => {
       try {
         const data = await fetchJson("/api/website-requests/plans");
         if (data && data.starter) setPlans(data);
-      } catch { /* keep defaults */ }
+      } catch {
+        /* keep defaults */
+      }
     })();
   }, []);
 
@@ -106,40 +176,64 @@ const BookWebsite = () => {
     fetchJson(`/api/discounts/offer/${token}`)
       .then((o) => {
         if (!on || !o?.ok) return;
-        const item = (o.items || []).find((i) => i.service === "website" && !i.booked);
+        const item = (o.items || []).find(
+          (i) => i.service === "website" && !i.booked,
+        );
         if (!item) return;
-        setOffer({ token, price: item.price, planKey: item.planKey, clientName: o.clientName || "" });
+        setOffer({
+          token,
+          price: item.price,
+          planKey: item.planKey,
+          clientName: o.clientName || "",
+        });
         setPlan(item.planKey);
       })
       .catch(() => {});
-    return () => { on = false; };
+    return () => {
+      on = false;
+    };
   }, [searchParams]);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const selected = plan ? plans[plan] : null;
   const effectivePrice = selected
-    ? (offer && offer.planKey === plan ? offer.price : discountInfo?.ok ? discountInfo.finalPrice : selected.priceNGN)
+    ? offer && offer.planKey === plan
+      ? offer.price
+      : discountInfo?.ok
+        ? discountInfo.finalPrice
+        : selected.priceNGN
     : 0;
   const applyCode = async () => {
     const code = discountCode.trim();
     if (!code || !selected) return;
     try {
-      const r = await fetchJson(`/api/discounts/validate?code=${encodeURIComponent(code)}&service=website&price=${selected.priceNGN}`);
+      const r = await fetchJson(
+        `/api/discounts/validate?code=${encodeURIComponent(code)}&service=website&price=${selected.priceNGN}`,
+      );
       setDiscountInfo(r);
     } catch {
-      setDiscountInfo({ ok: false, error: "Couldn't check that code — try again." });
+      setDiscountInfo({
+        ok: false,
+        error: "Couldn't check that code — try again.",
+      });
     }
   };
   // A validated discount is priced against ONE plan — switching plans voids it
-  useEffect(() => { setDiscountInfo(null); }, [plan]);
+  useEffect(() => {
+    setDiscountInfo(null);
+  }, [plan]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     if (!plan) return setError("Pick a package first.");
     if (!form.name.trim()) return setError("Please enter your name.");
-    if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) return setError("Please enter a valid email.");
-    if (!form.pages.trim()) return setError("List the pages your website needs — a rough list is fine.");
+    if (!/^\S+@\S+\.\S+$/.test(form.email.trim()))
+      return setError("Please enter a valid email.");
+    if (!form.pages.trim())
+      return setError(
+        "List the pages your website needs — a rough list is fine.",
+      );
 
     setSubmitting(true);
     try {
@@ -158,10 +252,13 @@ const BookWebsite = () => {
         }),
       });
       setDone({ invoiceNo: res?.invoice_no || "" });
-      if (window.__lenis) window.__lenis.scrollTo(0, { immediate: true, force: true });
+      if (window.__lenis)
+        window.__lenis.scrollTo(0, { immediate: true, force: true });
       else window.scrollTo(0, 0);
     } catch {
-      setError("Something went wrong — please try again in a moment.");
+      setError(
+        "The form could not send — the booking service is down. Email the details to enochrichard6@gmail.com and I will pick it up from there.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -177,29 +274,60 @@ const BookWebsite = () => {
 
       <div className="mx-auto max-w-[860px]">
         {done ? (
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border border-lime-400/30 bg-[#0d0f12] px-8 py-14 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl border border-lime-400/30 bg-[#0d0f12] px-8 py-14 text-center"
+          >
             <div className="mx-auto mb-6 flex h-[74px] w-[74px] items-center justify-center rounded-full border-2 border-lime-400 shadow-[0_0_30px_rgba(163,230,53,0.3)]">
-              <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 stroke-lime-400">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-8 w-8 stroke-lime-400"
+              >
                 <path d="M20 6L9 17l-5-5" />
               </svg>
             </div>
             <h1 className="text-2xl font-semibold">Booking received!</h1>
             <p className="mt-3 text-[15px] leading-relaxed text-white/55 max-w-[460px] mx-auto">
-              Check your email{done.invoiceNo ? <> — invoice <span className="text-lime-400 font-semibold">{done.invoiceNo}</span></> : ""} with your next steps, the terms, and a copy of your answers. The project starts once the deposit is confirmed.
+              Check your email
+              {done.invoiceNo ? (
+                <>
+                  {" "}
+                  — invoice{" "}
+                  <span className="text-lime-400 font-semibold">
+                    {done.invoiceNo}
+                  </span>
+                </>
+              ) : (
+                ""
+              )}{" "}
+              with your next steps, the terms, and a copy of your answers. The
+              project starts once the deposit is confirmed.
             </p>
             <Link to="/" className={buttonClasses("primary", "md", "mt-8")}>
               Back to home →
             </Link>
           </motion.div>
         ) : (
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}>
-            <p className="text-[11px] font-bold tracking-[0.3em] uppercase text-lime-400 mb-4">Website Design & Build</p>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <p className="text-[11px] font-bold tracking-[0.3em] uppercase text-lime-400 mb-4">
+              Website Design & Build
+            </p>
             <h1 className="text-3xl sm:text-4xl font-semibold leading-tight tracking-[-0.02em]">
-              A website that <span className="text-lime-400">works as hard as you do.</span>
+              A website that{" "}
+              <span className="text-lime-400">works as hard as you do.</span>
             </h1>
             <p className="mt-3 mb-10 text-[15px] leading-[1.65] text-white/50 max-w-[560px]">
-              Packages are tiered by page count. Pick the size that fits, tell me about the site, and you'll get an invoice and terms by email — design starts once the deposit lands.
+              Packages are tiered by page count. Pick the size that fits, tell
+              me about the site, and you'll get an invoice and terms by email —
+              design starts once the deposit lands.
             </p>
 
             {/* plan cards */}
@@ -208,21 +336,36 @@ const BookWebsite = () => {
                 const p = plans[key];
                 const active = plan === key;
                 return (
-                  <button key={key} type="button" onClick={() => setPlan(key)}
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setPlan(key)}
                     className={`rounded-2xl border p-5 text-left transition ${
                       active
                         ? "border-lime-400 bg-lime-400/10 shadow-[0_0_30px_rgba(163,230,53,0.15)]"
                         : "border-white/10 bg-white/[0.03] hover:border-white/25"
-                    }`}>
-                    <p className="text-[12px] font-bold uppercase tracking-[0.16em] mb-1"
-                      style={{ color: active ? "#a3e635" : "rgba(255,255,255,0.45)" }}>
+                    }`}
+                  >
+                    <p
+                      className="text-[12px] font-bold uppercase tracking-[0.16em] mb-1"
+                      style={{
+                        color: active ? "#a3e635" : "rgba(255,255,255,0.45)",
+                      }}
+                    >
                       {p.label}
                     </p>
                     <p className="text-[12px] text-white/40 mb-2">{p.pages}</p>
-                    <p className="text-[24px] font-semibold">{p.from ? "From " : ""}{N(p.priceNGN)}</p>
-                    <p className="text-[11px] text-white/35 mt-0.5">{p.timeline}</p>
+                    <p className="text-[24px] font-semibold">
+                      {p.from ? "From " : ""}
+                      {N(p.priceNGN)}
+                    </p>
+                    <p className="text-[11px] text-white/35 mt-0.5">
+                      {p.timeline}
+                    </p>
                     <ul className="mt-4 space-y-1.5 text-[12.5px] text-white/55">
-                      {(p.deliverables || []).slice(0, 5).map((d) => <li key={d}>• {d}</li>)}
+                      {(p.deliverables || []).slice(0, 5).map((d) => (
+                        <li key={d}>• {d}</li>
+                      ))}
                     </ul>
                   </button>
                 );
@@ -230,90 +373,195 @@ const BookWebsite = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              <input ref={hpRef} type="text" name="_hp" tabIndex={-1} autoComplete="off"
-                className="absolute left-[-9999px] h-0 w-0 opacity-0" aria-hidden="true" />
+              <input
+                ref={hpRef}
+                type="text"
+                name="_hp"
+                tabIndex={-1}
+                autoComplete="off"
+                className="absolute left-[-9999px] h-0 w-0 opacity-0"
+                aria-hidden="true"
+              />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <F label="Your name *"><Input value={form.name} maxLength={120} onChange={set("name")} placeholder="Full name" /></F>
-                <F label="Email *"><Input type="email" value={form.email} maxLength={160} onChange={set("email")} placeholder="you@example.com" /></F>
-                <F label="Phone / WhatsApp" optional><Input value={form.phone} maxLength={40} onChange={set("phone")} placeholder="+234…" /></F>
-                <F label="Brand / organisation" optional><Input value={form.brand} maxLength={120} onChange={set("brand")} placeholder="Who is the site for?" /></F>
+                <F label="Your name *">
+                  <Input
+                    value={form.name}
+                    maxLength={120}
+                    onChange={set("name")}
+                    placeholder="Full name"
+                  />
+                </F>
+                <F label="Email *">
+                  <Input
+                    type="email"
+                    value={form.email}
+                    maxLength={160}
+                    onChange={set("email")}
+                    placeholder="you@example.com"
+                  />
+                </F>
+                <F label="Phone / WhatsApp" optional>
+                  <Input
+                    value={form.phone}
+                    maxLength={40}
+                    onChange={set("phone")}
+                    placeholder="+234…"
+                  />
+                </F>
+                <F label="Brand / organisation" optional>
+                  <Input
+                    value={form.brand}
+                    maxLength={120}
+                    onChange={set("brand")}
+                    placeholder="Who is the site for?"
+                  />
+                </F>
               </div>
 
               <F label="What does the business do?" optional>
-                <Textarea value={form.about} maxLength={2000} onChange={set("about")}
-                  placeholder="A few sentences about the business and what the site should achieve." />
+                <Textarea
+                  value={form.about}
+                  maxLength={2000}
+                  onChange={set("about")}
+                  placeholder="A few sentences about the business and what the site should achieve."
+                />
               </F>
 
               <F label="What is the website for?" optional>
-                <Chips options={PURPOSES} value={purpose} onChange={setPurpose} multi />
+                <Chips
+                  options={PURPOSES}
+                  value={purpose}
+                  onChange={setPurpose}
+                  multi
+                />
               </F>
 
               <F label="Which pages does the site need? *">
-                <Textarea value={form.pages} maxLength={2000} onChange={set("pages")}
-                  placeholder="e.g. Home, About, Services, Portfolio, Blog, Contact… a rough list is fine." />
+                <Textarea
+                  value={form.pages}
+                  maxLength={2000}
+                  onChange={set("pages")}
+                  placeholder="e.g. Home, About, Services, Portfolio, Blog, Contact… a rough list is fine."
+                />
               </F>
 
               <F label="Features you'll need" optional>
-                <Chips options={FEATURES} value={features} onChange={setFeatures} multi />
+                <Chips
+                  options={FEATURES}
+                  value={features}
+                  onChange={setFeatures}
+                  multi
+                />
               </F>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <F label="Content readiness" optional>
-                  <Chips options={CONTENT_STATUS} value={contentStatus} onChange={setContentStatus} />
+                  <Chips
+                    options={CONTENT_STATUS}
+                    value={contentStatus}
+                    onChange={setContentStatus}
+                  />
                 </F>
                 <F label="Domain & hosting" optional>
-                  <Chips options={DOMAIN_STATUS} value={domainStatus} onChange={setDomainStatus} />
+                  <Chips
+                    options={DOMAIN_STATUS}
+                    value={domainStatus}
+                    onChange={setDomainStatus}
+                  />
                 </F>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <F label="Reference websites" optional>
-                  <Input value={form.references} maxLength={1000} onChange={set("references")} placeholder="Links to sites you like" />
+                  <Input
+                    value={form.references}
+                    maxLength={1000}
+                    onChange={set("references")}
+                    placeholder="Links to sites you like"
+                  />
                 </F>
                 <F label="Preferred timeline" optional>
-                  <Input value={form.duration} maxLength={120} onChange={set("duration")} placeholder="e.g. within a month" />
+                  <Input
+                    value={form.duration}
+                    maxLength={120}
+                    onChange={set("duration")}
+                    placeholder="e.g. within a month"
+                  />
                 </F>
               </div>
 
               <F label="Anything else?" optional>
-                <Textarea value={form.notes} maxLength={2000} onChange={set("notes")}
-                  placeholder="Anything that helps me understand the project better." />
+                <Textarea
+                  value={form.notes}
+                  maxLength={2000}
+                  onChange={set("notes")}
+                  placeholder="Anything that helps me understand the project better."
+                />
               </F>
 
               {selected && (
                 <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-white/55">
                   <p>
-                    Selected: <span className="text-white font-semibold">{selected.label} — {selected.pages}</span> at{" "}
-                    <span className="text-lime-400 font-semibold">{selected.from ? "from " : ""}{N(effectivePrice)}</span>
+                    Selected:{" "}
+                    <span className="text-white font-semibold">
+                      {selected.label} — {selected.pages}
+                    </span>{" "}
+                    at{" "}
+                    <span className="text-lime-400 font-semibold">
+                      {selected.from ? "from " : ""}
+                      {N(effectivePrice)}
+                    </span>
                     {effectivePrice !== selected.priceNGN && (
-                      <span className="ml-1.5 text-xs text-white/35 line-through">{N(selected.priceNGN)}</span>
-                    )}.
-                    Your invoice (70% deposit) and terms arrive by email after you submit.
+                      <span className="ml-1.5 text-xs text-white/35 line-through">
+                        {N(selected.priceNGN)}
+                      </span>
+                    )}
+                    . Your invoice (70% deposit) and terms arrive by email after
+                    you submit.
                   </p>
                   {offer ? (
                     <p className="mt-2 rounded-lg border border-lime-400/30 bg-lime-400/5 px-3 py-2 text-xs text-lime-300">
-                      ✓ Private offer applied{offer.clientName ? ` for ${offer.clientName}` : ""} — your agreed price is {N(offer.price)}.
+                      ✓ Private offer applied
+                      {offer.clientName ? ` for ${offer.clientName}` : ""} —
+                      your agreed price is {N(offer.price)}.
                     </p>
                   ) : (
                     <div className="mt-2.5 border-t border-dashed border-white/10 pt-2.5">
-                      <div className="mb-1.5 text-xs text-white/45">Have a discount code?</div>
+                      <div className="mb-1.5 text-xs text-white/45">
+                        Have a discount code?
+                      </div>
                       <div className="flex gap-2">
                         <Input
                           value={discountCode}
-                          onChange={(e) => { setDiscountCode(e.target.value.toUpperCase()); setDiscountInfo(null); }}
+                          onChange={(e) => {
+                            setDiscountCode(e.target.value.toUpperCase());
+                            setDiscountInfo(null);
+                          }}
                           placeholder="e.g. GRACE10"
                           className="w-40 !text-xs uppercase tracking-wide"
                         />
-                        <Button type="button" variant="secondary" size="sm" onClick={applyCode} disabled={!discountCode.trim()}>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="sm"
+                          onClick={applyCode}
+                          disabled={!discountCode.trim()}
+                        >
                           Apply
                         </Button>
                       </div>
                       {discountInfo?.ok && (
-                        <p className="mt-2 text-xs text-lime-300">✓ {discountInfo.label} — you save {N(discountInfo.amount)}. New total: {N(discountInfo.finalPrice)}.</p>
+                        <p className="mt-2 text-xs text-lime-300">
+                          ✓ {discountInfo.label} — you save{" "}
+                          {N(discountInfo.amount)}. New total:{" "}
+                          {N(discountInfo.finalPrice)}.
+                        </p>
                       )}
                       {discountInfo && !discountInfo.ok && (
-                        <p className="mt-2 text-xs text-red-400">{discountInfo.error}</p>
+                        <p className="mt-2 text-xs text-red-400">
+                          {discountInfo.error}
+                        </p>
                       )}
                     </div>
                   )}
@@ -321,10 +569,18 @@ const BookWebsite = () => {
               )}
 
               {error && (
-                <p className="rounded-xl border border-orange-400/30 bg-orange-400/10 px-4 py-3 text-[13px] text-orange-300">{error}</p>
+                <p className="rounded-xl border border-orange-400/30 bg-orange-400/10 px-4 py-3 text-[13px] text-orange-300">
+                  {error}
+                </p>
               )}
 
-              <Button type="submit" variant="primary" size="lg" disabled={submitting} className="w-full">
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                disabled={submitting}
+                className="w-full"
+              >
                 {submitting ? "Sending…" : "Book this website"}
               </Button>
             </form>
