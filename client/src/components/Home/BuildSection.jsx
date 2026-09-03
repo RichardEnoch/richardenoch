@@ -16,7 +16,7 @@ const cardVariants = {
 
 const BuildSection = () => {
   const navigate = useNavigate();
-  const [subtextReady, setSubtextReady] = useState(false);
+  const [, setSubtextReady] = useState(false);
 
   return (
     <section className="relative w-full bg-[#050505] py-16 lg:py-24">

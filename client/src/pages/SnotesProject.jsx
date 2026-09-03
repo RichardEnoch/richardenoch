@@ -1,5 +1,5 @@
 // src/pages/SnotesProject.jsx
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useState } from "react";
 /* Frames name a drop-in key rather than an import — see data/dropin.js and
    IMAGE-SLOTS.md. Dropping a correctly-named file into
    src/assets/dropin/snotes/ fills the frame; nothing here changes. */

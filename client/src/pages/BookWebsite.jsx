@@ -11,6 +11,7 @@ import {
   buttonClasses,
 } from "../components/ui";
 import { fetchJson } from "../api/http";
+import { submitBooking } from "../api/bookings";
 
 /* Display fallback for server/config/websitePlans.js — live values come
    from /api/website-requests/plans and the server recomputes on submit. */
@@ -237,10 +238,14 @@ const BookWebsite = () => {
 
     setSubmitting(true);
     try {
-      const res = await fetchJson("/api/website-requests", {
-        method: "POST",
-        body: JSON.stringify({
-          plan,
+      if (hpRef.current?.value) {
+        setDone({ invoiceNo: "" });
+        return;
+      }
+      await submitBooking({
+        service: "website",
+        plan,
+        answers: {
           ...form,
           purpose: purpose.join(", "),
           features: features.join(", "),
@@ -248,10 +253,9 @@ const BookWebsite = () => {
           domainStatus,
           discount_code: !offer && discountInfo?.ok ? discountCode.trim() : "",
           offer_token: offer?.token || "",
-          _hp: hpRef.current?.value || "",
-        }),
+        },
       });
-      setDone({ invoiceNo: res?.invoice_no || "" });
+      setDone({ invoiceNo: "" });
       if (window.__lenis)
         window.__lenis.scrollTo(0, { immediate: true, force: true });
       else window.scrollTo(0, 0);

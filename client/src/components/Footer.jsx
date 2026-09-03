@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   motion,
   useMotionValue,
@@ -168,7 +168,10 @@ const WatermarkSvg = () => {
           "viewBox",
           `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`,
         );
-      } catch (e) {}
+      } catch {
+        /* getBBox throws while the node is still unrendered; the
+           refit on fonts.ready covers that case. */
+      }
     };
     if (document.fonts?.ready) document.fonts.ready.then(fit);
     else window.addEventListener("load", fit);
@@ -385,7 +388,6 @@ const RightCard = ({ children, easterEgg, revealRef }) => {
 
 /* ── FOOTER ── */
 const Footer = () => {
-  const navigate = useNavigate();
   const revealRef = useRef(null);
   const [easterEgg, setEasterEgg] = useState(false);
   const typedRef = useRef("");

@@ -1,9 +1,17 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { fetchPublished } from "../../api/testimonials";
 
 /* ─── Data ───
-   Empty, and the section stays on the page anyway.
+   Live, from Supabase. Three stars and up are published by the database the
+   moment they are left; one and two stars are stored and never returned by
+   the read policy, so nothing here filters anything — there is nothing to
+   filter by the time the rows arrive.
+
+   The array below is the pre-render and the offline fallback. Leave it empty:
+   the placeholder is what shows while the fetch is in flight and if it fails,
+   which is the honest state in both cases.
 
    Five testimonials used to be hard-coded here and at least some of them were
    placeholders — including one carrying a doubled-conversion claim that
@@ -519,14 +527,36 @@ const TestimonialsEmpty = () => (
   </section>
 );
 
-/* Testimonials ship with the build — edit TESTIMONIALS at the top of the file.
-   A full array gets the scroll-driven stack; an empty one gets the placeholder,
-   so the section never silently disappears from the page. */
-const Testimonials = () =>
-  TESTIMONIALS.length ? (
-    <TestimonialStack items={TESTIMONIALS} />
+/* A full list gets the scroll-driven stack; an empty one gets the placeholder,
+   so the section never silently disappears from the page.
+
+   The stack is mounted only once there is something to put in it. It pins the
+   page and drives itself from scroll position, and mounting that with one card
+   and then remounting it with four as the fetch lands makes the page jump under
+   whoever is reading it. */
+const Testimonials = () => {
+  const [items, setItems] = useState(TESTIMONIALS);
+
+  useEffect(() => {
+    let alive = true;
+    fetchPublished()
+      .then((rows) => {
+        if (alive && rows.length) setItems(rows);
+      })
+      .catch(() => {
+        /* Offline, or the keys are not set on this deploy. The placeholder
+           already says the right thing, so there is nothing to report. */
+      });
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  return items.length ? (
+    <TestimonialStack items={items} />
   ) : (
     <TestimonialsEmpty />
   );
+};
 
 export default Testimonials;

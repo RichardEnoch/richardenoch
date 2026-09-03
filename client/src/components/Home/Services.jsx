@@ -1,9 +1,7 @@
 ﻿import React from "react";
-import { useNavigate } from "react-router-dom";
 import ProjectGrid from "./ProjectGrid";
 
 const Services = () => {
-  const navigate = useNavigate();
 
   return (
     <section className="relative w-full bg-[#050505] py-20 lg:py-24">

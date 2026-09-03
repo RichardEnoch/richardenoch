@@ -73,8 +73,6 @@ const ProjectDetailsHero = ({ project }) => {
       ? heroMeta.teamInitials.filter(Boolean)
       : []) || [];
 
-  const hasInitials = teamInitials.length > 0;
-
   // ⬇️ Intro text: one string from DB, broken into paragraphs by “Enter”
   const rawIntro =
     (typeof project?.introText === "string" && project.introText.trim().length

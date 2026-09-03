@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from "react";
-import Hls from "hls.js";
 
 const HLS_SRC =
   "https://stream.mux.com/4IMYGcL01xjs7ek5ANO17JC4VQVUTsojZlnw4fXzwSxc.m3u8";
@@ -10,7 +9,12 @@ const RateHero = () => {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    /* hls.js first, native second.
+    /* hls.js is ~150 kB and only this one hero needs it, so it is fetched
+       when the hero mounts rather than bundled into the page. Nothing waits
+       on it: the poster frame and the whole rest of the page are already
+       painted by the time it lands.
+
+       hls.js first, native second.
        These were the other way round, and the hero has been black in every
        browser except Safari ever since. Chrome answers canPlayType() for
        HLS with "maybe" — truthy — but cannot actually play it, so the
@@ -20,21 +24,29 @@ const RateHero = () => {
 
        Media Source Extensions is the real test. Safari has no MSE for HLS
        and plays it natively; everything else needs hls.js. */
-    if (Hls.isSupported()) {
-      const hls = new Hls({
-        startLevel: -1,
-        capLevelToPlayerSize: false,
-        maxBufferLength: 30,
-        abrEwmaDefaultEstimate: 5000000,
-      });
-      hls.loadSource(HLS_SRC);
-      hls.attachMedia(video);
-      return () => hls.destroy();
-    }
+    let hls;
+    let cancelled = false;
 
-    if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      video.src = HLS_SRC;
-    }
+    import("hls.js").then(({ default: Hls }) => {
+      if (cancelled) return;
+      if (Hls.isSupported()) {
+        hls = new Hls({
+          startLevel: -1,
+          capLevelToPlayerSize: false,
+          maxBufferLength: 30,
+          abrEwmaDefaultEstimate: 5000000,
+        });
+        hls.loadSource(HLS_SRC);
+        hls.attachMedia(video);
+      } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+        video.src = HLS_SRC;
+      }
+    });
+
+    return () => {
+      cancelled = true;
+      if (hls) hls.destroy();
+    };
   }, []);
 
   return (

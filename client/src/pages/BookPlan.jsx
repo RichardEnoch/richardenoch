@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import PageMeta from "../components/common/PageMeta";
 import { fetchJson } from "../api/http";
+import { submitBooking } from "../api/bookings";
 import {
   OWNER,
   PLANS,
@@ -583,20 +584,23 @@ const BookPlan = () => {
     setSubmitting(true);
     const data = collectResponses();
     try {
-      const res = await fetchJson("/api/questionnaire", {
-        method: "POST",
-        body: JSON.stringify({
+      if (hpRef.current?.value) {
+        setResult({ ok: true, invoiceNo: "", emailsSent: false });
+        return;
+      }
+      await submitBooking({
+        service: "brand",
+        plan: data?._meta?.plan || "",
+        answers: {
           ...data,
           discount_code: !offer && discountInfo?.ok ? discountCode.trim() : "",
           offer_token: offer?.token || "",
-          _hp: hpRef.current?.value || "",
-        }),
+        },
       });
-      setResult({
-        ok: true,
-        invoiceNo: res?.invoice_no || "",
-        emailsSent: res?.emails_sent !== false,
-      });
+      /* emailsSent is false because nothing sends email yet. The success
+         screen reads that flag and tells the client I will be in touch,
+         rather than claiming a receipt landed in their inbox. */
+      setResult({ ok: true, invoiceNo: "", emailsSent: false });
       localStorage.removeItem(STORE_KEY); // clear draft only on success
     } catch {
       setResult({ ok: false });

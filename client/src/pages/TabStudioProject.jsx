@@ -44,7 +44,6 @@ import gpUrb from "../assets/TabStudio/guideline/p29.webp"; // Urbanist
 import gp35 from "../assets/TabStudio/guideline/p35.webp";
 import gp41 from "../assets/TabStudio/guideline/p41.webp";
 import gp45 from "../assets/TabStudio/guideline/p45.webp";
-import gp48 from "../assets/TabStudio/guideline/p48.webp";
 
 /* Portfolio accent (lime) drives the page's labels, headings and CTAs. */
 const G = "#a3e635";

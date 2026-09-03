@@ -11,6 +11,7 @@ import {
   buttonClasses,
 } from "../components/ui";
 import { fetchJson } from "../api/http";
+import { submitBooking } from "../api/bookings";
 
 /* Fallback mirror of server/config/flyerPlans.js — the live values are
    fetched from /api/flyer-requests/plans; the server always recomputes
@@ -111,13 +112,15 @@ const BookFlyer = () => {
 
     setSubmitting(true);
     try {
-      await fetchJson("/api/flyer-requests", {
-        method: "POST",
-        body: JSON.stringify({
-          plan,
-          ...form,
-          _hp: hpRef.current?.value || "",
-        }),
+      if (hpRef.current?.value) {
+        setDone(true);
+        window.scrollTo(0, 0);
+        return;
+      }
+      await submitBooking({
+        service: "flyer",
+        plan,
+        answers: { ...form },
       });
       setDone(true);
       window.scrollTo(0, 0);

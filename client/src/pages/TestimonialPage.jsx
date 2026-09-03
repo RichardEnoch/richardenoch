@@ -12,7 +12,7 @@ import {
   Field,
   buttonClasses,
 } from "../components/ui";
-import { fetchJson } from "../api/http";
+import { submitTestimonial } from "../api/testimonials";
 import { TESTIMONIAL_SERVICES } from "../data/testimonialOptions";
 import { OWNER } from "../config/plans";
 
@@ -60,6 +60,7 @@ const TestimonialPage = () => {
      someone's words to a "please try again", a failed post hands them the
      testimonial they just wrote, addressed and ready to send. */
   const [handoff, setHandoff] = useState(false);
+  const [live, setLive] = useState(false);
 
   const composed = [
     "Testimonial for Richard Enoch",
@@ -92,21 +93,26 @@ const TestimonialPage = () => {
 
     setSubmitting(true);
     try {
-      await fetchJson("/api/testimonials", {
-        method: "POST",
-        body: JSON.stringify({
-          name: name.trim(),
-          initials: initials.trim().toUpperCase(),
-          service,
-          rating,
-          feedback: feedback.trim(),
-          _hp: hpRef.current?.value || "",
-        }),
+      /* The honeypot is checked here rather than in the database. A bot
+         that fills every field it finds never gets as far as a request. */
+      if (hpRef.current?.value) {
+        setDone(true);
+        return;
+      }
+      const res = await submitTestimonial({
+        name: name.trim(),
+        initials: initials.trim().toUpperCase(),
+        service,
+        rating,
+        feedback: feedback.trim(),
       });
+      setLive(res.willPublish);
       setDone(true);
     } catch {
-      /* No error message. The words are written; the job now is to get them
-         delivered, not to tell someone their effort failed. */
+      /* The store is unreachable, or its keys are not set on this deploy.
+         Rather than lose what someone just wrote, hand it to them addressed
+         and ready to send. Once VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
+         are set, nobody sees this path. */
       setHandoff(true);
     } finally {
       setSubmitting(false);
@@ -183,7 +189,9 @@ const TestimonialPage = () => {
             </div>
             <h1 className="text-2xl font-semibold">Thank you!</h1>
             <p className="mt-3 text-[15px] leading-relaxed text-white/55">
-              Your feedback means a lot — it's what keeps this studio growing.
+              {live
+                ? "It is on the site already — thank you. That means a lot."
+                : "Thank you — it has reached me, and I read every one."}
             </p>
             <Link
               to="/"
