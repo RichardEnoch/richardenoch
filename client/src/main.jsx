@@ -57,6 +57,8 @@ const OfferPage = React.lazy(() => import("./pages/OfferPage.jsx"));
 
 /* Featured projects — one project spanning several disciplines, each
    discipline on its own route so it can be linked to directly. */
+import { ADLM_CASE_STUDY_LIVE } from "./config/featureFlags";
+
 const AdlmHub = React.lazy(() => import("./pages/featured/AdlmHub.jsx"));
 const AdlmBrand = React.lazy(() => import("./pages/featured/AdlmBrand.jsx"));
 const AdlmDesignSystem = React.lazy(
@@ -109,41 +111,52 @@ const router = createBrowserRouter([
       { path: "offer/:token", element: <OfferPage /> },
 
       // ── Featured: ADLM Studio ──────────────────────────────────────────
-      { path: "projects/featured/adlm-studio", element: <AdlmHub /> },
-      { path: "projects/featured/adlm-studio/brand", element: <AdlmBrand /> },
-      {
-        path: "projects/featured/adlm-studio/design-system",
-        element: <AdlmDesignSystem />,
-      },
-      {
-        path: "projects/featured/adlm-studio/website",
-        element: <AdlmWebsite />,
-      },
-      {
-        path: "projects/featured/adlm-studio/product",
-        element: <AdlmProductSuite />,
-      },
-      {
-        path: "projects/featured/adlm-studio/product/quiv",
-        element: <AdlmQuiv />,
-      },
-      // Everything in the suite except QUIV. HERON and RateGen were linked
-      // from the suite page and from QUIV before they had routes, so both were
-      // 404s; the other three had no page at all. One dynamic route now covers
-      // all five — see pages/featured/AdlmProduct.jsx. It sits AFTER the QUIV
-      // path so the static match wins.
-      {
-        path: "projects/featured/adlm-studio/product/:slug",
-        element: <AdlmProduct />,
-      },
-      // The old standalone QUIV route now redirects into the suite, so links
-      // that pre-date the featured structure keep resolving.
-      {
-        path: "ui-projects/quiv",
-        element: (
-          <Navigate to="/projects/featured/adlm-studio/product/quiv" replace />
-        ),
-      },
+      // Unfinished; gated by ADLM_CASE_STUDY_LIVE. See config/featureFlags.
+      ...(ADLM_CASE_STUDY_LIVE
+        ? [
+            { path: "projects/featured/adlm-studio", element: <AdlmHub /> },
+            {
+              path: "projects/featured/adlm-studio/brand",
+              element: <AdlmBrand />,
+            },
+            {
+              path: "projects/featured/adlm-studio/design-system",
+              element: <AdlmDesignSystem />,
+            },
+            {
+              path: "projects/featured/adlm-studio/website",
+              element: <AdlmWebsite />,
+            },
+            {
+              path: "projects/featured/adlm-studio/product",
+              element: <AdlmProductSuite />,
+            },
+            {
+              path: "projects/featured/adlm-studio/product/quiv",
+              element: <AdlmQuiv />,
+            },
+            // Everything in the suite except QUIV. HERON and RateGen were linked
+            // from the suite page and from QUIV before they had routes, so both were
+            // 404s; the other three had no page at all. One dynamic route now covers
+            // all five — see pages/featured/AdlmProduct.jsx. It sits AFTER the QUIV
+            // path so the static match wins.
+            {
+              path: "projects/featured/adlm-studio/product/:slug",
+              element: <AdlmProduct />,
+            },
+            // The old standalone QUIV route redirects into the suite, so links
+            // that pre-date the featured structure keep resolving.
+            {
+              path: "ui-projects/quiv",
+              element: (
+                <Navigate
+                  to="/projects/featured/adlm-studio/product/quiv"
+                  replace
+                />
+              ),
+            },
+          ]
+        : [{ path: "ui-projects/quiv", element: <QuivProject /> }]),
       { path: "contact", element: <Contact /> },
       { path: "resume", element: <Resume /> },
       // "cv" is what half the world types.

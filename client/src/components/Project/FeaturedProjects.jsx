@@ -34,11 +34,12 @@ import TiltCard from "../common/TiltCard";
 
 import adlmHero from "../../assets/ADLM/hub-hero.webp";
 import niqsHero from "../../assets/websiteThumbs/niqs.webp";
+import { ADLM_CASE_STUDY_LIVE } from "../../config/featureFlags";
 
 const ADLM = "/projects/featured/adlm-studio";
 const EASE = [0.22, 0.61, 0.36, 1];
 
-const PROJECTS = [
+const ALL_PROJECTS = [
   {
     id: "adlm",
     name: "ADLM Studio",
@@ -141,6 +142,13 @@ const Chip = ({ part }) =>
    below is desktop-only. A pinned viewport clips a card that tall, and what
    falls off the bottom is the row of discipline chips, the one thing this
    section exists to hand a reader. */
+/* ADLM leads this deck, and every one of its links goes into the gated case
+   study. While that is off it drops out and the deck runs one project shorter,
+   rather than opening with a card that cannot be clicked. */
+const PROJECTS = ALL_PROJECTS.filter(
+  (p) => p.id !== "adlm" || ADLM_CASE_STUDY_LIVE,
+);
+
 const CardBody = ({ p, i, total }) => (
   <TiltCard className="group h-full" max={4}>
     <div className="sheen h-full overflow-hidden rounded-[26px] border border-white/10 bg-[#0b0d10] transition-colors duration-300 group-hover:border-[#89ff00]/40">

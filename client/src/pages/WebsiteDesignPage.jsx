@@ -22,7 +22,6 @@ const PROJECTS = [
       "A 112-route audit, a restructure around how people actually buy, and thirty-one rebuilt pages across three surfaces — the marketing site, the signed-in account, and the internal admin. The full case study covers the architecture, the five user flows and the design system underneath.",
     url: "https://www.adlmstudio.net/",
     liveUrl: "https://www.adlmstudio.net/",
-    caseUrl: "/projects/featured/adlm-studio/website",
     logo: adlmLogo,
     scope: [
       "IA + audit",

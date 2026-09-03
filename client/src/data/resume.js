@@ -56,7 +56,6 @@ export const SELECTED_WORK = [
     name: "ADLM Studio",
     kind: "Brand · Design system · Website · Product suite",
     state: "Live and selling",
-    to: "/projects/featured/adlm-studio",
     body: "A construction-technology company with six products and no way to tell them apart. Audited 112 routes of the legacy site, rebuilt the information architecture around who was actually visiting, wrote the design system, and designed the marketing site, dashboard, admin surfaces and product UI on top of it. QUIV — a BIM-powered take-off tool taken from market research to v4 — is one of the products inside that suite.",
   },
   {

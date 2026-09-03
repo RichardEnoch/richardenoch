@@ -27,8 +27,14 @@ import adlmSystemThumb from "../../assets/ADLM/site/designsystem.webp";
 import adlmProductThumb from "../../assets/ADLM/site/dashboard.webp";
 import adlmSocialThumb from "../../assets/ADLM/gallery/gal-02.webp";
 import cleansteadThumb from "../../assets/Cleanstead/signage.webp";
+import { ADLM_CASE_STUDY_LIVE } from "../../config/featureFlags";
 
 const ADLM_BASE = "/projects/featured/adlm-studio";
+
+/* Every ADLM discipline card routes into the case study, so while that is
+   gated the cards come out of the grid with it — a card that leads to a 404
+   is worse than no card. */
+const adlmCards = (...cards) => (ADLM_CASE_STUDY_LIVE ? cards : []);
 
 /* The four ADLM discipline cards. Each one is scoped to a single category and
    routes into that discipline's own page rather than the hub, so a filtered
@@ -93,7 +99,7 @@ const ADLM_CARDS = [
 ];
 
 const STATIC_GFX_PROJECTS = [
-  ADLM_CARDS[3],
+  ...adlmCards(ADLM_CARDS[3]),
   {
     kind: "gallary",
     slug: "graphic-design",
@@ -173,8 +179,7 @@ const QUIV_THUMB = "/thumb-quiv.svg";
 const NIQS_THUMB = "/NIQSEmblemDark.webp";
 
 const STATIC_UI_PROJECTS = [
-  ADLM_CARDS[1],
-  ADLM_CARDS[2],
+  ...adlmCards(ADLM_CARDS[1], ADLM_CARDS[2]),
   {
     kind: "ui",
     slug: "niqs",
@@ -237,7 +242,7 @@ const STATIC_UI_PROJECTS = [
    outage silently removed finished work from the portfolio. Order here is the
    display order. */
 const STATIC_BRAND_PROJECTS = [
-  ADLM_CARDS[0],
+  ...adlmCards(ADLM_CARDS[0]),
   {
     kind: "default",
     slug: "ydpay-brand",
