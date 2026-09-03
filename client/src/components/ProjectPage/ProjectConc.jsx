@@ -63,7 +63,10 @@ const ProjectConc = ({ project }) => {
           >
             <motion.div className="flex flex-col gap-1" variants={fadeLeft}>
               <div className="inline-flex max-w-max items-center gap-2 rounded-full bg-lime-500/10 border border-lime-500/25 px-3 py-1.5">
-                <CheckmarkCircle02Icon size={12} className="text-lime-400 shrink-0" />
+                <CheckmarkCircle02Icon
+                  size={12}
+                  className="text-lime-400 shrink-0"
+                />
                 <span className="text-[10px] font-bold text-lime-400 leading-none uppercase tracking-widest whitespace-nowrap">
                   Results
                 </span>

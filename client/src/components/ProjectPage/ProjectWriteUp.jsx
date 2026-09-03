@@ -2,7 +2,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import TypingText from "../common/TypingText";
-import { Search01Icon, BulbIcon, PencilEdit01Icon, CheckmarkCircle02Icon } from "hugeicons-react";
+import {
+  Search01Icon,
+  BulbIcon,
+  PencilEdit01Icon,
+  CheckmarkCircle02Icon,
+} from "hugeicons-react";
 import writeImg from "../../assets/Bookrion/img1.jpg";
 
 const SILVER_WORD = {
@@ -83,10 +88,21 @@ Each iteration made the visual experience more coherent and engaging.`,
   },
 ];
 
-const stepIcons = [Search01Icon, BulbIcon, PencilEdit01Icon, CheckmarkCircle02Icon];
+const stepIcons = [
+  Search01Icon,
+  BulbIcon,
+  PencilEdit01Icon,
+  CheckmarkCircle02Icon,
+];
 
 // ------- STEP BLOCK -------
-const StepBlock = ({ pillLabel, Icon, title, body, slideVariant = fadeLeft }) => (
+const StepBlock = ({
+  pillLabel,
+  Icon,
+  title,
+  body,
+  slideVariant = fadeLeft,
+}) => (
   <motion.div
     className="w-full lg:max-w-[574px] flex flex-col gap-4"
     variants={slideVariant}
@@ -155,7 +171,10 @@ const ProjectWriteUp = ({ project }) => {
             viewport={{ once: true, amount: 0.25 }}
           >
             <div className="relative flex-1">
-              <div className="relative h-full rounded-xl sm:rounded-2xl border-2 border-lime-500 overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.85)] bg-black/20" style={{ minHeight: 260 }}>
+              <div
+                className="relative h-full rounded-xl sm:rounded-2xl border-2 border-lime-500 overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.85)] bg-black/20"
+                style={{ minHeight: 260 }}
+              >
                 <img
                   src={caseStudyImage}
                   alt="Case study visual"

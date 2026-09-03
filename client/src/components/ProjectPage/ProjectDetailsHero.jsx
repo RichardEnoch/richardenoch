@@ -55,8 +55,8 @@ const ProjectDetailsHero = ({ project }) => {
     (Array.isArray(heroMeta.categories) && heroMeta.categories.length
       ? heroMeta.categories
       : Array.isArray(project?.categories) && project.categories.length
-      ? project.categories
-      : defaultCategories) || defaultCategories;
+        ? project.categories
+        : defaultCategories) || defaultCategories;
 
   const deliverablesText =
     heroMeta.deliverables && heroMeta.deliverables.trim().length

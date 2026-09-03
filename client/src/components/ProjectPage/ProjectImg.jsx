@@ -43,9 +43,7 @@ const ProjectImg = ({ project }) => {
             <img
               src={mainImageUrl}
               alt={
-                project?.name
-                  ? `${project.name} mid visual`
-                  : "Project visual"
+                project?.name ? `${project.name} mid visual` : "Project visual"
               }
               className="h-full w-full object-cover"
             />

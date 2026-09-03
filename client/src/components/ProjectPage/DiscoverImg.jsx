@@ -1,12 +1,25 @@
 // src/components/ProjectPage/DiscoverImg.jsx
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 
 const headerItem = {
   hidden: { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 0.61, 0.36, 1] } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.65, ease: [0.22, 0.61, 0.36, 1] },
+  },
 };
-import { ArrowLeft01Icon, ArrowRight01Icon, Cancel01Icon } from "hugeicons-react";
+import {
+  ArrowLeft01Icon,
+  ArrowRight01Icon,
+  Cancel01Icon,
+} from "hugeicons-react";
 
 import gimg1 from "../../assets/Bookrion/g1.jpg";
 import gimg2 from "../../assets/Bookrion/g2.jpg";
@@ -21,7 +34,7 @@ const StackedCard = ({ src, alt, index, total, scrollYProgress, onClick }) => {
   const scale = useTransform(
     scrollYProgress,
     [index / total, (index + 1) / total],
-    [1, targetScale]
+    [1, targetScale],
   );
 
   return (
@@ -47,7 +60,8 @@ const StackedCard = ({ src, alt, index, total, scrollYProgress, onClick }) => {
         {/* counter badge */}
         <div className="absolute top-3 left-4 z-10 rounded-full bg-black/50 px-3 py-1 backdrop-blur-sm">
           <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-white/60">
-            {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+            {String(index + 1).padStart(2, "0")} /{" "}
+            {String(total).padStart(2, "0")}
           </span>
         </div>
 
@@ -105,8 +119,8 @@ const DiscoverImg = ({ project }) => {
     (project?.images?.gallery && project.images.gallery.length
       ? project.images.gallery
       : project?.galleryImages && project.galleryImages.length
-      ? project.galleryImages
-      : []) || [];
+        ? project.galleryImages
+        : []) || [];
 
   let images = rawGallery.filter(Boolean);
   if (!images.length) {
@@ -124,20 +138,20 @@ const DiscoverImg = ({ project }) => {
     (e) => {
       if (e) e.stopPropagation();
       setLightboxIndex((prev) =>
-        prev === null ? prev : prev === 0 ? count - 1 : prev - 1
+        prev === null ? prev : prev === 0 ? count - 1 : prev - 1,
       );
     },
-    [count]
+    [count],
   );
 
   const showNext = useCallback(
     (e) => {
       if (e) e.stopPropagation();
       setLightboxIndex((prev) =>
-        prev === null ? prev : prev === count - 1 ? 0 : prev + 1
+        prev === null ? prev : prev === count - 1 ? 0 : prev + 1,
       );
     },
-    [count]
+    [count],
   );
 
   useEffect(() => {
@@ -159,7 +173,10 @@ const DiscoverImg = ({ project }) => {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.5 }}
-        variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.14 } } }}
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.14 } },
+        }}
       >
         <motion.p
           className="text-xs font-bold tracking-[0.3em] uppercase text-lime-400 mb-3"
@@ -170,7 +187,8 @@ const DiscoverImg = ({ project }) => {
         <motion.h2
           className="text-3xl sm:text-4xl lg:text-[44px] font-semibold leading-[1.1] tracking-[-0.02em]"
           style={{
-            background: "linear-gradient(180deg, #ffffff 0%, #b8b8b8 45%, #e0e0e0 100%)",
+            background:
+              "linear-gradient(180deg, #ffffff 0%, #b8b8b8 45%, #e0e0e0 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",

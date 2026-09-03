@@ -1,0 +1,752 @@
+<title>Putting ADLM On The Site</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root{
+    --bg:#050505; --bg2:#0A0A0A; --card:#0D0D0D; --card2:#111;
+    --line:#1C1C1C; --line2:#282828;
+    --ink:#fff; --ink2:#D4D4D4; --ink3:#A0A0A0; --ink4:#6A6A6A;
+    --lime:#89FF00; --lime2:#A3E635; --limebg:#101A02; --limeline:#2A3D0A;
+    --warn:#E0A44A; --warnbg:#191204; --warnline:#3A2C08;
+    --sans:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+    --rail:236px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+    font-size:16px;line-height:1.65;font-weight:300;-webkit-font-smoothing:antialiased}
+  p{margin:0 0 1.05em;color:var(--ink2)}
+  strong{font-weight:600;color:var(--ink)}
+  em{font-style:italic}
+  code{font:400 .88em/1.5 var(--mono);color:var(--lime2);background:#0F1403;
+       border:1px solid #1E2A08;border-radius:4px;padding:1px 6px}
+  a{color:var(--lime2)}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--lime);outline-offset:3px;border-radius:4px}
+
+  .shell{max-width:1240px;margin:0 auto;padding:0 24px;
+    display:grid;grid-template-columns:var(--rail) minmax(0,1fr);gap:56px;align-items:start}
+  @media(max-width:1100px){.shell{grid-template-columns:1fr;gap:0}}
+
+  /* ── sticky TOC ── */
+  .toc{position:sticky;top:40px;padding:40px 0 60px}
+  @media(max-width:1100px){
+    .toc{position:fixed;inset:auto 0 0 0;top:auto;z-index:80;padding:0;
+      background:rgba(6,6,6,.95);backdrop-filter:blur(16px);border-top:1px solid var(--line)}
+    .toc-inner{max-height:0;overflow:hidden;transition:max-height .28s ease}
+    .toc.open .toc-inner{max-height:62vh;overflow-y:auto}
+    .toc-head{display:flex!important}
+  }
+  .toc-head{display:none;align-items:center;justify-content:space-between;
+    padding:15px 24px;cursor:pointer;font:500 13px/1 var(--sans);color:var(--ink2)}
+  .toc-head b{color:var(--lime);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+  @media(max-width:1100px){.toc-inner{padding:0 16px 22px}}
+  .toc-label{font:500 10px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+    color:var(--ink4);margin:0 0 16px;padding-left:14px}
+  @media(max-width:1100px){.toc-label{display:none}}
+  .toc-prog{position:absolute;left:0;top:44px;bottom:60px;width:2px;background:var(--line);border-radius:2px}
+  .toc-prog i{position:absolute;left:0;top:0;width:2px;background:var(--lime);border-radius:2px;height:0;
+    box-shadow:0 0 10px rgba(137,255,0,.5)}
+  @media(max-width:1100px){.toc-prog{display:none}}
+  .toc ol{list-style:none;margin:0;padding:0;position:relative}
+  .toc li a{display:flex;gap:10px;align-items:baseline;padding:7px 0 7px 14px;
+    font:400 13.5px/1.4 var(--sans);color:var(--ink4);text-decoration:none;
+    border-left:2px solid transparent;transition:color .18s,border-color .18s}
+  .toc li a:hover{color:var(--ink2)}
+  .toc li a[aria-current="true"]{color:var(--lime);border-left-color:var(--lime)}
+  .toc li a span{font:500 10px/1.6 var(--mono);color:var(--ink4);min-width:16px}
+  .toc li a[aria-current="true"] span{color:var(--lime)}
+  .toc-div{height:1px;background:var(--line);margin:20px 0 16px 14px}
+  .toc-out a{display:block;padding:6px 0 6px 14px;font:400 12.5px/1.4 var(--sans);
+    color:var(--ink4);text-decoration:none;border-left:2px solid transparent}
+  .toc-out a:hover{color:var(--lime2)}
+
+  main{padding:40px 0 140px;min-width:0}
+  .masthead{padding:44px 0 52px;border-bottom:1px solid var(--line)}
+  .kicker{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line2);
+    background:#0B0B0B;border-radius:999px;padding:6px 14px 6px 10px;margin-bottom:24px;
+    font:500 11.5px/1 var(--sans);color:var(--ink3)}
+  .dot{width:6px;height:6px;border-radius:99px;background:var(--lime);box-shadow:0 0 9px var(--lime)}
+  h1{font-weight:600;font-size:clamp(36px,5.4vw,58px);line-height:1.03;letter-spacing:-.045em;margin:0 0 20px;
+    text-wrap:balance;background:linear-gradient(178deg,#fff 8%,#9A9A9A 108%);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .lead{font-size:clamp(17px,2vw,19px);line-height:1.55;color:var(--ink3);max-width:62ch}
+
+  section{padding:60px 0;scroll-margin-top:40px}
+  section+section{border-top:1px solid var(--line)}
+  @media(max-width:1100px){section{scroll-margin-top:16px}}
+  h2{font-weight:500;font-size:clamp(25px,3.2vw,34px);line-height:1.14;letter-spacing:-.038em;margin:0 0 14px;
+    text-wrap:balance;background:linear-gradient(178deg,#fff 10%,#AAA 105%);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  h3{font-weight:500;font-size:19px;line-height:1.3;letter-spacing:-.018em;margin:0 0 8px;color:var(--ink)}
+  h4{font-weight:600;font-size:15px;margin:0 0 6px;color:var(--ink)}
+  .eyebrow{font:500 10px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--lime);margin:0 0 16px}
+  .read{max-width:68ch}
+  .sub{color:var(--ink3);max-width:64ch;margin-bottom:34px}
+
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:820px){.g2,.g3{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:22px 24px}
+  .card p{font-size:14px;color:var(--ink3);margin:0}
+  .card p+p{margin-top:8px}
+  .card h4 .mark{color:var(--lime);font-family:var(--mono);font-size:11px;letter-spacing:.1em;margin-right:8px}
+
+  .tree{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 24px;overflow-x:auto}
+  .tree ul{list-style:none;margin:0;padding:0}
+  .tree ul ul{margin-left:16px;padding-left:16px;border-left:1px solid var(--line2)}
+  .node{display:flex;gap:12px;align-items:baseline;padding:6px 0;flex-wrap:wrap}
+  .node code{background:none;border:none;padding:0;color:var(--lime2);font-size:12.5px;white-space:nowrap}
+  .node b{font-weight:500;font-size:13.5px;color:var(--ink)}
+  .node i{font-style:normal;font-size:12.5px;color:var(--ink4)}
+  .node.root code{color:var(--lime);font-weight:500;font-size:13.5px}
+  .tag{font:500 9.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+    padding:4px 7px;border-radius:4px;white-space:nowrap}
+  .tag.new{color:var(--lime);background:var(--limebg);border:1px solid var(--limeline)}
+  .tag.have{color:var(--ink3);background:#0F0F0F;border:1px solid var(--line2)}
+  .tag.gone{color:#E0764A;background:#1C1008;border:1px solid #3A2010}
+
+  .flow{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:16px}
+  .flow-h{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+  .flow-h b{font-weight:500;font-size:16px;color:var(--ink)}
+  .flow-h .who{font:500 9.5px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;
+    padding:5px 8px;border-radius:4px;color:var(--lime);background:var(--limebg);border:1px solid var(--limeline)}
+  .steps{display:flex;gap:8px;flex-wrap:wrap}
+  .step{flex:1 1 128px;background:var(--bg2);border:1px solid var(--line2);border-radius:9px;padding:13px 14px}
+  .step em{font:500 9px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--ink4);
+    font-style:normal;display:block;margin-bottom:7px}
+  .step span{font-size:13px;color:var(--ink2);line-height:1.45;display:block}
+  .step.end{border-color:var(--limeline);background:var(--limebg)}
+  .step.end span{color:var(--lime2)}
+  .flow-note{margin:16px 0 0;font-size:13.5px;color:var(--ink4);max-width:74ch}
+
+  .spec{border-top:1px solid var(--line)}
+  .spec-i{display:grid;grid-template-columns:170px 1fr;gap:8px 22px;padding:16px 0;border-bottom:1px solid var(--line)}
+  @media(max-width:700px){.spec-i{grid-template-columns:1fr;gap:4px}}
+  .spec-i dt{font:500 11px/1.5 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--lime)}
+  .spec-i dd{margin:0;font-size:14px;color:var(--ink2);line-height:1.6}
+
+  .work{display:grid;border-top:1px solid var(--line)}
+  .wi{display:grid;grid-template-columns:40px 1fr;gap:6px 20px;padding:20px 0;border-bottom:1px solid var(--line)}
+  .wi>span{font:500 12px/1.8 var(--mono);color:var(--lime)}
+  .wi p{margin:0;font-size:14px;color:var(--ink3);max-width:72ch}
+
+  .q{background:var(--card);border:1px solid var(--line);border-left:2px solid var(--lime);
+    border-radius:0 12px 12px 0;padding:20px 24px;margin-bottom:12px}
+  .q h4{margin-bottom:7px}
+  .q p{font-size:14px;color:var(--ink3);margin:0}
+  .q p+p{margin-top:8px}
+  .rec{color:var(--lime2)}
+
+  .callout{background:var(--limebg);border:1px solid var(--limeline);border-radius:13px;padding:22px 24px;max-width:76ch}
+  .callout h4{color:var(--lime);font:500 10px/1 var(--mono);letter-spacing:.17em;text-transform:uppercase;margin-bottom:11px}
+  .callout p{font-size:14px;color:var(--ink2);margin:0}
+  .callout p+p{margin-top:9px}
+  .callout.warn{background:var(--warnbg);border-color:var(--warnline)}
+  .callout.warn h4{color:var(--warn)}
+
+  /* wireframe blocks */
+  .wf{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;gap:10px}
+  .wfb{border:1px dashed #2E3A18;border-radius:9px;background:rgba(137,255,0,.03);
+    padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+  .wfb b{font-weight:500;font-size:13.5px;color:var(--ink2)}
+  .wfb i{font-style:normal;font:400 11.5px/1.4 var(--mono);color:var(--ink4);text-align:right}
+  .wfb.solid{border-style:solid;border-color:var(--limeline);background:var(--limebg)}
+  .wfb.solid b{color:var(--lime2)}
+  .wfrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:640px){.wfrow{grid-template-columns:1fr}}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="shell">
+
+  <nav class="toc" id="toc" aria-label="On this page">
+    <div class="toc-head" id="tocHead"><span>On this page</span><b id="tocState">Menu</b></div>
+    <div class="toc-inner">
+      <p class="toc-label">On this page</p>
+      <div class="toc-prog"><i id="prog"></i></div>
+      <ol id="tocList">
+        <li><a href="#outcomes"><span>01</span>On outcomes</a></li>
+        <li><a href="#research"><span>02</span>Getting your research</a></li>
+        <li><a href="#featured"><span>03</span>Featured projects</a></li>
+        <li><a href="#categories"><span>04</span>Category pages</a></li>
+        <li><a href="#ia"><span>05</span>The ADLM tree</a></li>
+        <li><a href="#dsplace"><span>06</span>The design system</a></li>
+        <li><a href="#flows"><span>07</span>User flows</a></li>
+        <li><a href="#products"><span>08</span>Showing products</a></li>
+        <li><a href="#website"><span>09</span>The website page</a></li>
+        <li><a href="#toc-spec"><span>10</span>The sticky TOC</a></li>
+        <li><a href="#order"><span>11</span>Build order</a></li>
+        <li><a href="#asks"><span>12</span>What I need</a></li>
+      </ol>
+      <div class="toc-div"></div>
+      <p class="toc-label">Related</p>
+      <div class="toc-out">
+        <a href="https://claude.ai/code/artifact/9f026ce9-b1a6-41e3-abb5-fa04e4cef192" target="_blank" rel="noopener">Sample case-study pages →</a>
+        <a href="https://claude.ai/code/artifact/bb8afe45-d2a4-4d48-a681-38a07fcb06a5" target="_blank" rel="noopener">Scorecard + resumes →</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <header class="masthead">
+      <div class="kicker"><span class="dot"></span> Working plan · v2 · 25 August 2026</div>
+      <h1>Putting ADLM on the site.</h1>
+      <p class="lead">
+        Rewritten after your notes. Two of your corrections changed the plan rather than adjusting it —
+        the outcomes rule, and where the design system belongs. The structure below is built on your
+        featured-project model.
+      </p>
+    </header>
+
+    <!-- 01 OUTCOMES -->
+    <section id="outcomes">
+      <p class="eyebrow">01 · The correction</p>
+      <h2>You're right. Omission isn't dishonesty.</h2>
+      <p class="read sub">
+        Your video-editing analogy is exactly the right test, and my earlier rule failed it.
+        I'll restate the rule properly.
+      </p>
+
+      <div class="g2">
+        <div class="card">
+          <h4><span class="mark">✓</span>The actual rule</h4>
+          <p><strong>Never make a claim you can't back.</strong> That's it. It governs what you write,
+             not what you leave out.</p>
+          <p>A case study that describes the problem, the constraints, the decisions and the craft — and
+             says nothing about adoption — is a completely normal case study. Most of them are.</p>
+        </div>
+        <div class="card">
+          <h4><span class="mark">✕</span>What I wrongly implied</h4>
+          <p>That you should write "designed, not adopted" on the page. You shouldn't. Nobody asked, and
+             volunteering it hands a reviewer a reason to stop reading before they've seen the work.</p>
+          <p>You never have to write the words <em>I don't have metrics.</em> Just don't write a metric.</p>
+        </div>
+      </div>
+
+      <p class="read" style="margin-top:26px">
+        The line worth holding is narrow: <strong>don't let a page imply something false.</strong>
+        Showing YDPay screens under a heading like "now live in the app" would be a claim. Describing
+        what you designed, and stopping there, is not. Same screens, same work, no exposure.
+      </p>
+      <p class="read">
+        If it comes up in an interview — <em>did this ship?</em> — you answer then, in a conversation
+        where you can give it context. That is a completely different situation from pre-emptively
+        flagging it to a stranger skimming for a reason to say no.
+      </p>
+
+      <div class="callout warn" style="margin-top:28px">
+        <h4>The one exception, and it isn't about honesty</h4>
+        <p>
+          <strong>BookRion stays out.</strong> That's a rights question, not a disclosure question. You
+          weren't granted showcase permission, and the work on their site now isn't yours. That's an
+          exposure you can't write your way around, so it comes down. The brand identity stays — you
+          have rights to that.
+        </p>
+      </div>
+    </section>
+
+    <!-- 02 RESEARCH -->
+    <section id="research">
+      <p class="eyebrow">02 · Getting it out of you</p>
+      <h2>Most of your research is already written down.</h2>
+      <p class="read sub">
+        You asked how I'd get this from you. For ADLM, largely I don't need to — it's in the repo.
+        For everything else, it's a short structured interview per case study.
+      </p>
+
+      <div class="g3">
+        <div class="card">
+          <h4>Already have it</h4>
+          <p>ADLM's audit, IA and visual-direction docs contain the research in full — the route
+             inventory, the reference analysis, the contrast measurement, the QUIV market work. I lift
+             and shape it.</p>
+        </div>
+        <div class="card">
+          <h4>In your head</h4>
+          <p>The QS domain knowledge. You wrote three paragraphs on manual take-off and the cost barrier
+             without being asked, and it was the best writing in this project. That's the method — I
+             ask, you talk, I shape.</p>
+        </div>
+        <div class="card">
+          <h4>Not yet gathered</h4>
+          <p>NIQS and Reni. Six questions each, answered however's easiest — bullets, voice notes,
+             stream of consciousness. I turn it into the four-beat structure.</p>
+        </div>
+      </div>
+
+      <p class="read" style="margin-top:28px">
+        The four beats stay: <strong>the question → where I looked → what I found → what changed.</strong>
+        You don't need a formal study to fill them. "I looked at what PiggyVest and Cowrywise do with
+        goal-based saving, found they both bury the goal behind the balance, and put the goal first"
+        is a complete research beat. It's also literally true of work you've already done.
+      </p>
+    </section>
+
+    <!-- 03 FEATURED -->
+    <section id="featured">
+      <p class="eyebrow">03 · The new top of /projects</p>
+      <h2>Featured projects, above the grid.</h2>
+      <p class="read sub">
+        Your model, and it solves something the current site can't: a project that spans five
+        disciplines has no good home in a grid organised by discipline.
+      </p>
+
+      <div class="wf">
+        <div class="wfb solid"><b>Featured Projects — full-viewport carousel</b><i>swipe / drag · dot indicators<br>one slide per featured project</i></div>
+        <div class="wfrow">
+          <div class="wfb"><b>ADLM Studio</b><i>brand · product · website<br>social · presentation</i></div>
+          <div class="wfb"><b>NIQS</b><i>brand · product · website<br>social</i></div>
+        </div>
+        <div class="wfb"><b>YDPay</b><i>brand · product · social · motion</i></div>
+        <div class="wfb" style="border-style:solid;border-color:var(--line2);background:var(--bg2)"><b>↓ Category tabs + project grid (existing)</b><i>unchanged</i></div>
+      </div>
+
+      <p class="read" style="margin-top:26px">
+        Each slide carries the project name, a one-line positioning statement, and chips for the
+        disciplines it covers — the chips are the navigation. Clicking a chip goes straight to that
+        sub-page; clicking the slide goes to the hub.
+      </p>
+
+      <div class="callout" style="margin-top:24px">
+        <h4>The part I like most about your model</h4>
+        <p>
+          <strong>Each sub-page also stays a tile in its own category grid.</strong> ADLM Brand Identity
+          sits in the Brand Identity grid; ADLM Website sits in the Websites grid. So the work is
+          reachable two ways, and the two "next" buttons at the foot of each sub-page make that
+          explicit — <em>next discipline in this project</em>, or <em>next project in this discipline</em>.
+        </p>
+        <p>
+          That's a dual-axis structure: <strong>read across a project, or read across a craft.</strong>
+          A brand recruiter follows one axis and never leaves brand work. You follow the other when you
+          want to show range. Same pages, two reading orders, no duplication.
+        </p>
+      </div>
+    </section>
+
+    <!-- 04 CATEGORIES -->
+    <section id="categories">
+      <p class="eyebrow">04 · The tabs problem</p>
+      <h2>You already have three of the five pages.</h2>
+      <p class="read sub">
+        You spotted that category-specific resume links have nowhere to land, because categories are
+        tabs on one URL. Good catch — and the fix is smaller than it looks.
+      </p>
+
+      <div class="tree">
+        <ul>
+          <li><div class="node"><code>/graphic-design</code><b>Graphic Design</b><span class="tag have">Exists</span><i>hero · subtitle · sub-category tiles</i></div></li>
+          <li><div class="node"><code>/website-design</code><b>Websites</b><span class="tag have">Exists</span></div></li>
+          <li><div class="node"><code>/presentation-design</code><b>Presentation</b><span class="tag have">Exists</span></div></li>
+          <li><div class="node"><code>/brand-identity</code><b>Brand Identity</b><span class="tag new">Build</span><i>same template</i></div></li>
+          <li><div class="node"><code>/product-design</code><b>Product / UI-UX</b><span class="tag new">Build</span><i>same template</i></div></li>
+        </ul>
+      </div>
+
+      <p class="read" style="margin-top:24px">
+        The <code>GraphicDesignPage</code> pattern is already the answer — hero, positioning subtitle,
+        then tiles. Two more pages on that template and the set is complete. <code>/projects</code>
+        keeps the featured carousel and the full grid; the category pages become real destinations with
+        their own hero copy and their own metadata.
+      </p>
+      <p class="read">
+        Which answers the resume question directly: <strong>yes.</strong> Brand resume → <code>/brand-identity</code>.
+        Product resume → <code>/product-design</code>. Multidisciplinary resume → the homepage. Each lands
+        on a page that opens by arguing for that discipline, instead of a generic grid the reader has to
+        filter themselves.
+      </p>
+    </section>
+
+    <!-- 05 IA -->
+    <section id="ia">
+      <p class="eyebrow">05 · The tree</p>
+      <h2>ADLM, in full.</h2>
+      <p class="read sub">
+        I've adopted your nested URL. It's better than what I proposed — the path itself tells a reader
+        what they're looking at and where it sits.
+      </p>
+
+      <div class="tree">
+        <ul>
+          <li>
+            <div class="node root"><code>/projects/featured/adlm-studio</code><b>Hub</b>
+              <i>the problem · the spine · the suite · where everything lives</i></div>
+            <ul>
+              <li><div class="node"><code>/brand</code><b>Brand Identity</b><i>mark, colour, typographic voice, guideline, applications, merch</i></div></li>
+              <li><div class="node"><code>/design-system</code><b>Design System</b><span class="tag new">Own page</span><i>tokens, components, patterns</i></div></li>
+              <li><div class="node"><code>/website</code><b>Website</b><i>case study · Bextro-style</i></div></li>
+              <li><div class="node"><code>/product</code><b>Product / UI-UX</b><i>the suite — what it solves, how the six connect</i></div>
+                <ul>
+                  <li><div class="node"><code>/product/quiv</code><b>QUIV</b><i>Revit · take-off</i></div></li>
+                  <li><div class="node"><code>/product/heron</code><b>HERON</b><i>Planswift · 2D take-off → linked Excel BoQ</i></div></li>
+                  <li><div class="node"><code>/product/rategen</code><b>RateGen</b><i>rate build-up</i></div></li>
+                  <li><div class="node"><code>/product/revit-mep</code><b>Revit MEP</b></div></li>
+                  <li><div class="node"><code>/product/timepro</code><b>Time Pro</b></div></li>
+                  <li><div class="node"><code>/product/civiq</code><b>CIVIQ</b></div></li>
+                </ul>
+              </li>
+              <li><div class="node"><code>/social</code><b>Social &amp; Marketing</b><span class="tag have">Exists</span><i>the current gallery, re-homed + redirect</i></div></li>
+              <li><div class="node"><code>/presentation</code><b>Presentation</b><i>pitch and investor decks</i></div></li>
+            </ul>
+          </li>
+          <li style="margin-top:12px">
+            <div class="node root"><code>/projects/featured/niqs</code><b>NIQS</b><span class="tag new">Same shape</span>
+              <i>brand · product (portal + admin) · website · social templates</i></div>
+          </li>
+          <li style="margin-top:12px">
+            <div class="node root"><code>/projects/featured/ydpay</code><b>YDPay</b><span class="tag new">Same shape</span>
+              <i>brand · product · social · motion</i></div>
+          </li>
+          <li style="margin-top:12px">
+            <div class="node root"><code>Single-discipline</code><b>Everything else</b></div>
+            <ul>
+              <li><div class="node"><code>/ui-projects/reni</code><b>Reni</b><span class="tag new">Build</span><i>shipped, two platforms, daily use</i></div></li>
+              <li><div class="node"><code>/projects/verde-luxe</code> <code>/tabstudio</code> <code>/cleanstead</code><b>Brand identities</b><span class="tag have">Exist</span></div></li>
+              <li><div class="node"><code>/ui-projects/savedup</code> <code>/snotes</code><b>Concepts</b><span class="tag have">Exist</span></div></li>
+              <li><div class="node"><code>/projects/book-rion</code><b>BookRion</b><span class="tag have">Brand only</span></div></li>
+              <li><div class="node"><code>/ui-projects/quiv</code><b>Old QUIV route</b><span class="tag gone">→ redirect</span><i>to the nested path</i></div></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 06 DESIGN SYSTEM -->
+    <section id="dsplace">
+      <p class="eyebrow">06 · Your correction</p>
+      <h2>The design system isn't brand work.</h2>
+      <p class="read sub">
+        Agreed, and it matters more than a filing decision — the two are genuinely different crafts,
+        and a brand recruiter and a product recruiter want different halves.
+      </p>
+
+      <div class="g2">
+        <div class="card">
+          <h4>Brand Identity page owns</h4>
+          <p>The mark and lockups. The typographic voice. The colour <em>truth</em> — including the drift
+             finding, where the stylesheet and the artwork disagreed and the artwork won. The guideline
+             document. Applications: stationery, merch, environmental, certificates.</p>
+        </div>
+        <div class="card">
+          <h4>Design System page owns</h4>
+          <p>Colour <em>ramps</em> and semantic tokens. Type scale. Spacing, grid, radius, elevation.
+             Motion specification. Component inventory. Theming. And the contrast measurement, because
+             that's where it did its work.</p>
+        </div>
+      </div>
+
+      <p class="read" style="margin-top:26px">
+        The handoff between them is clean: <strong>brand establishes what the colour is; the design
+        system establishes what you're allowed to do with it.</strong> The contrast finding sits on the
+        design system page because it's the moment brand truth became a build constraint — white on the
+        brand blue fails, blue on navy passes, therefore navy-dominant. That decision governs both the
+        website and the product, which is exactly why the page sits between them.
+      </p>
+
+      <h3 style="margin-top:38px">The three-way link you described</h3>
+      <div class="wf" style="margin-top:16px">
+        <div class="wfrow">
+          <div class="wfb"><b>On /website — half-frame section</b><i>preview left · title, subtitle,<br>"View the design system" right</i></div>
+          <div class="wfb"><b>On /product — half-frame section</b><i>identical component,<br>same destination</i></div>
+        </div>
+        <div class="wfb solid"><b>/design-system — foot of page, two buttons</b><i>← See it on the website · See it in the product →</i></div>
+      </div>
+      <p class="read" style="margin-top:20px">
+        One shared component, used three times. A reader can detour into the system and come back to
+        either surface, or ignore it entirely and keep reading the case study. Nobody is forced through
+        a token spec to reach the work.
+      </p>
+    </section>
+
+    <!-- 07 FLOWS -->
+    <section id="flows">
+      <p class="eyebrow">07 · User flows</p>
+      <h2>Four entries, now that categories are real pages.</h2>
+
+      <div class="flow">
+        <div class="flow-h"><span class="who">Flow A</span><b>Product recruiter — from the product resume</b></div>
+        <div class="steps">
+          <div class="step"><em>Land</em><span>/product-design</span></div>
+          <div class="step"><em>Read</em><span>Hero argues the discipline</span></div>
+          <div class="step"><em>Pick</em><span>ADLM tile, or Reni</span></div>
+          <div class="step"><em>Enter</em><span>Suite page — how six connect</span></div>
+          <div class="step"><em>Open</em><span>QUIV or HERON</span></div>
+          <div class="step end"><em>Exit</em><span>Hire me → resume</span></div>
+        </div>
+        <p class="flow-note">Never has to pass through brand work. That's the point of the category page.</p>
+      </div>
+
+      <div class="flow">
+        <div class="flow-h"><span class="who">Flow B</span><b>Brand recruiter — from the brand resume</b></div>
+        <div class="steps">
+          <div class="step"><em>Land</em><span>/brand-identity</span></div>
+          <div class="step"><em>Scan</em><span>Five identity systems</span></div>
+          <div class="step"><em>Open</em><span>ADLM Brand</span></div>
+          <div class="step"><em>Next</em><span>→ Verde Luxe (craft axis)</span></div>
+          <div class="step end"><em>Exit</em><span>Hire me → resume</span></div>
+        </div>
+        <p class="flow-note">Follows the craft axis. Five systems in a row reads as a brand practice, not one long engagement.</p>
+      </div>
+
+      <div class="flow">
+        <div class="flow-h"><span class="who">Flow C</span><b>Generalist recruiter — from the multidisciplinary resume</b></div>
+        <div class="steps">
+          <div class="step"><em>Land</em><span>Homepage</span></div>
+          <div class="step"><em>See</em><span>Featured carousel</span></div>
+          <div class="step"><em>Enter</em><span>ADLM hub</span></div>
+          <div class="step"><em>Cross</em><span>Brand → System → Website (project axis)</span></div>
+          <div class="step end"><em>Exit</em><span>Hire me → resume</span></div>
+        </div>
+        <p class="flow-note">Follows the project axis. One project, five disciplines — the range argument makes itself.</p>
+      </div>
+
+      <div class="flow">
+        <div class="flow-h"><span class="who">Flow D</span><b>Prospective client</b></div>
+        <div class="steps">
+          <div class="step"><em>Land</em><span>Homepage or a sent link</span></div>
+          <div class="step"><em>Judge</em><span>Featured work, visually</span></div>
+          <div class="step"><em>Check</em><span>"Can he do this for me?"</span></div>
+          <div class="step end"><em>Exit</em><span>Work with me → rate card → book</span></div>
+        </div>
+        <p class="flow-note">Unchanged and intact. It just stops being the only door.</p>
+      </div>
+    </section>
+
+    <!-- 08 PRODUCTS -->
+    <section id="products">
+      <p class="eyebrow">08 · The clarity you asked for</p>
+      <h2>Showing a product, concretely.</h2>
+      <p class="read sub">
+        Six blocks, same order on every product page. Nothing bespoke, so all six are producible.
+      </p>
+
+      <div class="wf">
+        <div class="wfb solid"><b>1 · Hero — muted loop, 5–8s</b>
+          <i>The single most characteristic action.<br>QUIV: select an element in Revit, panel fills.<br>Poster frame fallback, autoplay muted, no audio.</i></div>
+        <div class="wfb"><b>2 · In context — one full screenshot</b>
+          <i>Revit or Planswift with the ADLM panel docked.<br>The frame that proves it's real software.</i></div>
+        <div class="wfb"><b>3 · Flow strips — your existing carousel</b>
+          <i>GuidelineCarousel, landscape.<br>One strip per flow: Import · Measure · Collate · Export.<br>4–6 frames each, snap-scrolled.</i></div>
+        <div class="wfb"><b>4 · Feature snippets — copy beside the exact component</b>
+          <i>Extracted UI fragments, not full screens.<br>Same rule ADLM's own site uses.</i></div>
+        <div class="wfb"><b>5 · The phone continuation</b>
+          <i>Same data, picked up away from the desk.<br>One frame or a short loop. The proof of the model.</i></div>
+        <div class="wfb"><b>6 · The output</b>
+          <i>What it produces — the linked Excel BoQ,<br>the priced bill, the valuation.</i></div>
+      </div>
+
+      <div class="callout" style="margin-top:28px">
+        <h4>On the Notion-style embed</h4>
+        <p>
+          I'd not embed the full case inline. Three reasons: each product should be its own indexable
+          URL so you can send a recruiter a clean QUIV link; six full cases on one page is enormous to
+          load; and a reader who wants QUIV shouldn't scroll through five others.
+        </p>
+        <p>
+          <strong>What gets you the same feel:</strong> on the suite page, each product gets a rich
+          preview block — key art, the one-liner, its capability chips, a strip of 3–4 screens — then a
+          link out. Visually it reads as embedded. Structurally it stays six pages.
+        </p>
+      </div>
+
+      <p class="read" style="margin-top:26px">
+        And one scroll-scrubbed sequence, <strong>on QUIV only</strong> — the take-off action, frames
+        driven by scroll position. Build it once, on the flagship. Six bespoke scroll interactions is
+        weeks of work that will stall everything behind it.
+      </p>
+
+      <div class="callout" style="margin-top:24px">
+        <h4>Your own site already wrote the suite page's headline</h4>
+        <p>
+          <em>"Six products, one workflow. Measure where your drawings live. Price from one shared
+          library. Report from one place."</em> That's better than anything I'd have written for the
+          spine. Use it.
+        </p>
+      </div>
+    </section>
+
+    <!-- 09 WEBSITE PAGE -->
+    <section id="website">
+      <p class="eyebrow">09 · Section order</p>
+      <h2>The website page.</h2>
+      <p class="read sub">
+        Bextro's archetype — full-bleed media hero, transparent nav over it, copy anchored low, floating
+        card with the CTA. Worth noting: that's the same reference ADLM's own visual direction picked as
+        its photographic hero. The case study and its subject end up speaking the same language.
+      </p>
+
+      <div class="wf">
+        <div class="wfb solid"><b>Hero — full-bleed preview</b><i>site preview or looping scroll capture<br>buttons: full web view · visit the live site</i></div>
+        <div class="wfb"><b>Where it started</b><i>the brief, and what the site was for</i></div>
+        <div class="wfb"><b>How things were</b><i>the audit — ConstructTech, the dead legal links,<br>the invisible-to-search finding, the buried proof</i></div>
+        <div class="wfb"><b>What we did</b><i>the restructure — merges, redirects, retired numbers</i></div>
+        <div class="wfb"><b>Information architecture</b><i>sitemap before / after — from 01-ia/</i></div>
+        <div class="wfb"><b>User flows</b><i>the five flows — self-serve, sales-led, course,<br>institutional, existing customer</i></div>
+        <div class="wfb solid"><b>Design system — half-frame</b><i>preview + "View the design system" →</i></div>
+        <div class="wfb"><b>Handpicked sections</b><i>the pages worth showing, as images</i></div>
+        <div class="wfb"><b>Two next buttons</b><i>ADLM Product → · Next website project →</i></div>
+      </div>
+
+      <p class="read" style="margin-top:22px">
+        Sticky TOC down the side throughout, listing those sections plus the sibling ADLM pages.
+      </p>
+    </section>
+
+    <!-- 10 TOC -->
+    <section id="toc-spec">
+      <p class="eyebrow">10 · The pattern</p>
+      <h2>The sticky table of contents.</h2>
+      <p class="read sub">You're using it. Here's the spec — including an answer to your motion question.</p>
+
+      <dl class="spec">
+        <div class="spec-i"><dt>Desktop ≥1100</dt>
+          <dd>Left rail, sticky, offset for the fixed nav. Sections, then a divider, then the sibling pages of the same project — so it navigates within the page <em>and</em> across the case study.</dd></div>
+        <div class="spec-i"><dt>Below 1100</dt>
+          <dd>Collapses to a bar pinned to the bottom of the viewport; tapping expands the same list. Bottom, not top — thumb reach, and it doesn't fight the site nav.</dd></div>
+        <div class="spec-i"><dt>Scroll-spy</dt>
+          <dd>Active item flips when a section crosses roughly a third of the viewport, not when it touches the top edge.</dd></div>
+        <div class="spec-i"><dt>Progress</dt>
+          <dd>Hairline lime fill down the rail. Tells a skimmer how much is left before they decide whether to bail.</dd></div>
+        <div class="spec-i"><dt>Lenis</dt>
+          <dd><strong>The one that will bite.</strong> Anchor clicks must go through <code>window.__lenis.scrollTo(target,{offset:-96})</code>. Native <code>scrollIntoView</code> fights the smooth scroll and lands wrong.</dd></div>
+        <div class="spec-i"><dt>Reduced motion</dt>
+          <dd><strong>Not a design compromise — and not ours.</strong> <code>prefers-reduced-motion</code> is a setting the <em>visitor</em> turns on in their own OS, usually for vestibular disorders or migraine triggers. Only those people get instant jumps instead of smooth scroll. Everyone else gets the full treatment. Your site already honours it globally via <code>MotionConfig reducedMotion="user"</code> — this just extends the same standard to the TOC.</dd></div>
+        <div class="spec-i"><dt>Accessibility</dt>
+          <dd><code>&lt;nav aria-label="On this page"&gt;</code>, <code>aria-current</code> on active, visible focus ring, real anchors so it works before JS runs.</dd></div>
+        <div class="spec-i"><dt>Reuse</dt>
+          <dd>One shared component. Every long case study gets it — ADLM, NIQS, YDPay, Reni.</dd></div>
+      </dl>
+    </section>
+
+    <!-- 11 ORDER -->
+    <section id="order">
+      <p class="eyebrow">11 · Build order</p>
+      <h2>Framework first, screens as they land.</h2>
+      <p class="read sub">
+        Structured so nothing waits on assets. Every page ships with its slots labelled; you drop images
+        in as each revamp finishes.
+      </p>
+
+      <div class="work">
+        <div class="wi"><span>01</span><p><strong>Shared components.</strong> The sticky TOC, the two-next-buttons footer, the design-system half-frame, the featured carousel. Everything downstream depends on these four.</p></div>
+        <div class="wi"><span>02</span><p><strong>Featured carousel on /projects</strong>, with ADLM, NIQS and YDPay slides.</p></div>
+        <div class="wi"><span>03</span><p><strong>The two missing category pages</strong> — <code>/brand-identity</code> and <code>/product-design</code>, on the GraphicDesignPage template. This is what makes the tailored resume links land properly.</p></div>
+        <div class="wi"><span>04</span><p><strong>ADLM hub.</strong> Problem, spine, the six-product workflow map, discipline cards.</p></div>
+        <div class="wi"><span>05</span><p><strong>ADLM brand + design system.</strong> Two pages, linked to each other and forward to website and product.</p></div>
+        <div class="wi"><span>06</span><p><strong>ADLM website page</strong>, Bextro archetype, IA and flows lifted from <code>01-ia/</code>.</p></div>
+        <div class="wi"><span>07</span><p><strong>ADLM product suite page</strong>, then QUIV and HERON as the first two product pages.</p></div>
+        <div class="wi"><span>08</span><p><strong>Remaining four products</strong>, and the social page re-homed with its redirect.</p></div>
+        <div class="wi"><span>09</span><p><strong>NIQS as a featured project</strong>, same shape.</p></div>
+        <div class="wi"><span>10</span><p><strong>Reni.</strong> Single product page, not featured — one discipline, done thoroughly.</p></div>
+        <div class="wi"><span>11</span><p><strong>Housekeeping.</strong> Two doors on the homepage, Resume in the nav, "How I work" rewritten, years line corrected, BookRion product and website removed.</p></div>
+      </div>
+
+      <div class="callout warn" style="margin-top:28px">
+        <h4>Parked, not forgotten</h4>
+        <p>
+          Testimonials stay exactly as they are, per your call — the submission line is broken from the
+          backend migration and leaving them visible is your reminder. Logged here so it doesn't get
+          lost: <strong>fix the testimonial submission route, then replace all five.</strong>
+        </p>
+      </div>
+    </section>
+
+    <!-- 12 ASKS -->
+    <section id="asks">
+      <p class="eyebrow">12 · What I need</p>
+      <h2>Four left.</h2>
+
+      <div class="q">
+        <h4>1 · Reni — the origin story</h4>
+        <p>I have the briefs, the module list, both codebases and the decisions. What I don't have is
+           <strong>why you built it.</strong> What were you using before, and what specifically broke down
+           badly enough that building your own was the reasonable option? That's the first paragraph of
+           the case study and only you have it.</p>
+        <p><span class="rec">Also:</span> confirm it's a single product page rather than featured. It's
+           one discipline done deeply — I think that's the stronger framing.</p>
+      </div>
+
+      <div class="q">
+        <h4>2 · NIQS — six questions</h4>
+        <p>Agreed it's featured; your discipline breakdown is right, and the admin secretariat is
+           product design. What I need: what was wrong before you started, what the institute asked for
+           versus what you concluded they needed, what the template system replaced, and what the
+           secretariat actually does day to day. Same four-beat structure.</p>
+      </div>
+
+      <div class="q">
+        <h4>3 · Presentation as an ADLM discipline</h4>
+        <p>You listed it in the sub-categories. Do the ADLM decks exist and are they yours to show?
+           If it's thin, I'd fold it into the social and marketing page rather than give it a
+           near-empty page of its own.</p>
+      </div>
+
+      <div class="q">
+        <h4>4 · Six product pages, still</h4>
+        <p>You answered around this but not directly. <span class="rec">My recommendation stands:</span>
+           full pages for <strong>QUIV, HERON and RateGen</strong>; rich preview blocks on the suite page
+           for <strong>Revit MEP, Time Pro and CIVIQ</strong>, promoted to full pages later if they earn it.
+           Halves the assets you have to produce, and three strong pages read better than six thin ones.</p>
+        <p>If you want all six as full pages, say so and I'll build all six — I just want it to be a
+           decision rather than a default.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('#tocList a'));
+  var secs  = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  var prog  = document.getElementById('prog');
+  var rail  = document.querySelector('.toc-prog');
+  var toc   = document.getElementById('toc');
+  var head  = document.getElementById('tocHead');
+  var state = document.getElementById('tocState');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function setActive(i){
+    links.forEach(function(a,n){
+      if(n===i) a.setAttribute('aria-current','true'); else a.removeAttribute('aria-current');
+    });
+  }
+  function current(){
+    var best=0,bestTop=-Infinity;
+    secs.forEach(function(s,i){
+      if(!s) return;
+      var t=s.getBoundingClientRect().top - window.innerHeight*0.33;
+      if(t<=0 && t>bestTop){ bestTop=t; best=i; }
+    });
+    return best;
+  }
+  function onScroll(){
+    var doc=document.documentElement;
+    var max=doc.scrollHeight-window.innerHeight;
+    var p=max>0?Math.min(1,Math.max(0,window.scrollY/max)):0;
+    if(prog&&rail) prog.style.height=(rail.offsetHeight*p)+'px';
+    setActive(current());
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll);
+  onScroll();
+
+  // In richPort this line becomes window.__lenis.scrollTo(el,{offset:-96})
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var el=document.querySelector(a.getAttribute('href'));
+      if(!el) return;
+      e.preventDefault();
+      var y=el.getBoundingClientRect().top+window.scrollY-24;
+      window.scrollTo({top:y,behavior:reduce?'auto':'smooth'});
+      history.replaceState(null,'',a.getAttribute('href'));
+      if(toc.classList.contains('open')){ toc.classList.remove('open'); state.textContent='Menu'; }
+    });
+  });
+  head.addEventListener('click',function(){
+    var open=toc.classList.toggle('open');
+    state.textContent=open?'Close':'Menu';
+  });
+})();
+</script>

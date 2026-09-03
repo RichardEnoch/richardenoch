@@ -14,7 +14,7 @@ function useIsMobile() {
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== "undefined" && window.matchMedia
       ? window.matchMedia(query).matches
-      : false
+      : false,
   );
   useEffect(() => {
     if (typeof window === "undefined" || !window.matchMedia) return;
@@ -34,12 +34,32 @@ function useIsMobile() {
 
 /* ─── single slide card ─── */
 function SlideCard({ slide, index, rawIndex, isMobile, portrait }) {
+  /* A slide with no caption keeps the original full-bleed sizing — the five
+     pages that used this component before captions existed must not change. */
+  const hasCaption = Boolean(slide.title || slide.caption);
+  /* The tallest the frame is allowed to get. A captioned slide gives up some
+     height so the caption is not pushed off the bottom of the track. */
+  const frameH = hasCaption
+    ? portrait
+      ? "70vh"
+      : isMobile
+        ? "32vh"
+        : "58vh"
+    : portrait
+      ? "78vh"
+      : isMobile
+        ? "40vh"
+        : "72vh";
   // Tight fan: neighbours sit close and far behind (small offset, hard blur,
   // strong scale-down) so only the centre page reads clearly.
-  const x = useTransform(rawIndex, (v) => (isMobile ? 0 : `${(index - v) * 22}vw`));
-  const y = useTransform(rawIndex, (v) => (isMobile ? `${(index - v) * 58}vw` : 0));
+  const x = useTransform(rawIndex, (v) =>
+    isMobile ? 0 : `${(index - v) * 22}vw`,
+  );
+  const y = useTransform(rawIndex, (v) =>
+    isMobile ? `${(index - v) * 58}vw` : 0,
+  );
   const scale = useTransform(rawIndex, (v) =>
-    Math.max(0.66, 1 - Math.min(Math.abs(index - v), 1) * 0.34)
+    Math.max(0.66, 1 - Math.min(Math.abs(index - v), 1) * 0.34),
   );
   const opacity = useTransform(rawIndex, (v) => {
     const d = Math.abs(index - v);
@@ -51,7 +71,7 @@ function SlideCard({ slide, index, rawIndex, isMobile, portrait }) {
     return `blur(${d * 18}px)`;
   });
   const zIndex = useTransform(rawIndex, (v) =>
-    Math.round(20 - Math.abs(index - v) * 10)
+    Math.round(20 - Math.abs(index - v) * 10),
   );
 
   return (
@@ -71,41 +91,91 @@ function SlideCard({ slide, index, rawIndex, isMobile, portrait }) {
         zIndex,
       }}
     >
-      {/* page — the frame IS the image: the img sizes itself to fit the track
-          at its natural aspect, so the border hugs the guideline page exactly
-          with zero letterbox space beside it */}
-      {slide.src ? (
-        <img
-          src={slide.src}
-          alt={slide.alt}
-          loading="lazy"
-          className="rounded-xl sm:rounded-2xl border border-white/10 shadow-[0_24px_80px_rgba(0,0,0,0.7)]"
-          style={{
-            maxWidth: "94%",
-            maxHeight: isMobile ? "92%" : "96%",
-            width: "auto",
-            height: "auto",
-            background: "#0d0f13",
-          }}
-        />
-      ) : (
-        <div
-          className="rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 bg-white/[0.03] flex flex-col items-center justify-center gap-3 px-10"
-          style={{
-            aspectRatio: portrait ? "210 / 297" : "16 / 9",
-            [portrait ? "height" : "width"]: portrait ? "90%" : "90%",
-            background: "#0d0f13",
-          }}
-        >
-          <div className="w-10 h-10 rounded-full border border-dashed border-white/15 flex items-center justify-center">
-            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5">
-              <rect x="3" y="3" width="18" height="18" rx="3" />
-              <path d="M3 16l5-5 4 4 3-3 6 6" />
-            </svg>
+      {/* The frame IS the image: it sizes itself to fit the track at its
+          natural aspect, so the border hugs the page exactly with no letterbox
+          beside it. Any caption travels with the frame rather than being
+          captioned once for the whole carousel, which would read as lag.
+
+          This wrapper must carry a real height. Percentage heights on the
+          frame below resolve against it, and when it was auto-height the
+          frames collapsed to nothing on every page using this component. */}
+      <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+        {slide.src ? (
+          <img
+            src={slide.src}
+            alt={slide.alt}
+            loading="lazy"
+            className="rounded-xl sm:rounded-2xl border border-white/10 shadow-[0_24px_80px_rgba(0,0,0,0.7)]"
+            style={{
+              maxWidth: portrait ? "94%" : "90%",
+              maxHeight: hasCaption
+                ? isMobile
+                  ? "52vh"
+                  : portrait
+                    ? "70vh"
+                    : "58vh"
+                : isMobile
+                  ? "62vh"
+                  : "78vh",
+              width: "auto",
+              height: "auto",
+              background: "#0d0f13",
+            }}
+          />
+        ) : (
+          <div
+            className="rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 bg-white/[0.03] flex flex-col items-center justify-center gap-3 px-10"
+            style={{
+              /* An empty frame stands in for a spread that is not photographed
+                 yet, so it has to be the exact shape of the thing that will
+                 land in it — 16:9 for a landscape deck, A-series for a
+                 portrait one. Getting that wrong makes the section a lie.
+
+                 The size is driven from WIDTH, not height. Setting a height
+                 alongside `max-width: 90%` lets the clamp win on a wide screen
+                 and squeeze the box off its own ratio; deriving the width from
+                 the height cap keeps the ratio intact at every size. */
+              aspectRatio: portrait ? "210 / 297" : "16 / 9",
+              width: `min(${portrait ? "94%" : "90%"}, calc(${frameH} * ${
+                portrait ? "210 / 297" : "16 / 9"
+              }))`,
+              background: "#0d0f13",
+            }}
+          >
+            <div className="w-10 h-10 rounded-full border border-dashed border-white/15 flex items-center justify-center">
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="rgba(255,255,255,0.25)"
+                strokeWidth="1.5"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="3" />
+                <path d="M3 16l5-5 4 4 3-3 6 6" />
+              </svg>
+            </div>
+            <p className="text-[11px] text-white/20 text-center leading-relaxed max-w-[300px]">
+              {slide.alt || slide.label}
+            </p>
           </div>
-          <p className="text-[11px] text-white/20 text-center leading-relaxed max-w-[300px]">{slide.alt}</p>
-        </div>
-      )}
+        )}
+
+        {(slide.title || slide.caption) && (
+          <div className="max-w-[52ch] px-4 text-center">
+            {slide.title && (
+              <p className="text-[16px] font-semibold leading-[1.3] text-white">
+                {slide.title}
+              </p>
+            )}
+            {slide.caption && (
+              <p className="mt-1.5 text-[13.5px] leading-[1.6] text-white/45">
+                {slide.caption}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
     </motion.div>
   );
 }
@@ -142,17 +212,27 @@ export default function GuidelineCarousel({
   // Map the full scroll range straight onto the slides — the last page lands
   // exactly as the sticky releases, so there's no static dead-scroll before
   // the next section (that gap read as "empty space").
-  const rawIndex = useTransform(scrollYProgress, [0, 1], [0, Math.max(1, activeSlides.length - 1)]);
+  const rawIndex = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0, Math.max(1, activeSlides.length - 1)],
+  );
 
   /* SNAP: the scroll position commits to one slide at a time. Rounding the
      raw index makes each scroll band own a single page, and the spring eases
      the hand-off — so the deck clicks from slide to slide like a swiped
      carousel instead of rolling freely under the wheel. */
   const snapTarget = useTransform(rawIndex, (v) => Math.round(v));
-  const slideIndex = useSpring(snapTarget, { stiffness: 200, damping: 30, mass: 0.7 });
+  const slideIndex = useSpring(snapTarget, {
+    stiffness: 200,
+    damping: 30,
+    mass: 0.7,
+  });
 
   useMotionValueEvent(rawIndex, "change", (v) => {
-    setActiveIndex(Math.max(0, Math.min(activeSlides.length - 1, Math.round(v))));
+    setActiveIndex(
+      Math.max(0, Math.min(activeSlides.length - 1, Math.round(v))),
+    );
   });
 
   /* gentle fade-in as section enters viewport */
@@ -167,7 +247,8 @@ export default function GuidelineCarousel({
     const el = containerRef.current;
     if (!el) return;
     const scrollable = el.offsetHeight - window.innerHeight;
-    const target = el.offsetTop + (i / Math.max(1, activeSlides.length - 1)) * scrollable;
+    const target =
+      el.offsetTop + (i / Math.max(1, activeSlides.length - 1)) * scrollable;
     if (window.__lenis) window.__lenis.scrollTo(target);
     else window.scrollTo({ top: target, behavior: "smooth" });
   };
@@ -191,17 +272,21 @@ export default function GuidelineCarousel({
         className="sticky top-0 h-screen overflow-hidden flex flex-col"
         style={{ opacity: entryOpacity }}
       >
-
         {/* ── header ── */}
         <div className="px-4 sm:px-8 lg:px-16 pt-10 pb-2 shrink-0 max-w-[1100px] mx-auto w-full">
-          <p className="text-[11px] font-bold tracking-[0.3em] uppercase mb-3" style={{ color }}>
+          <p
+            className="text-[11px] font-bold tracking-[0.3em] uppercase mb-3"
+            style={{ color }}
+          >
             {n} — {label}
           </p>
           <h2 className="text-2xl sm:text-[38px] font-semibold leading-tight tracking-[-0.03em] mb-2">
             <span className="text-white">{white} </span>
             <span style={{ color }}>{accent}</span>
           </h2>
-          <p className="text-[14px] leading-[1.6] text-white/45 max-w-[560px]">{description}</p>
+          <p className="text-[14px] leading-[1.6] text-white/45 max-w-[560px]">
+            {description}
+          </p>
         </div>
 
         {/* ── skip / escape button ── */}
@@ -230,7 +315,8 @@ export default function GuidelineCarousel({
         {/* ── footer: counter + dots + mobile arrows ── */}
         <div className="shrink-0 pb-5 pt-2">
           <p className="text-center text-[11px] font-mono text-white/25 mb-3 tracking-widest">
-            {String(activeIndex + 1).padStart(2, "0")} / {String(activeSlides.length).padStart(2, "0")}
+            {String(activeIndex + 1).padStart(2, "0")} /{" "}
+            {String(activeSlides.length).padStart(2, "0")}
           </p>
 
           <div className="flex items-center justify-center gap-2 flex-wrap px-4">
@@ -243,7 +329,8 @@ export default function GuidelineCarousel({
                 style={{
                   width: i === activeIndex ? "20px" : "6px",
                   height: "6px",
-                  background: i === activeIndex ? color : "rgba(255,255,255,0.18)",
+                  background:
+                    i === activeIndex ? color : "rgba(255,255,255,0.18)",
                   opacity: i === activeIndex ? 1 : 0.7,
                 }}
               />
@@ -262,7 +349,9 @@ export default function GuidelineCarousel({
               {activeIndex + 1} of {activeSlides.length}
             </span>
             <button
-              onClick={() => goTo(Math.min(activeSlides.length - 1, activeIndex + 1))}
+              onClick={() =>
+                goTo(Math.min(activeSlides.length - 1, activeIndex + 1))
+              }
               disabled={activeIndex === activeSlides.length - 1}
               className="flex items-center justify-center w-11 h-11 rounded-full border border-white/15 bg-white/5 text-white/60 disabled:opacity-25 transition-opacity"
             >
@@ -270,7 +359,6 @@ export default function GuidelineCarousel({
             </button>
           </div>
         </div>
-
       </motion.div>
     </div>
   );
