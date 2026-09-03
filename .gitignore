@@ -39,3 +39,9 @@ Thumbs.db
 
 # Raw source assets (design files, prototypes, brand exports)
 extra/
+
+# ADLM licensed the FM Bolyar OTFs, not us, and this repo is public. The
+# @font-face rules point at /fonts/ so a missing file degrades to the
+# fallback stack instead of failing the build.
+client/public/fonts/
+client/src/assets/fonts/
