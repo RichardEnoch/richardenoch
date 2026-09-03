@@ -10,8 +10,8 @@ import FontScaler from "./components/common/FontScaler.jsx";
 import CustomCursor from "./components/common/CustomCursor.jsx";
 import Preloader from "./components/common/Preloader.jsx";
 
-const MIN_MS = 900;   // floor, so the logo never just flashes
-const MAX_MS = 9000;  // ceiling, so a stalled asset can never trap anyone
+const MIN_MS = 900; // floor, so the logo never just flashes
+const MAX_MS = 9000; // ceiling, so a stalled asset can never trap anyone
 
 function App() {
   const location = useLocation();
@@ -40,13 +40,21 @@ function App() {
     };
 
     let fontsReady = false;
-    document.fonts?.ready.then(() => { fontsReady = true; }).catch(() => { fontsReady = true; });
+    document.fonts?.ready
+      .then(() => {
+        fontsReady = true;
+      })
+      .catch(() => {
+        fontsReady = true;
+      });
 
     const tick = () => {
       const imgs = Array.from(document.images).filter(
-        (img) => img.loading !== "lazy" && img.src
+        (img) => img.loading !== "lazy" && img.src,
       );
-      const loaded = imgs.filter((img) => img.complete && img.naturalWidth > 0).length;
+      const loaded = imgs.filter(
+        (img) => img.complete && img.naturalWidth > 0,
+      ).length;
       const imgPct = imgs.length ? loaded / imgs.length : 1;
       const pct = Math.round((imgPct * 0.85 + (fontsReady ? 0.15 : 0)) * 100);
 
@@ -96,7 +104,7 @@ function App() {
             pre.src = img.src;
           });
         },
-        { rootMargin: "1800px 0px" } // roughly two screens of runway
+        { rootMargin: "1800px 0px" }, // roughly two screens of runway
       );
 
       document
@@ -115,7 +123,8 @@ function App() {
       cancelled = true;
       observerRef.current?.disconnect();
       observerRef.current = null;
-      if (typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(id);
+      if (typeof window.cancelIdleCallback === "function")
+        window.cancelIdleCallback(id);
       else clearTimeout(id);
     };
   }, [loading, location.pathname]);
@@ -139,7 +148,11 @@ function App() {
       return () => query.removeEventListener("change", onChange);
     }
 
-    const lenis = new Lenis({ duration: 0.9, smoothWheel: true, wheelMultiplier: 1.2 });
+    const lenis = new Lenis({
+      duration: 0.9,
+      smoothWheel: true,
+      wheelMultiplier: 1.2,
+    });
     // Exposed so route changes (ScrollToTop) can reset Lenis's internal
     // target — a bare window.scrollTo leaves it stale and the next wheel
     // input animates back from the old position (feels like a hang).

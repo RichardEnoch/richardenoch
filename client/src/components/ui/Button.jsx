@@ -15,8 +15,7 @@ const VARIANTS = {
   secondary:
     "border-2 border-[#5DB402] bg-transparent font-bold text-[#7BF003] " +
     "hover:bg-[#7BF003]/10 hover:border-[#7BF003]",
-  ghost:
-    "font-semibold text-white/65 hover:bg-white/[0.06] hover:text-white",
+  ghost: "font-semibold text-white/65 hover:bg-white/[0.06] hover:text-white",
   danger:
     "border border-rose-400/30 bg-rose-500/10 font-semibold text-rose-300 " +
     "hover:border-rose-400/50 hover:bg-rose-500/20",
@@ -34,7 +33,11 @@ const SIZES = {
    Every filled or outlined variant gets the glass sheen. */
 const SHEEN_VARIANTS = new Set(["primary", "secondary", "danger"]);
 
-export const buttonClasses = (variant = "primary", size = "md", className = "") =>
+export const buttonClasses = (
+  variant = "primary",
+  size = "md",
+  className = "",
+) =>
   [
     "inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-lg transition",
     "disabled:pointer-events-none disabled:opacity-50",
@@ -47,7 +50,10 @@ export const buttonClasses = (variant = "primary", size = "md", className = "") 
     .join(" ");
 
 const Button = React.forwardRef(
-  ({ variant = "primary", size = "md", className = "", children, ...props }, ref) => (
+  (
+    { variant = "primary", size = "md", className = "", children, ...props },
+    ref,
+  ) => (
     <motion.button
       ref={ref}
       whileHover={{ y: -2, scale: 1.02 }}
@@ -58,7 +64,7 @@ const Button = React.forwardRef(
     >
       {children}
     </motion.button>
-  )
+  ),
 );
 Button.displayName = "Button";
 

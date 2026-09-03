@@ -38,7 +38,7 @@ const LazyVideo = ({ src, poster, className = "", eager = false, ...rest }) => {
           io.disconnect();
         }
       },
-      { rootMargin: "300px" }
+      { rootMargin: "300px" },
     );
     io.observe(el);
     return () => io.disconnect();

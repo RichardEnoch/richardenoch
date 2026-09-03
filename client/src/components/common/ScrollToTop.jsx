@@ -23,7 +23,8 @@ const ScrollToTop = () => {
             window.scrollTo({
               top: y,
               left: 0,
-              behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+              behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+                .matches
                 ? "auto"
                 : "smooth",
             });

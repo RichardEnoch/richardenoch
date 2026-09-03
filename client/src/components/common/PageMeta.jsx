@@ -6,7 +6,12 @@ const DEFAULT_DESC =
 const DEFAULT_IMG = "https://richardenoch.vercel.app/og-default.jpg";
 const BASE_URL = "https://richardenoch.vercel.app";
 
-const PageMeta = ({ title, description = DEFAULT_DESC, image = DEFAULT_IMG, url }) => {
+const PageMeta = ({
+  title,
+  description = DEFAULT_DESC,
+  image = DEFAULT_IMG,
+  url,
+}) => {
   const fullTitle = title ? `${title} | Richard Enoch` : SITE;
   const canonical = url ? `${BASE_URL}${url}` : undefined;
 

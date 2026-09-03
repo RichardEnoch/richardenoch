@@ -21,7 +21,13 @@
 // re-measures when images finish loading or the window resizes.
 
 import { Children, useEffect, useRef, useState } from "react";
-import { motion, useScroll, useSpring, useTransform, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useReducedMotion,
+} from "framer-motion";
 
 const ScrollAlign = ({
   children,
@@ -48,7 +54,11 @@ const ScrollAlign = ({
     const measure = () => {
       setHeights({ a: a.offsetHeight, b: b.offsetHeight });
       // Side by side only when the two columns actually sit on one row.
-      setStacked(Math.abs(a.getBoundingClientRect().top - b.getBoundingClientRect().top) > 40);
+      setStacked(
+        Math.abs(
+          a.getBoundingClientRect().top - b.getBoundingClientRect().top,
+        ) > 40,
+      );
     };
 
     measure();
@@ -72,7 +82,11 @@ const ScrollAlign = ({
 
   /* A touch of spring so the drift feels physical rather than mechanically
      tied to the wheel. Critically damped — no overshoot on a scroll. */
-  const raw = useTransform(scrollYProgress, [0, 1], [0, active ? difference : 0]);
+  const raw = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0, active ? difference : 0],
+  );
   const drift = useSpring(raw, { stiffness: 220, damping: 40, mass: 0.4 });
 
   const [first, second] = Children.toArray(children);

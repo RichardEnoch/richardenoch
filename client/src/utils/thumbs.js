@@ -27,7 +27,10 @@ const modules = import.meta.glob("../assets/**/*.thumb.webp", {
 const byBasename = {};
 const ambiguous = new Set();
 for (const [filePath, url] of Object.entries(modules)) {
-  const key = filePath.split("/").pop().replace(/\.thumb\.webp$/i, "");
+  const key = filePath
+    .split("/")
+    .pop()
+    .replace(/\.thumb\.webp$/i, "");
   if (key in byBasename) ambiguous.add(key);
   byBasename[key] = url;
 }
@@ -40,8 +43,8 @@ export function thumbFor(fullUrl) {
   if (!fullUrl || typeof fullUrl !== "string") return fullUrl;
   const file = decodeURIComponent(fullUrl.split("/").pop() || "");
   const base = file
-    .replace(/\.[a-z0-9]+$/i, "")           // drop extension
-    .replace(/-[A-Za-z0-9_-]{8}$/, "");     // drop Vite's content hash
+    .replace(/\.[a-z0-9]+$/i, "") // drop extension
+    .replace(/-[A-Za-z0-9_-]{8}$/, ""); // drop Vite's content hash
   return byBasename[base] || fullUrl;
 }
 

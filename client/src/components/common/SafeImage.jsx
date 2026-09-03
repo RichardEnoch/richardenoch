@@ -27,9 +27,7 @@ const SafeImage = ({
       <div
         className={`rounded-3xl border border-white/10 bg-white/[0.03] p-10 ${className}`}
       >
-        <p className="text-sm text-white/60">
-          No image available.
-        </p>
+        <p className="text-sm text-white/60">No image available.</p>
       </div>
     );
   }

@@ -46,7 +46,7 @@ export default function useDragScroll() {
     if (!node) return;
 
     const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
+      "(prefers-reduced-motion: reduce)",
     ).matches;
 
     let dragging = false;
@@ -196,7 +196,7 @@ export default function useDragScroll() {
     () => () => {
       if (cleanupRef.current) cleanupRef.current();
     },
-    []
+    [],
   );
 
   return attach;

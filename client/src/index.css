@@ -1,14 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@200..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@200..700&display=swap");
+/* Used only by the ADLM design-system specimens, where quantities and rates
+   have to line up in columns and token names read as code. */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+/* ADLM's wordmark face — loaded so the type specimen on the brand page can be
+   set in the actual typeface rather than described in someone else's. */
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap");
+
 /* @tailwind base;
 @tailwind components;
 @tailwind utilities; */
 
-
 @import "tailwindcss";
 
+/* ADLM's original 2020 face, self-hosted from the licensed OTFs in the project
+   folder. Used only in the type specimen on the brand page, so the typeface
+   that was replaced can be shown as itself rather than as an approximation.
 
+   MUST stay below every @import. CSS requires all @import rules to precede any
+   other rule — putting these @font-face blocks above `@import "tailwindcss"`
+   silently invalidates that import, Tailwind never loads, and the entire site
+   renders unstyled. */
+@font-face {
+  font-family: "FM Bolyar Sans Pro";
+  src: url("/fonts/FMBolyarSansPro-400.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "FM Bolyar Sans Pro";
+  src: url("/fonts/FMBolyarSansPro-500.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "FM Bolyar Sans Pro";
+  src: url("/fonts/FMBolyarSansPro-700.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* src/index.css */
 html {
@@ -32,21 +66,19 @@ body,
   overflow-x: clip;
 }
 
-
-
-a.active hr{
-    display: block ;
+a.active hr {
+  display: block;
 }
 
-*{
-    font-family: Outfit;
+* {
+  font-family: Outfit;
 }
 
 /* Pages that opt into Lexend. Scoped, because the `*` rule above targets
    every element and would otherwise beat plain inheritance from the wrapper. */
 .page-lexend,
 .page-lexend * {
-    font-family: 'Lexend', sans-serif;
+  font-family: "Lexend", sans-serif;
 }
 
 /* ── Glass sheen on buttons ────────────────────────────────────────────────
@@ -56,34 +88,36 @@ a.active hr{
    be handed an extra child. The radius stays the brand's rounded-lg; this is
    the shine, not the pill shape. */
 .btn-sheen {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
 }
 .btn-sheen::after {
-    content: "";
-    position: absolute;
-    top: -60%;
-    left: -70%;
-    width: 40%;
-    height: 220%;
-    pointer-events: none;
-    background: linear-gradient(
-        100deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.15) 35%,
-        rgba(255, 255, 255, 0.5) 50%,
-        rgba(255, 255, 255, 0.15) 65%,
-        transparent 100%
-    );
-    transform: translateX(0) rotate(12deg);
-    opacity: 0;
-    transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.18s ease;
+  content: "";
+  position: absolute;
+  top: -60%;
+  left: -70%;
+  width: 40%;
+  height: 220%;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 35%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.15) 65%,
+    transparent 100%
+  );
+  transform: translateX(0) rotate(12deg);
+  opacity: 0;
+  transition:
+    transform 0.75s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.18s ease;
 }
 .btn-sheen:hover::after,
 .btn-sheen:focus-visible::after {
-    opacity: 1;
-    transform: translateX(420%) rotate(12deg);
+  opacity: 1;
+  transform: translateX(420%) rotate(12deg);
 }
 
 /* ── Type scale ────────────────────────────────────────────────────────────
@@ -93,45 +127,86 @@ a.active hr{
    default spacing reads as gappy.
    Use .type-display-* for page and section titles, .type-h* for interface
    headings, .type-eyebrow for the small label above a heading. */
-.type-display-1 { font-size: clamp(2.75rem, 7.5vw, 5.5rem); font-weight: 400; letter-spacing: -0.035em; line-height: 1.02; }
-.type-display-2 { font-size: clamp(2.25rem, 5.5vw, 4rem);   font-weight: 400; letter-spacing: -0.03em;  line-height: 1.06; }
-.type-display-3 { font-size: clamp(1.875rem, 4.5vw, 3rem);  font-weight: 400; letter-spacing: -0.03em;  line-height: 1.1; }
-.type-h1 { font-size: clamp(1.625rem, 3.2vw, 2.25rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.18; }
-.type-h2 { font-size: clamp(1.375rem, 2.6vw, 1.75rem); font-weight: 500; letter-spacing: -0.015em; line-height: 1.22; }
-.type-h3 { font-size: 1.25rem;  font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; }
-.type-h4 { font-size: 1.0625rem; font-weight: 500; line-height: 1.35; }
+.type-display-1 {
+  font-size: clamp(2.75rem, 7.5vw, 5.5rem);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+.type-display-2 {
+  font-size: clamp(2.25rem, 5.5vw, 4rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.06;
+}
+.type-display-3 {
+  font-size: clamp(1.875rem, 4.5vw, 3rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+.type-h1 {
+  font-size: clamp(1.625rem, 3.2vw, 2.25rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.18;
+}
+.type-h2 {
+  font-size: clamp(1.375rem, 2.6vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.22;
+}
+.type-h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.type-h4 {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
 .type-eyebrow {
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
 }
 /* The tail of a two-tone heading. Emphasis without reaching for bold. */
-.type-mute { color: rgba(255, 255, 255, 0.35); }
+.type-mute {
+  color: rgba(255, 255, 255, 0.35);
+}
 /* Running text stays readable — roughly 65 characters. */
-.type-measure { max-width: 65ch; }
+.type-measure {
+  max-width: 65ch;
+}
 
 /* ── Card surface ──────────────────────────────────────────────────────────
    Lit from the top edge rather than outlined all round, over a barely-raised
    surface. Depth comes from that light line plus the ground, not a shadow —
    which is what keeps a dark page looking flat and deliberate. */
 .card-surface {
-    background: rgba(255, 255, 255, 0.03);
-    border-top: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 1.25rem;
 }
-.card-surface-lg { border-radius: 2rem; }
+.card-surface-lg {
+  border-radius: 2rem;
+}
 
 /* Interactive cards lift slightly and brighten their lit edge. */
 .card-surface-hover {
-    transition: background-color 260ms cubic-bezier(0.4, 0, 0.2, 1),
-                border-color 260ms cubic-bezier(0.4, 0, 0.2, 1),
-                transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    background-color 260ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 260ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .card-surface-hover:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-top-color: rgba(255, 255, 255, 0.28);
-    transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.05);
+  border-top-color: rgba(255, 255, 255, 0.28);
+  transform: translateY(-3px);
 }
 
 /* ── Accessibility preferences ──────────────────────────────────────────
@@ -140,30 +215,36 @@ a.active hr{
    for CSS is everything Motion never touches: transitions, keyframes, marquee
    loops, hover lifts, and scroll-behavior. */
 @media (prefers-reduced-motion: reduce) {
-    /* Near-zero rather than 0s: some libraries wait on transitionend/
+  /* Near-zero rather than 0s: some libraries wait on transitionend/
        animationend to clean up, and a true 0s duration can mean that event
        never fires, leaving an element stuck mid-state. */
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 
-    html { scroll-behavior: auto !important; }
+  html {
+    scroll-behavior: auto !important;
+  }
 
-    /* The partner marquee animates to translateX(-50%). Collapsing its
+  /* The partner marquee animates to translateX(-50%). Collapsing its
        duration would park it there permanently, so stop the animation
        outright and let the track rest at its natural start position. */
-    .marquee-track {
-        animation: none !important;
-        transform: none !important;
-    }
+  .marquee-track {
+    animation: none !important;
+    transform: none !important;
+  }
 
-    .btn-sheen::after { opacity: 0 !important; }
-    .card-surface-hover:hover { transform: none !important; }
+  .btn-sheen::after {
+    opacity: 0 !important;
+  }
+  .card-surface-hover:hover {
+    transform: none !important;
+  }
 }
 
 /* Some visitors find layered translucency and heavy blur hard to read through
@@ -171,46 +252,155 @@ a.active hr{
    leans on frosted panels in a lot of places, and every one of them still has
    to be legible without the blur. */
 @media (prefers-reduced-transparency: reduce) {
-    .card-surface,
-    [class*="backdrop-blur"] {
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-    }
-    .card-surface { background: #141414 !important; }
+  .card-surface,
+  [class*="backdrop-blur"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .card-surface {
+    background: #141414 !important;
+  }
 }
 
 /* The palette rests a lot of secondary copy at white/40–white/55. That is
    comfortably readable on the dark ground for most people and not for
    everyone, so raise text and borders when higher contrast is requested. */
 @media (prefers-contrast: more) {
-    .type-mute { color: rgba(255, 255, 255, 0.82) !important; }
-    .card-surface {
-        border-color: rgba(255, 255, 255, 0.34) !important;
-        border-top-color: rgba(255, 255, 255, 0.46) !important;
-    }
+  .type-mute {
+    color: rgba(255, 255, 255, 0.82) !important;
+  }
+  .card-surface {
+    border-color: rgba(255, 255, 255, 0.34) !important;
+    border-top-color: rgba(255, 255, 255, 0.46) !important;
+  }
 }
 
-  @media (max-width:640px){
-    a.active{
-        background-color: black;
-        color: white;
-    }
+@media (max-width: 640px) {
+  a.active {
+    background-color: black;
+    color: white;
   }
+}
 
-  .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-  
-  .no-scrollbar::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-  }
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
 
 /* Make sure the page itself can scroll */
-html, body, #root {
+html,
+body,
+#root {
   height: auto;
   min-height: 100%;
 }
 body {
   -webkit-overflow-scrolling: touch;
+}
+
+/* ── Reflective sheen ───────────────────────────────────────────────────────
+   A light source sweeping across a surface on hover. It reads as a physical
+   material rather than an opacity change, which is the difference between a
+   card that feels made and a card that feels rendered.
+
+   Add `sheen` to any card, button or image wrapper. The element needs to clip
+   its own overflow, which the class handles, and the sweep sits above the
+   content but takes no pointer events, so nothing underneath stops working. */
+.sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.sheen::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 36%,
+    rgba(255, 255, 255, 0.1) 45%,
+    rgba(255, 255, 255, 0.26) 50%,
+    rgba(255, 255, 255, 0.1) 55%,
+    transparent 64%
+  );
+  transform: translateX(-140%);
+  transition: transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.sheen:hover::after,
+.sheen:focus-visible::after,
+.group:hover .sheen::after {
+  transform: translateX(140%);
+}
+/* On a light surface the white sweep disappears; darken it instead. */
+.sheen-dark::after {
+  background: linear-gradient(
+    105deg,
+    transparent 36%,
+    rgba(0, 0, 0, 0.05) 45%,
+    rgba(0, 0, 0, 0.12) 50%,
+    rgba(0, 0, 0, 0.05) 55%,
+    transparent 64%
+  );
+}
+
+/* A sheen is decoration. If the reader has asked for less movement, it goes. */
+@media (prefers-reduced-motion: reduce) {
+  .sheen::after {
+    display: none;
+  }
+}
+
+/* ── Printing the resume ─────────────────────────────────────────────────
+   Ctrl+P on /resume should produce a CV, not a screenshot of a dark website.
+   Three things have to happen: the site chrome goes, the palette inverts to
+   ink on paper, and every scroll-reveal is forced to its finished state —
+   otherwise anything below the fold prints as a blank block, because it was
+   never scrolled into view and Framer Motion left it at opacity 0. */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  header:not(.resume-page header),
+  footer,
+  nav,
+  .resume-actions {
+    display: none !important;
+  }
+
+  .resume-page,
+  .resume-page * {
+    background: #fff !important;
+    color: #111 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    /* Reveal animations never ran for off-screen content. */
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .resume-page {
+    padding-top: 0 !important;
+  }
+
+  .resume-page a {
+    text-decoration: none !important;
+  }
+
+  /* Keep a job or a project from being split across a page break. */
+  .resume-page article {
+    break-inside: avoid;
+  }
+
+  .resume-page .resume-section {
+    border-color: #d4d4d4 !important;
+    break-inside: auto;
+  }
 }

@@ -43,8 +43,7 @@ const TypingText = ({
   const isInView = useInView(ref, { once: true, amount: 0.7 });
 
   // Decide whether the animation should be playing
-  const shouldAnimate =
-    startWhen !== undefined ? Boolean(startWhen) : isInView;
+  const shouldAnimate = startWhen !== undefined ? Boolean(startWhen) : isInView;
 
   const [animState, setAnimState] = useState("hidden");
 
@@ -66,7 +65,7 @@ const TypingText = ({
 
   const animatedTokenCount = useMemo(
     () => tokens.filter((t) => !/^\s+$/.test(t)).length,
-    [tokens]
+    [tokens],
   );
 
   // Fire onComplete when the last word should be done animating

@@ -15,7 +15,7 @@ const MAX_IMAGE_BYTES = MAX_IMAGE_MB * 1024 * 1024;
 export function uploadImage(
   file,
   onProgress,
-  endpoint = "/api/projects/admin/upload"
+  endpoint = "/api/projects/admin/upload",
 ) {
   return new Promise((resolve, reject) => {
     if (!file) return reject(new Error("No file selected"));
@@ -25,8 +25,8 @@ export function uploadImage(
       const mb = (file.size / (1024 * 1024)).toFixed(1);
       return reject(
         new Error(
-          `File is too large (${mb} MB). Maximum allowed is ${MAX_IMAGE_MB} MB.`
-        )
+          `File is too large (${mb} MB). Maximum allowed is ${MAX_IMAGE_MB} MB.`,
+        ),
       );
     }
 

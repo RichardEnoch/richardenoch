@@ -74,7 +74,11 @@ const CustomCursor = () => {
           width: isPointer ? 72 : 52,
           height: isPointer ? 72 : 52,
         }}
-        transition={{ opacity: { duration: 0.2 }, width: { duration: 0.2 }, height: { duration: 0.2 } }}
+        transition={{
+          opacity: { duration: 0.2 },
+          width: { duration: 0.2 },
+          height: { duration: 0.2 },
+        }}
         className="bg-transparent"
       >
         <div
@@ -82,7 +86,8 @@ const CustomCursor = () => {
             width: "100%",
             height: "100%",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(132,204,22,0.22) 0%, transparent 70%)",
+            background:
+              "radial-gradient(circle, rgba(132,204,22,0.22) 0%, transparent 70%)",
             filter: "blur(8px)",
           }}
         />
@@ -109,7 +114,12 @@ const CustomCursor = () => {
             ? "0 0 10px #84cc16, 0 0 22px rgba(132,204,22,0.85), 0 0 44px rgba(132,204,22,0.35)"
             : "0 0 7px #84cc16, 0 0 14px rgba(132,204,22,0.65)",
         }}
-        transition={{ opacity: { duration: 0.15 }, width: { duration: 0.18 }, height: { duration: 0.18 }, boxShadow: { duration: 0.18 } }}
+        transition={{
+          opacity: { duration: 0.15 },
+          width: { duration: 0.18 },
+          height: { duration: 0.18 },
+          boxShadow: { duration: 0.18 },
+        }}
       />
     </>
   );
