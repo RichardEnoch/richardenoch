@@ -10,9 +10,17 @@ const RateHero = () => {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      video.src = HLS_SRC;
-    } else if (Hls.isSupported()) {
+    /* hls.js first, native second.
+       These were the other way round, and the hero has been black in every
+       browser except Safari ever since. Chrome answers canPlayType() for
+       HLS with "maybe" — truthy — but cannot actually play it, so the
+       native branch always won, hls.js never initialised, and the element
+       failed with MEDIA_ERR_SRC_NOT_SUPPORTED behind an opaque gradient
+       where nothing looked broken.
+
+       Media Source Extensions is the real test. Safari has no MSE for HLS
+       and plays it natively; everything else needs hls.js. */
+    if (Hls.isSupported()) {
       const hls = new Hls({
         startLevel: -1,
         capLevelToPlayerSize: false,
@@ -22,6 +30,10 @@ const RateHero = () => {
       hls.loadSource(HLS_SRC);
       hls.attachMedia(video);
       return () => hls.destroy();
+    }
+
+    if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      video.src = HLS_SRC;
     }
   }, []);
 

@@ -14,6 +14,7 @@ import {
 } from "../components/ui";
 import { fetchJson } from "../api/http";
 import { TESTIMONIAL_SERVICES } from "../data/testimonialOptions";
+import { OWNER } from "../config/plans";
 
 const StarButton = ({ filled, onClick, onHover, onLeave }) => (
   <button
@@ -55,6 +56,25 @@ const TestimonialPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
+  /* The API this form posts to is not currently running. Rather than lose
+     someone's words to a "please try again", a failed post hands them the
+     testimonial they just wrote, addressed and ready to send. */
+  const [handoff, setHandoff] = useState(false);
+
+  const composed = [
+    "Testimonial for Richard Enoch",
+    "",
+    `Name: ${name.trim() || "—"}`,
+    `Project: ${service || "—"}`,
+    `Rating: ${rating}/5`,
+    "",
+    feedback.trim(),
+  ].join("\n");
+
+  const waHref = `https://wa.me/${OWNER.whatsappIntl}?text=${encodeURIComponent(composed)}`;
+  const mailHref = `mailto:${OWNER.email}?subject=${encodeURIComponent(
+    "Testimonial for Richard Enoch",
+  )}&body=${encodeURIComponent(composed)}`;
 
   const onNameChange = (v) => {
     setName(v);
@@ -85,7 +105,9 @@ const TestimonialPage = () => {
       });
       setDone(true);
     } catch {
-      setError("Something went wrong — please try again in a moment.");
+      /* No error message. The words are written; the job now is to get them
+         delivered, not to tell someone their effort failed. */
+      setHandoff(true);
     } finally {
       setSubmitting(false);
     }
@@ -100,7 +122,48 @@ const TestimonialPage = () => {
       />
 
       <div className="mx-auto max-w-[560px]">
-        {done ? (
+        {handoff ? (
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="card-surface card-surface-lg px-8 py-12"
+          >
+            <h1 className="type-h1 text-white">One more tap</h1>
+            <p className="type-measure mt-4 text-[15px] leading-[1.6] text-white/55">
+              Your testimonial is written and ready — it just needs sending.
+              Either button below opens with the whole thing already filled in.
+            </p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noreferrer"
+                className={buttonClasses("primary", "md", "flex-1")}
+              >
+                Send on WhatsApp
+              </a>
+              <a
+                href={mailHref}
+                className={buttonClasses("secondary", "md", "flex-1")}
+              >
+                Send by email
+              </a>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => navigator.clipboard?.writeText(composed)}
+              className="mt-5 text-[14px] text-white/40 underline-offset-4 transition-colors hover:text-lime-400 hover:underline"
+            >
+              Or copy it and send however you like
+            </button>
+
+            <pre className="mt-8 max-h-52 overflow-auto whitespace-pre-wrap rounded-2xl bg-white/[0.03] p-5 text-[13px] leading-[1.6] text-white/50">
+              {composed}
+            </pre>
+          </motion.div>
+        ) : done ? (
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}

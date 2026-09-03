@@ -200,6 +200,12 @@ const PricingTiers = () => {
             </nav>
 
             <p className="mt-6 max-w-[70ch] text-[13px] leading-[1.6] text-white/35">
+              Type licensing, stock and print proofs are quoted at cost on top
+              of the figures below. Where a project needs a typeface bought or
+              drawn, you see what it costs and nothing is marked up.
+            </p>
+
+            <p className="mt-3 max-w-[70ch] text-[13px] leading-[1.6] text-white/35">
               Naira and dollar figures are the same price in two currencies,
               converted at ₦{Math.round(fxRate).toLocaleString("en-NG")} to $1.
               The rate moves, so treat the second figure as an estimate.

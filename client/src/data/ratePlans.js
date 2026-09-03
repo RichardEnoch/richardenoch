@@ -32,19 +32,19 @@ export const DEPOSIT_PCT = 70;
 export const BRAND_TIERS = [
   {
     id: "silver",
-    usd: 150,
+    usd: 450,
     audience: "Starting out",
     description:
       "For small businesses starting out that need a subtle identity.",
-    duration: "10–14 days",
+    duration: "2–3 weeks",
     features: PLANS.silver.deliverables,
   },
   {
     id: "gold",
-    usd: 350,
+    usd: 1200,
     audience: "Ready to launch",
     description: "Launch your brand with everything you need to stand out.",
-    duration: "3–4 weeks",
+    duration: "4–6 weeks",
     featured: true,
     badge: "Most popular",
     inherits: "Silver",
@@ -52,7 +52,6 @@ export const BRAND_TIERS = [
       "Brand guideline, 15–30 pages",
       "Brand patterns and textures",
       "Email signature, letterhead and deck template",
-      "5-page website, source code included",
       "2 marketing designs, banners for 3 platforms",
       "4 merch designs and 7 mockups",
       "A third revision round, and SVG files",
@@ -60,20 +59,19 @@ export const BRAND_TIERS = [
   },
   {
     id: "platinum",
-    usd: 450,
+    usd: 2500,
     audience: "Positioning to scale",
     description:
-      "Full brand + professional website to position your business at the next level.",
-    duration: "5–7 weeks",
+      "The complete system, documented well enough to be run without me.",
+    duration: "8–10 weeks",
     inherits: "Gold",
     features: [
       "Complete brand guideline, 30+ pages",
-      "Website with as many pages as it needs",
       "5 social designs, banners for every platform",
       "5 marketing designs",
       "10 merch designs, one mockup for each",
       "Revisions until it is right, not a fixed count",
-      "Every working file, plus website source",
+      "Every working file, in every format",
     ],
   },
 ];
@@ -82,10 +80,10 @@ export const BRAND_TIERS = [
 export const WEBSITE_TIERS = [
   {
     id: "starter",
-    usd: 150,
+    usd: 600,
     audience: "Up to 5 pages",
     description: "A clean, credible presence for a business that needs one.",
-    duration: "2 weeks",
+    duration: "3 weeks",
     features: [
       "Up to 5 custom-designed pages",
       "Mobile-first responsive build",
@@ -96,10 +94,10 @@ export const WEBSITE_TIERS = [
   },
   {
     id: "business",
-    usd: 285,
+    usd: 1200,
     audience: "Up to 10 pages",
     description: "Room to publish, room to grow, and analytics to see it.",
-    duration: "3–4 weeks",
+    duration: "5–6 weeks",
     featured: true,
     badge: "Most booked",
     inherits: "Starter",
@@ -112,11 +110,11 @@ export const WEBSITE_TIERS = [
   },
   {
     id: "premium",
-    usd: 490,
+    usd: 2200,
     from: true,
     audience: "15+ or custom",
     description: "A larger site or a web app, scoped around what it has to do.",
-    duration: "6 weeks+, scoped",
+    duration: "8 weeks+, scoped",
     inherits: "Business",
     features: [
       "15+ pages, or a custom web app",
@@ -132,11 +130,11 @@ export const WEBSITE_TIERS = [
 export const FLYER_TIERS = [
   {
     id: "single",
-    usd: 12,
-    perDesignUSD: 12,
+    usd: 45,
+    perDesignUSD: 45,
     audience: "1 design",
     description: "One flyer or social design, done properly.",
-    duration: "2 days",
+    duration: "3 days",
     features: [
       "1 flyer / social design",
       "Print + social-ready exports",
@@ -145,21 +143,21 @@ export const FLYER_TIERS = [
   },
   {
     id: "triple",
-    usd: 30,
-    perDesignUSD: 10,
+    usd: 120,
+    perDesignUSD: 40,
     audience: "3 designs",
     description: "A short run at a lower rate per design.",
-    duration: "5 days",
+    duration: "7 days",
     inherits: "the single design",
     features: ["2 more designs, 3 in total", "A lower rate for each of them"],
   },
   {
     id: "five",
-    usd: 42,
-    perDesignUSD: 8,
+    usd: 180,
+    perDesignUSD: 36,
     audience: "5 designs",
     description: "The best rate per design, with your files to keep.",
-    duration: "8 days",
+    duration: "10–12 days",
     featured: true,
     badge: "Best value",
     inherits: "the 3-design pack",
@@ -172,7 +170,7 @@ export const FLYER_TIERS = [
   {
     id: "event",
     usd: null,
-    perDesignUSD: 7,
+    perDesignUSD: 30,
     audience: "6+ designs",
     description: "A full set for one event, priced on the number of designs.",
     duration: "Scoped",
@@ -239,7 +237,7 @@ export function buildRateSections(rate) {
       width: "standard",
       heading: "Brand identity",
       blurb:
-        "Your brand is the first impression. Every tier below is a complete identity — they differ in how far it reaches.",
+        "Your brand is the first impression. Every tier below is a complete identity — they differ in how far it reaches. Booking a brand and a website together takes 15% off the pair.",
       tiers: BRAND_TIERS.map((t) =>
         toCard({ ...t, name: PLANS[t.id].label }, rate, {
           cadence: "one-off project",

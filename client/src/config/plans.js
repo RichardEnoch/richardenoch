@@ -20,7 +20,7 @@ export const OWNER = {
    card quoted two different naira figures for the same plan as soon as the
    market moved. Both now read config/fx.js. */
 export const PRICING = {
-  USD: { silver: 150, gold: 350, platinum: 450 },
+  USD: { silver: 450, gold: 1200, platinum: 2500 },
   RATE_OVERRIDE: null, // the rate is never pinned — see config/fx.js
   FALLBACK_RATE,
   ROUND_TO: 1000,
@@ -48,7 +48,7 @@ export const PLANS = {
   },
   gold: {
     label: "Gold",
-    website: true,
+    website: false,
     blurb: "Launch your brand with everything you need to stand out.",
     deliverables: [
       "Logo Design",
@@ -65,16 +65,14 @@ export const PLANS = {
       "2 Marketing Designs",
       "4 Merch Designs",
       "7 Mockup Images",
-      "5-Page Website",
       "3 Revision Rounds",
-      "Final files: JPEG, PNG, SVG + website source code",
+      "Final files: JPEG, PNG, SVG",
     ],
   },
   platinum: {
     label: "Platinum",
-    website: true,
-    blurb:
-      "Full brand + professional website to position your business at the next level.",
+    website: false,
+    blurb: "The complete system, documented well enough to be run without me.",
     deliverables: [
       "Logo Design",
       "Colour Palette",
@@ -90,9 +88,8 @@ export const PLANS = {
       "5 Marketing Designs",
       "10 Merch Designs",
       "One Mockup per Design",
-      "Website (pages as required)",
       "Revisions as required",
-      "All Files + website source code",
+      "All Files, in every format",
     ],
   },
 };
