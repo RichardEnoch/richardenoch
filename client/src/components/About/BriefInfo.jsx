@@ -195,9 +195,7 @@ const BriefInfo = () => {
             className="text-xs sm:text-sm tracking-[0.18em] text-white/80 uppercase"
           />
 
-          <div
-            className="mt-2 text-3xl sm:text-4xl md:text-5xl text-white font-medium tracking-[-0.04em]"
-          >
+          <div className="mt-2 text-3xl sm:text-4xl md:text-5xl text-white font-medium tracking-[-0.04em]">
             <TypingText as="span" text="brief introduction" delay={0.3} />
           </div>
         </div>
@@ -218,7 +216,7 @@ const BriefInfo = () => {
                 as="p"
                 delay={0.4}
                 wordStep={0.03}
-                text={`I'm a multidisciplinary designer, and I've been on this roller coaster for about 6 years now. My style has always been "Well, I think I can, so let's try," and that mindset has helped me pick up skills across different design niches.`}
+                text={`I've been on this roller coaster about six years now — the first few in brand identity, the last three mostly in product. My style has always been "Well, I think I can, so let's try," and that mindset has helped me pick up skills across different design niches.`}
                 className="text-[13px] leading-relaxed text-gray-200 sm:text-sm"
               />
               <TypingText
@@ -305,7 +303,10 @@ const BriefInfo = () => {
                     hover:-translate-y-0.5 active:translate-y-0
                   "
                 >
-                  <Download01Icon size={16} className="text-lime-400 transition-colors group-hover:text-black" />
+                  <Download01Icon
+                    size={16}
+                    className="text-lime-400 transition-colors group-hover:text-black"
+                  />
                   Download Resume
                 </a>
 

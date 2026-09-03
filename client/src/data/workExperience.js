@@ -37,12 +37,15 @@ const workExperience = [
     name: "Book Rion",
     role: "UI/UX & Brand Designer",
     durationLabel: "Jul 2025 – Mar 2026",
+    // The product and website were later rebuilt by another team and I hold no
+    // showcase rights, so nothing here claims a shipped or live product — only
+    // the identity work appears in the portfolio.
     workExperience: [
-      "Designed and maintained the interface system across BookRion's web and mobile platforms — Rion Prime, Young Rion, and the Listing Portal — ensuring consistency and usability across all surfaces.",
-      "Translated business goals and user research into wireframes, prototypes, and high-fidelity designs, including the Community and Book Clubs experience.",
-      "Developed and managed BookRion's brand identity system — typography, colour palette, and visual assets — to strengthen brand coherence and recognition.",
-      "Conducted usability testing and iterated on feedback, ensuring accessible, inclusive experiences aligned with WCAG standards.",
-      "Collaborated cross-functionally with product managers, developers, and content teams to balance aesthetics, functionality, and business objectives.",
+      "Built and ran BookRion's brand identity system — typography, colour palette and visual assets — alongside the product work.",
+      "Designed the interface patterns across three surfaces (Rion Prime, Young Rion, the Listing Portal) so they read as one product rather than three.",
+      "Turned business goals and user research into wireframes, prototypes and high-fidelity screens, including the Community and Book Clubs experience.",
+      "Ran usability sessions and designed to WCAG standards.",
+      "Worked across product, engineering and content to keep the design intent intact through handoff.",
     ],
   },
   {
