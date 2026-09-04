@@ -6,6 +6,7 @@ import { Clock01Icon, Globe02Icon, ZapIcon } from "hugeicons-react";
 import confetti from "canvas-confetti";
 import PageMeta from "../components/common/PageMeta";
 import { Button, Input, Textarea, Label, Field } from "../components/ui";
+import { OWNER } from "../config/plans";
 
 const SERVICE_OPTIONS = [
   "UI / UX Design",
@@ -897,10 +898,10 @@ const Contact = () => {
                 <p className="text-center text-xs text-white/25">
                   Prefer email?{" "}
                   <a
-                    href="mailto:enochrichard6@gmail.com"
+                    href={`mailto:${OWNER.email}`}
                     className="text-white/45 underline underline-offset-2 transition hover:text-white/75"
                   >
-                    enochrichard6@gmail.com
+                    {OWNER.email}
                   </a>
                 </p>
               </motion.div>

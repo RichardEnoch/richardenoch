@@ -12,6 +12,7 @@ import {
 } from "../components/ui";
 import { fetchJson } from "../api/http";
 import { submitBooking } from "../api/bookings";
+import { OWNER } from "../config/plans";
 
 /* Fallback mirror of server/config/flyerPlans.js — the live values are
    fetched from /api/flyer-requests/plans; the server always recomputes
@@ -126,7 +127,7 @@ const BookFlyer = () => {
       window.scrollTo(0, 0);
     } catch {
       setError(
-        "The form could not send — the booking service is down. Email the details to enochrichard6@gmail.com and I will pick it up from there.",
+        `The form could not send. Email the details to ${OWNER.email} and I will pick it up from there.`,
       );
     } finally {
       setSubmitting(false);

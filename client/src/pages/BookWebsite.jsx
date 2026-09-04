@@ -12,6 +12,7 @@ import {
 } from "../components/ui";
 import { fetchJson } from "../api/http";
 import { submitBooking } from "../api/bookings";
+import { OWNER } from "../config/plans";
 
 /* Display fallback for server/config/websitePlans.js — live values come
    from /api/website-requests/plans and the server recomputes on submit. */
@@ -261,7 +262,7 @@ const BookWebsite = () => {
       else window.scrollTo(0, 0);
     } catch {
       setError(
-        "The form could not send — the booking service is down. Email the details to enochrichard6@gmail.com and I will pick it up from there.",
+        `The form could not send. Email the details to ${OWNER.email} and I will pick it up from there.`,
       );
     } finally {
       setSubmitting(false);

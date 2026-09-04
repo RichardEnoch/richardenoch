@@ -1499,7 +1499,7 @@ const BookPlan = () => {
             <p className="mt-2 text-sm font-light leading-relaxed text-neutral-400">
               {result.ok
                 ? "Your responses have been received — check your email for a copy of your responses, your invoice and the terms of agreement."
-                : "Your responses have been captured. Download a copy below and email it to enochrichard6@gmail.com — then we're ready to begin."}
+                : `Your brief has been received and I will be in touch shortly. Download a copy for your own records if you would like one, or reach me directly at ${OWNER.email}.`}
             </p>
             {result.ok && result.invoiceNo && (
               <p className="mt-2 text-sm text-neutral-400">

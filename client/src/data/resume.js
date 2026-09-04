@@ -11,11 +11,13 @@
 // Rule for editing: nothing goes in here that isn't already true on the CV.
 // If a claim can't be checked against a shipped thing, it doesn't get a number.
 
+import { OWNER } from "../config/plans";
+
 export const PROFILE = {
   name: "Richard Enoch Adesiyan",
   title: "Multidisciplinary Designer — Brand & Product",
   location: "Lagos, Nigeria · works remote",
-  email: "enochrichard6@gmail.com",
+  email: OWNER.email,
   phone: "+234 903 852 2066",
   linkedin: "https://www.linkedin.com/in/richardenoch/",
   site: "richardenoch.vercel.app",

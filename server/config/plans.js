@@ -7,9 +7,9 @@ export const OWNER = {
   fullName: "Adesiyan Richard Enoch",
   title: "Brand Identity & Product Designer",
   // official/displayed contact email (sender is GMAIL_USER — keep them the same)
-  email: "des.richardenoch@gmail.com",
+  email: "enochrichard6@gmail.com",
   // where "NEW BOOKING" notifications are delivered
-  notifyEmail: process.env.OWNER_EMAIL || "des.richardenoch@gmail.com",
+  notifyEmail: process.env.OWNER_EMAIL || "enochrichard6@gmail.com",
   whatsapp: "0903 852 2066",
   whatsappIntl: "2349038522066",
   site: "richardenoch.vercel.app",

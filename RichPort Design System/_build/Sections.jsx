@@ -138,7 +138,7 @@ function Footer({ onNavigate }) {
           <div className="row">
             <span className="contact-pill">
               <span className="contact-icon"><IconMail size={9}/></span>
-              <span style={{color: "var(--fg-2)"}}>des.richardenoch@gmail.com</span>
+              <span style={{color: "var(--fg-2)"}}>enochrichard6@gmail.com</span>
             </span>
             <span className="contact-pill">
               <span className="contact-icon"><IconPhone size={9}/></span>

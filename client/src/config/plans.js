@@ -4,11 +4,17 @@
 
 import { FALLBACK_RATE, getFxRate } from "./fx";
 
+/* The one place the site's own contact details are written down.
+   The booking forms, the testimonial hand-off and the enquiry fallbacks all
+   read from here. It used to hold a different address from the one on the
+   résumé, so a client who filled in a form was answered from somewhere other
+   than the address on the CV that brought them. When the custom domain
+   lands, this is the single line that changes. */
 export const OWNER = {
   name: "Richard Enoch",
   fullName: "Adesiyan Richard Enoch",
   title: "Brand Identity & Product Designer",
-  email: "des.richardenoch@gmail.com",
+  email: "enochrichard6@gmail.com",
   whatsapp: "0903 852 2066",
   whatsappIntl: "2349038522066",
   site: "richardenoch.vercel.app",
