@@ -20,7 +20,7 @@ export const PROFILE = {
   email: OWNER.email,
   phone: "+234 903 852 2066",
   linkedin: "https://www.linkedin.com/in/richardenoch/",
-  site: "richardenoch.vercel.app",
+  site: "richardenoch.com",
 };
 
 /* The years line, settled once so every surface says the same thing.

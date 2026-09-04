@@ -1454,10 +1454,10 @@ const BookPlan = () => {
 
         <div className="mt-10 text-center text-xs text-zinc-600">
           <a
-            href="https://richardenoch.vercel.app"
+            href={`https://${OWNER.site}`}
             className="text-neutral-400 hover:text-lime-400"
           >
-            richardenoch.vercel.app
+            {OWNER.site}
           </a>
           &nbsp;•&nbsp; {OWNER.email} &nbsp;•&nbsp; Designed &amp; built by
           Richard Enoch

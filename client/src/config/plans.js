@@ -17,7 +17,7 @@ export const OWNER = {
   email: "enochrichard6@gmail.com",
   whatsapp: "0903 852 2066",
   whatsappIntl: "2349038522066",
-  site: "richardenoch.vercel.app",
+  site: "richardenoch.com",
 };
 
 /* PRICING — the brand tiers, in dollars.
