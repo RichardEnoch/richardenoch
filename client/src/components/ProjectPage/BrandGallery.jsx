@@ -297,7 +297,43 @@ const BANDS_2 = [
   [{ c: 2, r: 3 }], // 4:3 landscape
 ];
 
-const BAND_SETS = { 12: BANDS_12, 6: BANDS_6, 2: BANDS_2 };
+/* ── the landscape set ──
+   The bands above mix portrait, square and tall tiles, which is what makes
+   the Tabstudio and Verde Luxe galleries pack the way they do. It is the
+   wrong shape for photographed mockups: those come off the camera landscape,
+   and object-cover in a 3:4 tile throws away half the frame — the letterhead
+   loses its foot, the cap loses its brim.
+
+   So a gallery whose contents are all landscape can ask for tiles that are
+   all landscape. Every shape here is 3:2 or 4:3, which is what the mockups
+   actually are, so the crop is a few pixels rather than a third of the
+   picture. Opt in with bands="landscape". */
+const LANDSCAPE_12 = [
+  [
+    { c: 6, r: 8 }, // 3:2
+    { c: 6, r: 8 }, // 3:2
+  ],
+  [
+    { c: 4, r: 6 }, // 4:3
+    { c: 4, r: 6 }, // 4:3
+    { c: 4, r: 6 }, // 4:3
+  ],
+];
+
+const LANDSCAPE_6 = [
+  [{ c: 6, r: 8 }], // 3:2 full width
+  [
+    { c: 3, r: 4 }, // 3:2
+    { c: 3, r: 4 }, // 3:2
+  ],
+];
+
+const LANDSCAPE_2 = [[{ c: 2, r: 3 }]]; // 4:3, one per row
+
+const BAND_SETS = {
+  default: { 12: BANDS_12, 6: BANDS_6, 2: BANDS_2 },
+  landscape: { 12: LANDSCAPE_12, 6: LANDSCAPE_6, 2: LANDSCAPE_2 },
+};
 
 /* Whatever is left when the bands run out still has to close cleanly, so the
    tail is laid out as its own complete rows rather than trailing off. */
@@ -317,8 +353,8 @@ function closingBand(rem, cols) {
 }
 
 /* Walk the bands until every tile has a shape. */
-function layoutFor(count, cols) {
-  const bands = BAND_SETS[cols] || BANDS_6;
+function layoutFor(count, cols, set = "default") {
+  const bands = (BAND_SETS[set] || BAND_SETS.default)[cols] || BANDS_6;
   const out = [];
   let b = 0;
   while (out.length < count) {
@@ -376,6 +412,8 @@ export default function BrandGallery({
   images = [],
   color = "#a3e635",
   cta = null,
+  /* "landscape" when every picture in the set is wider than it is tall. */
+  bands = "default",
 }) {
   const navigate = useNavigate();
   const headerRef = useRef(null);
@@ -387,8 +425,8 @@ export default function BrandGallery({
   const gridRef = useRef(null);
   const { cols, rowH } = useBentoGrid(gridRef);
   const shapes = React.useMemo(
-    () => layoutFor(images.length, cols),
-    [images.length, cols],
+    () => layoutFor(images.length, cols, bands),
+    [images.length, cols, bands],
   );
 
   const filled = images.filter((item) => item.src);

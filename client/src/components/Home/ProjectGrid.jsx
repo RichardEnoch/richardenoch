@@ -27,14 +27,15 @@ import adlmSystemThumb from "../../assets/ADLM/site/designsystem.webp";
 import adlmProductThumb from "../../assets/ADLM/site/dashboard.webp";
 import adlmSocialThumb from "../../assets/ADLM/gallery/gal-02.webp";
 import cleansteadThumb from "../../assets/Cleanstead/signage.webp";
-import { ADLM_CASE_STUDY_LIVE } from "../../config/featureFlags";
+import { linkIsLive } from "../../config/featureFlags";
 
 const ADLM_BASE = "/projects/featured/adlm-studio";
 
-/* Every ADLM discipline card routes into the case study, so while that is
-   gated the cards come out of the grid with it — a card that leads to a 404
-   is worse than no card. */
-const adlmCards = (...cards) => (ADLM_CASE_STUDY_LIVE ? cards : []);
+/* Each ADLM discipline card routes into one page of the case study, and those
+   pages publish separately. A card is shown when its own destination is live,
+   so the brand and design-system cards appear while the product one waits —
+   a card that leads to a 404 is worse than no card. */
+const adlmCards = (...cards) => cards.filter((c) => linkIsLive(c.route));
 
 /* The four ADLM discipline cards. Each one is scoped to a single category and
    routes into that discipline's own page rather than the hub, so a filtered

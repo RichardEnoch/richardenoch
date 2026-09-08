@@ -78,4 +78,20 @@ export function withAssets(frames = []) {
   return frames.map((f) => (f.src ? f : { ...f, src: asset(f.key) }));
 }
 
+/**
+ * Like withAssets, but drops the frames that have not landed.
+ *
+ * The default behaviour — keep the frame, show a labelled placeholder — is
+ * right while a case study is being built and Richard is reading it. It is
+ * wrong once the page is public: a visitor should see the work that exists,
+ * not an inventory of the work that does not.
+ *
+ * Nothing here is hard-coded to a list of "ready" keys, so no code changes
+ * when the rest of the shoot arrives. Drop the file in the folder and its
+ * frame comes back on the next build, in its original position.
+ */
+export function withAssetsOnly(frames = []) {
+  return withAssets(frames).filter((f) => Boolean(f.src));
+}
+
 export default asset;

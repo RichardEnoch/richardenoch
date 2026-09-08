@@ -57,7 +57,7 @@ const OfferPage = React.lazy(() => import("./pages/OfferPage.jsx"));
 
 /* Featured projects — one project spanning several disciplines, each
    discipline on its own route so it can be linked to directly. */
-import { ADLM_CASE_STUDY_LIVE } from "./config/featureFlags";
+import { adlmLive } from "./config/featureFlags";
 
 const AdlmHub = React.lazy(() => import("./pages/featured/AdlmHub.jsx"));
 const AdlmBrand = React.lazy(() => import("./pages/featured/AdlmBrand.jsx"));
@@ -111,22 +111,41 @@ const router = createBrowserRouter([
       { path: "offer/:token", element: <OfferPage /> },
 
       // ── Featured: ADLM Studio ──────────────────────────────────────────
-      // Unfinished; gated by ADLM_CASE_STUDY_LIVE. See config/featureFlags.
-      ...(ADLM_CASE_STUDY_LIVE
+      // Published page by page. See config/featureFlags — brand identity and
+      // the design system are finished; the hub, the website case and the six
+      // product pages are not, and a route that exists for an unfinished page
+      // is a route someone can find.
+      ...(adlmLive("hub")
+        ? [{ path: "projects/featured/adlm-studio", element: <AdlmHub /> }]
+        : []),
+      ...(adlmLive("brand")
         ? [
-            { path: "projects/featured/adlm-studio", element: <AdlmHub /> },
             {
               path: "projects/featured/adlm-studio/brand",
               element: <AdlmBrand />,
             },
+          ]
+        : []),
+      ...(adlmLive("design-system")
+        ? [
             {
               path: "projects/featured/adlm-studio/design-system",
               element: <AdlmDesignSystem />,
             },
+          ]
+        : []),
+      ...(adlmLive("website")
+        ? [
             {
               path: "projects/featured/adlm-studio/website",
               element: <AdlmWebsite />,
             },
+          ]
+        : []),
+      // The suite, QUIV, and one dynamic route covering the other five
+      // products. The dynamic path sits after QUIV so the static match wins.
+      ...(adlmLive("product")
+        ? [
             {
               path: "projects/featured/adlm-studio/product",
               element: <AdlmProductSuite />,
@@ -135,17 +154,11 @@ const router = createBrowserRouter([
               path: "projects/featured/adlm-studio/product/quiv",
               element: <AdlmQuiv />,
             },
-            // Everything in the suite except QUIV. HERON and RateGen were linked
-            // from the suite page and from QUIV before they had routes, so both were
-            // 404s; the other three had no page at all. One dynamic route now covers
-            // all five — see pages/featured/AdlmProduct.jsx. It sits AFTER the QUIV
-            // path so the static match wins.
             {
               path: "projects/featured/adlm-studio/product/:slug",
               element: <AdlmProduct />,
             },
-            // The old standalone QUIV route redirects into the suite, so links
-            // that pre-date the featured structure keep resolving.
+            // Links that pre-date the featured structure keep resolving.
             {
               path: "ui-projects/quiv",
               element: (

@@ -23,6 +23,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PageMeta from "../../components/common/PageMeta";
 import SectionToc from "../../components/common/SectionToc";
+import { liveLinks } from "../../config/featureFlags";
 import CaseHero from "../../components/common/CaseHero";
 import BuildSection from "../../components/Home/BuildSection";
 import dsHero from "../../assets/ADLM/gallery/gal-12.webp";
@@ -78,12 +79,27 @@ const SECTIONS = [
   { id: "inventory", label: "The inventory" },
 ];
 
-const SIBLINGS = [
+const SIBLINGS = liveLinks([
   { to: BASE, label: "← ADLM overview" },
   { to: `${BASE}/brand`, label: "Brand identity" },
   { to: `${BASE}/website`, label: "Website" },
   { to: `${BASE}/product`, label: "Product / UI-UX" },
-];
+]);
+
+/* "Pick one" needs at least one to pick. Both surfaces this section points
+   at are unpublished, so the whole block waits for them. */
+const EXITS = liveLinks([
+  {
+    to: `${BASE}/website`,
+    t: "On the website",
+    b: "Thirty-one marketing pages, navy-dominant because of the contrast finding above.",
+  },
+  {
+    to: `${BASE}/product`,
+    t: "In the product",
+    b: "Six tools, three themes, and the components a quantity surveyor works in all day.",
+  },
+]);
 
 export default function AdlmDesignSystem() {
   return (
@@ -977,64 +993,59 @@ export default function AdlmDesignSystem() {
           </Rise>
         </Section>
 
-        {/* ── the two exits ── */}
-        <section className="border-t border-white/5 px-4 py-16 sm:px-8 sm:py-20 lg:px-12">
-          <div className="mx-auto max-w-[1120px]">
-            <Rise>
-              <p className="type-eyebrow mb-3 text-white/30">See it applied</p>
-              <h2 className="type-h1 mb-10 max-w-[30ch] text-white">
-                The system governs two surfaces. Pick one.
-              </h2>
-            </Rise>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {[
-                {
-                  to: `${BASE}/website`,
-                  t: "On the website",
-                  b: "Thirty-one marketing pages, navy-dominant because of the contrast finding above.",
-                },
-                {
-                  to: `${BASE}/product`,
-                  t: "In the product",
-                  b: "Six tools, three themes, and the components a quantity surveyor works in all day.",
-                },
-              ].map((x) => (
-                <Rise key={x.to}>
-                  <Link
-                    to={x.to}
-                    className="flex h-full flex-col rounded-2xl border border-white/8 bg-white/[0.02] p-8 transition-colors duration-300 hover:border-[#a3e635]/30 hover:bg-white/[0.04]"
-                  >
-                    <h3 className="type-h2 mb-2 text-white">{x.t}</h3>
-                    <p className="mb-6 text-[14.5px] leading-[1.65] text-white/50">
-                      {x.b}
-                    </p>
-                    <span
-                      className="mt-auto inline-flex items-center gap-2 text-[13px] font-semibold"
-                      style={{ color: G }}
+        {/* ── the exits — only while there is somewhere to go ── */}
+        {EXITS.length > 0 && (
+          <section className="border-t border-white/5 px-4 py-16 sm:px-8 sm:py-20 lg:px-12">
+            <div className="mx-auto max-w-[1120px]">
+              <Rise>
+                <p className="type-eyebrow mb-3 text-white/30">
+                  See it applied
+                </p>
+                <h2 className="type-h1 mb-10 max-w-[30ch] text-white">
+                  {EXITS.length > 1
+                    ? "The system governs two surfaces. Pick one."
+                    : "See where the system is applied."}
+                </h2>
+              </Rise>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {EXITS.map((x) => (
+                  <Rise key={x.to}>
+                    <Link
+                      to={x.to}
+                      className="flex h-full flex-col rounded-2xl border border-white/8 bg-white/[0.02] p-8 transition-colors duration-300 hover:border-[#a3e635]/30 hover:bg-white/[0.04]"
                     >
-                      View
-                      <svg
-                        width="15"
-                        height="15"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        aria-hidden="true"
+                      <h3 className="type-h2 mb-2 text-white">{x.t}</h3>
+                      <p className="mb-6 text-[14.5px] leading-[1.65] text-white/50">
+                        {x.b}
+                      </p>
+                      <span
+                        className="mt-auto inline-flex items-center gap-2 text-[13px] font-semibold"
+                        style={{ color: G }}
                       >
-                        <path
-                          d="M5 12h14M13 6l6 6-6 6"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                  </Link>
-                </Rise>
-              ))}
+                        View
+                        <svg
+                          width="15"
+                          height="15"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M5 12h14M13 6l6 6-6 6"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
+                    </Link>
+                  </Rise>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         <Blend />
 

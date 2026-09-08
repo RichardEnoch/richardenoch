@@ -24,7 +24,8 @@ import NextPair from "../../components/common/NextPair";
 import BrandGallery from "../../components/ProjectPage/BrandGallery";
 import GuidelineCarousel from "../../components/ProjectPage/GuidelineCarousel";
 /* Frames name a drop-in key rather than an import — see data/adlmAssets.js. */
-import { withAssets } from "../../data/adlmAssets";
+import { withAssetsOnly } from "../../data/adlmAssets";
+import { liveLinks } from "../../config/featureFlags";
 import BuildSection from "../../components/Home/BuildSection";
 import {
   Section,
@@ -215,9 +216,16 @@ const TYPE = [
 ];
 
 /* Every deliverable in the platinum package, one cell each — the specific
-   thing that gets photographed, not a category. Ratios are mixed so the
-   masonry packs like the Tabstudio and Verde Luxe galleries rather than
-   stacking into equal rectangles. Real shots go in as they are produced. */
+   thing that gets photographed, not a category.
+
+   Ratios describe the photograph, not the object: every mockup in this set
+   came off the camera landscape, so a letterhead is 4:3 here even though a
+   sheet of paper is portrait. Framing a landscape photograph in a portrait
+   tile does not show more of the letterhead, it shows less of it.
+
+   The gallery renders only the frames whose picture has landed. The rest
+   stay in this list so that dropping the file in restores the frame in its
+   original position, with no code change. */
 const TOUCHPOINTS = [
   // produced
   {
@@ -231,40 +239,56 @@ const TOUCHPOINTS = [
     alt: "ADLM training badge",
   },
   // stationery and office
-  { label: "Letterhead", ratio: "3/4", key: "touchpoints/letterhead" },
+  { label: "Letterhead", ratio: "4/3", key: "touchpoints/letterhead" },
   {
     label: "Business cards, front and back",
     ratio: "4/3",
     key: "touchpoints/business-cards",
   },
-  { label: "Envelope", ratio: "4/3", key: "touchpoints/envelope" },
+  { label: "Envelope", ratio: "3/2", key: "touchpoints/envelope" },
   {
     label: "Document folder",
-    ratio: "4/5",
+    ratio: "3/2",
     key: "touchpoints/document-folder",
   },
-  { label: "Notepad", ratio: "4/5", key: "touchpoints/notepad" },
-  { label: "Branded pen", ratio: "1/1", key: "touchpoints/branded-pen" },
+  { label: "The stationery set", ratio: "3/2", key: "touchpoints/stationery" },
+  {
+    label: "Email signature",
+    ratio: "4/3",
+    key: "touchpoints/email-signature",
+  },
+  {
+    label: "Company profile",
+    ratio: "3/2",
+    key: "touchpoints/company-profile",
+  },
+  { label: "Notepad", ratio: "4/3", key: "touchpoints/notepad" },
+  { label: "Branded pen", ratio: "4/3", key: "touchpoints/branded-pen" },
   { label: "Desk calendar", ratio: "4/3", key: "touchpoints/desk-calendar" },
   // training and events
-  { label: "Lanyard and ID card", ratio: "4/5", key: "touchpoints/lanyard" },
-  { label: "Roll-up banner", ratio: "3/4", key: "touchpoints/roll-up-banner" },
+  { label: "Certificate", ratio: "4/3", key: "touchpoints/certificate" },
+  { label: "Lanyard", ratio: "3/2", key: "touchpoints/lanyard" },
+  { label: "ID card", ratio: "1/1", key: "touchpoints/id-card" },
+  { label: "Office poster", ratio: "3/2", key: "touchpoints/office-poster" },
+  { label: "Roll-up banner", ratio: "3/2", key: "touchpoints/roll-up-banner" },
   { label: "Event backdrop", ratio: "16/9", key: "touchpoints/event-backdrop" },
   // merchandise
-  { label: "T-shirt", ratio: "1/1", key: "touchpoints/t-shirt" },
-  { label: "Polo shirt", ratio: "4/5", key: "touchpoints/polo-shirt" },
-  { label: "Hoodie", ratio: "4/5", key: "touchpoints/hoodie" },
-  { label: "Face cap", ratio: "1/1", key: "touchpoints/face-cap" },
-  { label: "Tote bag", ratio: "4/5", key: "touchpoints/tote-bag" },
-  { label: "Paper bag", ratio: "4/5", key: "touchpoints/paper-bag" },
-  { label: "Mug", ratio: "1/1", key: "touchpoints/mug" },
-  { label: "Water bottle", ratio: "3/4", key: "touchpoints/water-bottle" },
+  { label: "T-shirt", ratio: "4/3", key: "touchpoints/t-shirt" },
+  { label: "Face cap", ratio: "3/2", key: "touchpoints/face-cap" },
+  { label: "Tote bag", ratio: "4/3", key: "touchpoints/tote-bag" },
+  { label: "Mug", ratio: "4/3", key: "touchpoints/mug" },
+  { label: "Wristband", ratio: "4/3", key: "touchpoints/wristband" },
+  { label: "Social media", ratio: "4/3", key: "touchpoints/social-media" },
+  { label: "Polo shirt", ratio: "4/3", key: "touchpoints/polo-shirt" },
+  { label: "Hoodie", ratio: "4/3", key: "touchpoints/hoodie" },
+  { label: "Paper bag", ratio: "4/3", key: "touchpoints/paper-bag" },
+  { label: "Water bottle", ratio: "4/3", key: "touchpoints/water-bottle" },
   {
     label: "Branded flash drive",
     ratio: "4/3",
     key: "touchpoints/branded-flash-drive",
   },
-  { label: "Keychain", ratio: "1/1", key: "touchpoints/keychain" },
+  { label: "Keychain", ratio: "4/3", key: "touchpoints/keychain" },
   { label: "Sticker pack", ratio: "4/3", key: "touchpoints/sticker-pack" },
   { label: "Mouse pad", ratio: "4/3", key: "touchpoints/mouse-pad" },
 ];
@@ -343,12 +367,15 @@ const SECTIONS = [
   { id: "imagery", label: "Imagery" },
 ];
 
-const SIBLINGS = [
+/* Filtered, so this page never offers a door into a case that has not been
+   published yet. The full set stays listed: publishing a sibling in
+   config/featureFlags puts its link back without touching this file. */
+const SIBLINGS = liveLinks([
   { to: BASE, label: "← ADLM overview" },
   { to: `${BASE}/design-system`, label: "Design system" },
   { to: `${BASE}/website`, label: "Website" },
   { to: `${BASE}/product`, label: "Product / UI-UX" },
-];
+]);
 
 /* The mark on the brand's own ground: navy, one soft glow, a fine dot grid. */
 const LogoPlate = ({ className = "", ratio = "5/4", width = "42%" }) => (
@@ -794,18 +821,26 @@ export default function AdlmBrand() {
           </div>
         </Section>
 
-        {/* Guideline — held at 1340, between full bleed and the reading column. */}
-        <div className="mx-auto max-w-[1340px]">
-          <GuidelineCarousel
-            n="07"
-            label="The guideline"
-            white="The system,"
-            accent="documented"
-            description="Being rebuilt against the current direction. Frames are the intended spreads."
-            slides={withAssets(GUIDELINE_SLIDES)}
-            orientation="landscape"
-          />
-        </div>
+        {/* Guideline — held at 1340, between full bleed and the reading column.
+
+            The document is still being rebuilt against the current direction.
+            An empty carousel of ten labelled placeholders is not a preview of
+            it, it is an announcement that it does not exist, so the section
+            stays out until at least one spread has landed. Dropping the first
+            file into assets/ADLM/dropin/guideline/ brings it back. */}
+        {withAssetsOnly(GUIDELINE_SLIDES).length > 0 && (
+          <div className="mx-auto max-w-[1340px]">
+            <GuidelineCarousel
+              n="07"
+              label="The guideline"
+              white="The system,"
+              accent="documented"
+              description="Spreads from the guideline as it stands."
+              slides={withAssetsOnly(GUIDELINE_SLIDES)}
+              orientation="landscape"
+            />
+          </div>
+        )}
 
         {/* ── 08 in application — three narrative beats ── */}
         <Section id="application" width="bleed">
@@ -912,8 +947,9 @@ export default function AdlmBrand() {
           label="Touchpoints"
           white="The brand,"
           accent="applied"
-          images={withAssets(TOUCHPOINTS)}
-          description="Every deliverable in the platinum package, one shot each. The certificate and badge are produced; the rest are specified and awaiting the shoot."
+          images={withAssetsOnly(TOUCHPOINTS)}
+          bands="landscape"
+          description="Stationery, training collateral and merchandise, photographed. More of the set goes up as it is produced."
         />
 
         {/* ── 10 imagery ── */}
