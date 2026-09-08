@@ -16,7 +16,7 @@ import { OWNER } from "../config/plans";
 export const PROFILE = {
   name: "Richard Enoch Adesiyan",
   title: "Multidisciplinary Designer — Brand & Product",
-  location: "Osun State, Nigeria · works remote",
+  location: "Nigeria · works remote",
   email: OWNER.email,
   phone: "+234 903 852 2066",
   linkedin: "https://www.linkedin.com/in/richardenoch/",
@@ -133,7 +133,7 @@ export const EXPERIENCE = [
     id: "adlm",
     company: "ADLM Studio",
     role: "Creative Lead",
-    period: "Feb 2022 – Present",
+    period: "Feb 2020 – Present",
     meta: "Lagos, Nigeria",
     points: [
       "Lead creative direction across brand identity, product UI, marketing collateral and client deliverables.",

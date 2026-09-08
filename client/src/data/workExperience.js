@@ -52,7 +52,7 @@ const workExperience = [
     id: "adlm",
     name: "ADLM Studio",
     role: "Creative Lead",
-    durationLabel: "Feb 2022 – Present",
+    durationLabel: "Feb 2020 – Present",
     workExperience: [
       "Lead creative direction for the studio — owning brand identity, product UI, marketing collateral, and client deliverables across multi-disciplinary projects.",
       "Define and maintain studio design standards, brand guidelines, and component libraries used across every client engagement.",
