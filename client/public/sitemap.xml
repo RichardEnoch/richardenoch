@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Hand-maintained. The site has no build step that knows its own routes, so
+  when a route is added in main.jsx it has to be added here too.
+
+  Left out on purpose: /book, /book-website and /book-flyer (forms, not
+  content), /offer/:token (private links), /cv and /ui-project (redirects),
+  and everything under /projects/featured/adlm-studio, which is gated behind
+  ADLM_CASE_STUDY_LIVE until the case study is finished.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url><loc>https://richardenoch.com/</loc><priority>1.0</priority><changefreq>monthly</changefreq></url>
+
+  <!-- The two doors -->
+  <url><loc>https://richardenoch.com/resume</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://richardenoch.com/rate-details</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+
+  <!-- Disciplines -->
+  <url><loc>https://richardenoch.com/brand-identity</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://richardenoch.com/product-design</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+
+  <url><loc>https://richardenoch.com/projects</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://richardenoch.com/about</loc><priority>0.8</priority><changefreq>yearly</changefreq></url>
+  <url><loc>https://richardenoch.com/contact</loc><priority>0.7</priority><changefreq>yearly</changefreq></url>
+
+  <!-- Product / UI case studies -->
+  <url><loc>https://richardenoch.com/ui-projects/niqs</loc><priority>0.8</priority></url>
+  <url><loc>https://richardenoch.com/ui-projects/ydpay-mobile-redesign</loc><priority>0.7</priority></url>
+  <url><loc>https://richardenoch.com/ui-projects/snotes</loc><priority>0.7</priority></url>
+  <url><loc>https://richardenoch.com/ui-projects/savedup</loc><priority>0.7</priority></url>
+  <url><loc>https://richardenoch.com/ui-projects/quiv</loc><priority>0.7</priority></url>
+
+  <!-- Brand case studies -->
+  <url><loc>https://richardenoch.com/projects/ydpay-brand</loc><priority>0.7</priority></url>
+  <url><loc>https://richardenoch.com/projects/verde-luxe</loc><priority>0.7</priority></url>
+  <url><loc>https://richardenoch.com/projects/cleanstead</loc><priority>0.7</priority></url>
+  <url><loc>https://richardenoch.com/projects/tabstudio</loc><priority>0.7</priority></url>
+  <url><loc>https://richardenoch.com/projects/book-rion</loc><priority>0.7</priority></url>
+
+  <!-- Graphic, web and presentation galleries -->
+  <url><loc>https://richardenoch.com/graphic-design</loc><priority>0.6</priority></url>
+  <url><loc>https://richardenoch.com/website-design</loc><priority>0.6</priority></url>
+  <url><loc>https://richardenoch.com/presentation-design</loc><priority>0.6</priority></url>
+  <url><loc>https://richardenoch.com/adlm-studio-designs</loc><priority>0.6</priority></url>
+  <url><loc>https://richardenoch.com/whitespace-designs</loc><priority>0.6</priority></url>
+  <url><loc>https://richardenoch.com/ydpay-designs</loc><priority>0.6</priority></url>
+
+  <url><loc>https://richardenoch.com/testimonial</loc><priority>0.4</priority></url>
+
+</urlset>

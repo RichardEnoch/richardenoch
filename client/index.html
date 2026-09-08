@@ -2,9 +2,92 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/reni-logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Richard Enoch Portfolio</title>
+    <link rel="icon" type="image/png" href="/reni-logo.png" />
+    <meta name="theme-color" content="#050505" />
+
+    <!--
+      These tags are the fallback, not the source of truth.
+
+      react-helmet-async writes per-page titles, descriptions and canonicals
+      once React has mounted, and Google runs JavaScript so it sees those.
+      LinkedIn, WhatsApp, X, Slack and iMessage do not — they read this file
+      and stop. Without something here, a link to the portfolio unfurled in a
+      DM as a bare URL: no title, no summary, no image.
+
+      So this is the site-level card every non-JS scraper gets. It describes
+      the site rather than any one page, which is the honest thing for a
+      fallback to do.
+    -->
+    <title>Richard Enoch — Brand Identity & Product Designer</title>
+    <meta
+      name="description"
+      content="Richard Enoch is a multidisciplinary designer in Lagos working across brand identity, product design and the design systems that hold them together — for construction technology, fintech, publishing and a national professional body."
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Richard Enoch" />
+    <meta property="og:url" content="https://richardenoch.com/" />
+    <meta
+      property="og:title"
+      content="Richard Enoch — Brand Identity & Product Designer"
+    />
+    <meta
+      property="og:description"
+      content="Brand identity and product design, and the systems that hold them together. Six years in design, three in product."
+    />
+    <meta property="og:image" content="https://richardenoch.com/og-default.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Richard Enoch — brand identity, product design, design systems"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Richard Enoch — Brand Identity & Product Designer"
+    />
+    <meta
+      name="twitter:description"
+      content="Brand identity and product design, and the systems that hold them together."
+    />
+    <meta
+      name="twitter:image"
+      content="https://richardenoch.com/og-default.png"
+    />
+
+    <!-- Tells Google who this is, rather than leaving it to infer from copy. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Richard Enoch",
+        "alternateName": "Adesiyan Richard Enoch",
+        "url": "https://richardenoch.com",
+        "image": "https://richardenoch.com/og-default.png",
+        "jobTitle": "Brand Identity & Product Designer",
+        "email": "mailto:enochrichard6@gmail.com",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Lagos",
+          "addressCountry": "NG"
+        },
+        "alumniOf": {
+          "@type": "CollegeOrUniversity",
+          "name": "Obafemi Awolowo University"
+        },
+        "knowsAbout": [
+          "Brand identity",
+          "Design systems",
+          "Product design",
+          "UI/UX design",
+          "Quantity surveying"
+        ],
+        "sameAs": ["https://www.linkedin.com/in/richardenoch/"]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

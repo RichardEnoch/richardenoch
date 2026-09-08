@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 const SITE = "Richard Enoch — Multidisciplinary Designer";
 const DEFAULT_DESC =
   "Portfolio of Richard Enoch — brand identity, UI/UX, graphic design, and web design.";
-const DEFAULT_IMG = "https://richardenoch.com/og-default.jpg";
+const DEFAULT_IMG = "https://richardenoch.com/og-default.png";
 const BASE_URL = "https://richardenoch.com";
 
 const PageMeta = ({

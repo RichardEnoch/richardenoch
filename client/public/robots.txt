@@ -1,0 +1,12 @@
+# richardenoch.com
+User-agent: *
+Allow: /
+
+# Booking flows and the testimonial form are for people who arrived through
+# the site, not search results. Nothing secret — just nothing worth indexing.
+Disallow: /book
+Disallow: /book-website
+Disallow: /book-flyer
+Disallow: /offer/
+
+Sitemap: https://richardenoch.com/sitemap.xml
