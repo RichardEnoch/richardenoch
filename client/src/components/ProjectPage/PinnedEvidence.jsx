@@ -3,8 +3,9 @@
 // The proof, pinned to the board.
 //
 // The findings list is twenty-two sentences about a site the reader has never
-// seen. Every one of them is checkable — the old ADLM site is still live at
-// www.adlmstudio.net — so the evidence sits right beside the claim.
+// seen. Every one of them was captured from the old ADLM site at
+// www.adlmstudio.net before the rebuild replaced it, so the evidence sits
+// right beside the claim.
 //
 // It does not sit there loudly. Two or three captures, tacked up at slightly
 // wrong angles the way photographs end up on a wall, low enough in contrast
@@ -222,8 +223,8 @@ const PinnedEvidence = ({ items = [], label = "See the old screens" }) => {
                       </div>
                     </div>
                     <p className="mt-4 text-[12.5px] leading-[1.6] text-white/25">
-                      Captured from the live site at www.adlmstudio.net, which
-                      is still running the version this audit covers.
+                      Captured from www.adlmstudio.net before the rebuild went
+                      live, the version this audit covers.
                     </p>
                   </div>
                 </div>

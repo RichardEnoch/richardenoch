@@ -493,7 +493,7 @@ export default function AdlmQuiv() {
                 trade deliberately is most of what product design actually is.
               </p>
               <a
-                href="https://adlm-studio.vercel.app/quiv"
+                href="https://www.adlmstudio.net/product/revit"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-lg px-5 py-3 text-[13.5px] font-bold text-black transition-[filter] duration-200 hover:brightness-110"

@@ -7,6 +7,7 @@ import PageMeta from "../components/common/PageMeta";
 
 import niqsLogo from "../assets/partner/NiqsColor.svg";
 import adlmLogo from "../assets/partner/ADLMLogo.png";
+import marykidshubShot from "../assets/websiteThumbs/marykidshub.webp";
 
 const HERO_VIDEO =
   "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_115655_b4d9cd77-feed-43cd-a198-af78ebdf1f7a.mp4";
@@ -55,6 +56,28 @@ const PROJECTS = [
     logo: null,
     logoText: "OT",
     scope: ["Website design", "Personal brand"],
+  },
+  {
+    id: "marykidshub",
+    number: "04",
+    name: "Mary Kids Hub",
+    category: "Children's Publishing · Books",
+    description:
+      "A home for a children's publisher — books, comics and devotionals for readers aged 8 to 16. Organised around the story worlds a young reader picks from, with a book club for them and a separate path for the grown-ups buying.",
+    url: "https://www.marykidshub.com/",
+    liveUrl: "https://www.marykidshub.com/",
+    // The site sends X-Frame-Options: SAMEORIGIN, so it cannot be embedded.
+    // A capture of the live homepage stands in for the iframe.
+    shot: marykidshubShot,
+    logo: null,
+    logoText: "MK",
+    scope: [
+      "Website design + build",
+      "Book catalogue",
+      "Story worlds",
+      "Book club",
+      "Grown-ups path",
+    ],
   },
 ];
 
@@ -122,7 +145,7 @@ const ScaledIframe = ({ url, name }) => {
 };
 
 // ─── Browser chrome wrapper ───────────────────────────────────────────────────
-const BrowserFrame = ({ url, name }) => {
+const BrowserFrame = ({ url, name, shot }) => {
   const domain = (() => {
     try {
       return new URL(url).hostname;
@@ -195,7 +218,16 @@ const BrowserFrame = ({ url, name }) => {
         </svg>
       </div>
 
-      <ScaledIframe url={url} name={name} />
+      {shot ? (
+        <img
+          src={shot}
+          alt={`${name} homepage`}
+          loading="lazy"
+          className="block w-full"
+        />
+      ) : (
+        <ScaledIframe url={url} name={name} />
+      )}
     </div>
   );
 };
@@ -342,7 +374,7 @@ const ProjectSection = ({ project, index }) => {
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.85, delay: 0.1, ease: [0.22, 0.61, 0.36, 1] }}
       >
-        <BrowserFrame url={project.url} name={project.name} />
+        <BrowserFrame url={project.url} name={project.name} shot={project.shot} />
       </motion.div>
     </section>
   );

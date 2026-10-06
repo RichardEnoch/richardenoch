@@ -16,6 +16,7 @@ import presThumb from "../../assets/PresentationDesigns/1.webp";
 import webOluwatosin from "../../assets/websiteThumbs/oluwatosin.webp";
 import webNiqs from "../../assets/websiteThumbs/niqs.webp";
 import webAdlm from "../../assets/websiteThumbs/adlm.webp";
+import webMaryKidsHub from "../../assets/websiteThumbs/marykidshub.webp";
 
 /* Brand case-study thumbnails. These four projects are hardcoded pages with
    local assets, so they must not depend on the API to be discoverable. */
@@ -459,9 +460,14 @@ const WEB_PROJECTS = [
     name: "ADLM Studio",
     category: "Construction Tech · Software",
     thumb: webAdlm,
-    // www.adlmstudio.net still serves the pre-rebuild site; the redesign this
-    // card shows is the Vercel deploy.
-    live: "https://adlm-studio.vercel.app/",
+    live: "https://www.adlmstudio.net/",
+  },
+  {
+    id: "marykidshub",
+    name: "Mary Kids Hub",
+    category: "Children's Publishing · Books",
+    thumb: webMaryKidsHub,
+    live: "https://www.marykidshub.com/",
   },
 ];
 

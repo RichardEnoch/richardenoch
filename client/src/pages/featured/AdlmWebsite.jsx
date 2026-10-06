@@ -71,7 +71,7 @@ import {
 } from "../../components/common/CaseParts";
 
 const BASE = "/projects/featured/adlm-studio";
-const LIVE = "https://adlm-studio.vercel.app";
+const LIVE = "https://www.adlmstudio.net";
 
 /* Grouped the way the audit grouped them, because the grouping is the argument:
    the structural failures are what justify a redesign, the broken links merely
@@ -299,8 +299,8 @@ const DECISIONS = [
 ];
 
 /* Captures of the old site, one set per finding group. Every one of these is
-   a screenshot of www.adlmstudio.net as it stands — the site this audit was
-   written against is still live, so none of it has to be taken on trust. */
+   a screenshot of www.adlmstudio.net taken before the rebuild replaced it —
+   the record of the site this audit was written against. */
 const EVIDENCE = {
   Structure: [
     {
