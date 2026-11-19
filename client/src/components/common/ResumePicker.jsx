@@ -331,6 +331,10 @@ const ResumePicker = ({ open, onClose }) => {
     a.remove();
   };
 
+  // No document at build time (scripts/prerender.mjs). The modal starts
+  // closed, so there is nothing to render there anyway.
+  if (typeof document === "undefined") return null;
+
   return createPortal(
     <AnimatePresence>
       {open && (

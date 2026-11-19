@@ -1,224 +1,15 @@
-// src/main.jsx or src/index.jsx
+// src/main.jsx — the browser entry.
 import React from "react";
 import ReactDom from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Navigate,
-  useParams,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { MotionConfig } from "framer-motion";
-import App from "./App.jsx";
 import "./index.css";
-import Home from "./pages/Home.jsx";
-const About = React.lazy(() => import("./pages/About.jsx"));
+import { routes } from "./routes.jsx";
 
-const Projects = React.lazy(() => import("./pages/Projects.jsx"));
-const RateDetails = React.lazy(() => import("./pages/RateDetails.jsx"));
-const GraphicDesignPage = React.lazy(() => import("./pages/GraphicDesignPage"));
-const WebsiteDesignPage = React.lazy(
-  () => import("./pages/WebsiteDesignPage.jsx"),
-);
-const YDpayPage = React.lazy(() => import("./pages/YDpayPage.jsx"));
-const SavedupProject = React.lazy(() => import("./pages/SavedupProject.jsx"));
-const SnotesProject = React.lazy(() => import("./pages/SnotesProject.jsx"));
-const QuivProject = React.lazy(() => import("./pages/QuivProject.jsx"));
-const TabStudioProject = React.lazy(
-  () => import("./pages/TabStudioProject.jsx"),
-);
-const VerdeLuxeProject = React.lazy(
-  () => import("./pages/VerdeLuxeProject.jsx"),
-);
-const CleansteadProject = React.lazy(
-  () => import("./pages/CleansteadProject.jsx"),
-);
-const BookRionProject = React.lazy(() => import("./pages/BookRionProject.jsx"));
-const ADLMStudioPage = React.lazy(() => import("./pages/ADLMStudioPage.jsx"));
-const NiqsUIProject = React.lazy(() => import("./pages/NiqsUIProject.jsx"));
-const YDpayBrandPage = React.lazy(() => import("./pages/YDpayBrandPage.jsx"));
-const WhitespacePage = React.lazy(() => import("./pages/WhitespacePage.jsx"));
-const YDpayDesignPage = React.lazy(() => import("./pages/YDpayDesignPage.jsx"));
-const Contact = React.lazy(() => import("./pages/Contact.jsx"));
-const Resume = React.lazy(() => import("./pages/Resume.jsx"));
-/* Discipline landing pages. A recruiter arrives with one discipline in mind,
-   not one project, so each gets its own route rather than a query string on
-   the projects grid. */
-const BrandIdentity = React.lazy(() => import("./pages/BrandIdentity.jsx"));
-const ProductDesign = React.lazy(() => import("./pages/ProductDesign.jsx"));
-const PresentationDesignPage = React.lazy(
-  () => import("./pages/PresentationDesignPage.jsx"),
-);
-const BookPlan = React.lazy(() => import("./pages/BookPlan.jsx"));
-const TestimonialPage = React.lazy(() => import("./pages/TestimonialPage.jsx"));
-const BookFlyer = React.lazy(() => import("./pages/BookFlyer.jsx"));
-const BookWebsite = React.lazy(() => import("./pages/BookWebsite.jsx"));
-const OfferPage = React.lazy(() => import("./pages/OfferPage.jsx"));
+const router = createBrowserRouter(routes);
 
-/* Featured projects — one project spanning several disciplines, each
-   discipline on its own route so it can be linked to directly. */
-import { adlmLive } from "./config/featureFlags";
-
-const AdlmHub = React.lazy(() => import("./pages/featured/AdlmHub.jsx"));
-const AdlmBrand = React.lazy(() => import("./pages/featured/AdlmBrand.jsx"));
-const AdlmDesignSystem = React.lazy(
-  () => import("./pages/featured/AdlmDesignSystem.jsx"),
-);
-const AdlmWebsite = React.lazy(
-  () => import("./pages/featured/AdlmWebsite.jsx"),
-);
-const AdlmProductSuite = React.lazy(
-  () => import("./pages/featured/AdlmProductSuite.jsx"),
-);
-const AdlmQuiv = React.lazy(() => import("./pages/featured/AdlmQuiv.jsx"));
-const AdlmProduct = React.lazy(
-  () => import("./pages/featured/AdlmProduct.jsx"),
-);
-
-// Redirect component that preserves slug params
-const RedirectWithSlug = ({ basePath }) => {
-  const { slug } = useParams();
-  return <Navigate to={slug ? `${basePath}/${slug}` : basePath} replace />;
-};
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    children: [
-      { index: true, element: <Home /> },
-      { path: "about", element: <About /> },
-
-      { path: "projects", element: <Projects /> },
-      {
-        path: "projects/niqs",
-        element: <Navigate to="/ui-projects/niqs" replace />,
-      },
-      { path: "projects/tabstudio", element: <TabStudioProject /> },
-      { path: "projects/verde-luxe", element: <VerdeLuxeProject /> },
-      { path: "projects/cleanstead", element: <CleansteadProject /> },
-      { path: "projects/book-rion", element: <BookRionProject /> },
-      { path: "projects/ydpay-brand", element: <YDpayBrandPage /> },
-      { path: "graphic-design", element: <GraphicDesignPage /> },
-      { path: "adlm-studio-designs", element: <ADLMStudioPage /> },
-      { path: "whitespace-designs", element: <WhitespacePage /> },
-      { path: "ydpay-designs", element: <YDpayDesignPage /> },
-      { path: "website-design", element: <WebsiteDesignPage /> },
-      { path: "rate-details", element: <RateDetails /> },
-      { path: "book", element: <BookPlan /> },
-      { path: "book-flyer", element: <BookFlyer /> },
-      { path: "book-website", element: <BookWebsite /> },
-      { path: "offer/:token", element: <OfferPage /> },
-
-      // ── Featured: ADLM Studio ──────────────────────────────────────────
-      // Published page by page. See config/featureFlags — brand identity and
-      // the design system are finished; the hub, the website case and the six
-      // product pages are not, and a route that exists for an unfinished page
-      // is a route someone can find.
-      ...(adlmLive("hub")
-        ? [{ path: "projects/featured/adlm-studio", element: <AdlmHub /> }]
-        : []),
-      ...(adlmLive("brand")
-        ? [
-            {
-              path: "projects/featured/adlm-studio/brand",
-              element: <AdlmBrand />,
-            },
-          ]
-        : []),
-      ...(adlmLive("design-system")
-        ? [
-            {
-              path: "projects/featured/adlm-studio/design-system",
-              element: <AdlmDesignSystem />,
-            },
-          ]
-        : []),
-      ...(adlmLive("website")
-        ? [
-            {
-              path: "projects/featured/adlm-studio/website",
-              element: <AdlmWebsite />,
-            },
-          ]
-        : []),
-      // The suite, QUIV, and one dynamic route covering the other five
-      // products. The dynamic path sits after QUIV so the static match wins.
-      ...(adlmLive("product")
-        ? [
-            {
-              path: "projects/featured/adlm-studio/product",
-              element: <AdlmProductSuite />,
-            },
-            {
-              path: "projects/featured/adlm-studio/product/quiv",
-              element: <AdlmQuiv />,
-            },
-            {
-              path: "projects/featured/adlm-studio/product/:slug",
-              element: <AdlmProduct />,
-            },
-            // Links that pre-date the featured structure keep resolving.
-            {
-              path: "ui-projects/quiv",
-              element: (
-                <Navigate
-                  to="/projects/featured/adlm-studio/product/quiv"
-                  replace
-                />
-              ),
-            },
-          ]
-        : [{ path: "ui-projects/quiv", element: <QuivProject /> }]),
-      { path: "contact", element: <Contact /> },
-      { path: "resume", element: <Resume /> },
-      // "cv" is what half the world types.
-      { path: "cv", element: <Navigate to="/resume" replace /> },
-      { path: "brand-identity", element: <BrandIdentity /> },
-      { path: "product-design", element: <ProductDesign /> },
-      { path: "testimonial", element: <TestimonialPage /> },
-      { path: "presentation-design", element: <PresentationDesignPage /> },
-      // Every case study now has its own route above. Anything else that used
-      // to be served from the database falls back to the projects index.
-      { path: "projects/:slug", element: <Navigate to="/projects" replace /> },
-
-      // ✅ UI Projects (plural) — matches your navigate(`/ui-projects/${slug}`)
-      { path: "ui-projects", element: <Navigate to="/projects" replace /> },
-      { path: "ui-projects/ydpay-mobile-redesign", element: <YDpayPage /> },
-      { path: "ui-projects/savedup", element: <SavedupProject /> },
-      { path: "ui-projects/niqs", element: <NiqsUIProject /> },
-      { path: "ui-projects/snotes", element: <SnotesProject /> },
-      // Quiv now lives inside the ADLM suite — its redirect is declared above.
-      {
-        path: "ui-projects/:slug",
-        element: <Navigate to="/projects" replace />,
-      },
-
-      // keep old links working by redirecting (preserving slug)
-      { path: "ui-project", element: <Navigate to="/ui-projects" replace /> },
-      {
-        path: "ui-project/:slug",
-        element: <RedirectWithSlug basePath="/ui-projects" />,
-      },
-
-      // 404 catch-all
-      {
-        path: "*",
-        element: (
-          <div className="flex min-h-screen flex-col items-center justify-center bg-[#050505] text-white">
-            <h1 className="text-4xl font-bold">404</h1>
-            <p className="mt-2 text-neutral-400">Page not found</p>
-            <a href="/" className="mt-4 text-lime-400 hover:underline">
-              Go home
-            </a>
-          </div>
-        ),
-      },
-    ],
-  },
-]);
-
-ReactDom.createRoot(document.getElementById("root")).render(
+const app = (
   <React.StrictMode>
     <HelmetProvider>
       {/* reducedMotion="user" makes every motion component on the site honour
@@ -231,5 +22,36 @@ ReactDom.createRoot(document.getElementById("root")).render(
         <RouterProvider router={router} />
       </MotionConfig>
     </HelmetProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );
+
+/* Public pages arrive already rendered (scripts/prerender.mjs), so crawlers,
+   link previews and AI tools can read them without running JavaScript. Those
+   are hydrated: React takes over the HTML that is already there instead of
+   throwing it away. Pages that are not pre-rendered (booking forms, private
+   offer links) arrive as an empty shell and are rendered from scratch. */
+const container = document.getElementById("root");
+if (container.hasChildNodes()) {
+  ReactDom.hydrateRoot(container, app);
+  dropPrerenderedHead();
+} else {
+  ReactDom.createRoot(container).render(app);
+}
+
+/* The pre-rendered page carries its own <title> and meta tags for scrapers.
+   Once React writes its copies (which it then keeps updated as you move
+   around the site), the originals are stale duplicates, so they go. Waiting
+   for React's title rather than removing them up front means the tab never
+   shows a bare URL while the page's code is still loading. */
+function dropPrerenderedHead() {
+  const stale = () => document.head.querySelectorAll("[data-prerender]");
+  if (!stale().length) return;
+  const tryDrop = () => {
+    if (!document.head.querySelector("title:not([data-prerender])")) return false;
+    stale().forEach((el) => el.remove());
+    return true;
+  };
+  if (tryDrop()) return;
+  const observer = new MutationObserver(() => tryDrop() && observer.disconnect());
+  observer.observe(document.head, { childList: true });
+}

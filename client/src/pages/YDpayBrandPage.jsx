@@ -276,7 +276,7 @@ export default function YDpayBrandPage() {
   return (
     <div className="bg-[#07090C] text-white min-h-screen">
       <PageMeta
-        title="YDPay Brand Identity — Richard Enoch"
+        title="YDPay — Brand Identity"
         description="The brand foundation behind the product — the typography, voice, guideline, and touchpoints that turned a fixed mark and palette into a working brand system for YDPay fintech."
       />
 

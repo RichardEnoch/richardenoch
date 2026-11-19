@@ -367,7 +367,7 @@ export default function NiqsUIProject() {
   return (
     <div className="bg-[#07090C] text-white min-h-screen">
       <PageMeta
-        title="NIQS Digital Transformation — Richard Enoch"
+        title="NIQS — Digital Transformation"
         description="Full digital identity rebuild for Nigeria's premier professional body for Quantity Surveyors — brand system, website, member portal, admin dashboard, and a self-serve design engine."
       />
 
