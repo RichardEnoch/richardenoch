@@ -54,8 +54,6 @@ import darkVariantGradient from "../../assets/ADLM/logo/dark-logo-variant-gradie
 import evolutionMiddle from "../../assets/ADLM/logo/evolution-middle.svg";
 import sketchImg from "../../assets/ADLM/brand/idea-sketch.webp";
 import evo1 from "../../assets/ADLM/brand/evo-1.webp";
-import certificateImg from "../../assets/ADLM/brand/certificate.webp";
-import badgeImg from "../../assets/ADLM/brand/badge.webp";
 import dashboardImg from "../../assets/ADLM/brand/dashboard.webp";
 import phoneImg from "../../assets/ADLM/brand/phone.webp";
 import heroImg from "../../assets/ADLM/gallery/gal-03.webp";
@@ -227,17 +225,6 @@ const TYPE = [
    stay in this list so that dropping the file in restores the frame in its
    original position, with no code change. */
 const TOUCHPOINTS = [
-  // produced
-  {
-    src: certificateImg,
-    label: "Training certificate",
-    alt: "ADLM training certificate",
-  },
-  {
-    src: badgeImg,
-    label: "Course completion seal",
-    alt: "ADLM training badge",
-  },
   // stationery and office
   { label: "Letterhead", ratio: "4/3", key: "touchpoints/letterhead" },
   {
@@ -854,7 +841,7 @@ export default function AdlmBrand() {
               />
               <p className="text-[16px] leading-[1.75] text-white/55">
                 An identity is only worth what survives contact with the things
-                it has to appear on. Three places this one earns its keep.
+                it has to appear on. Two places this one earns its keep.
               </p>
             </Rise>
           </Prose>
@@ -862,35 +849,6 @@ export default function AdlmBrand() {
           <div className="space-y-16">
             <AppliedStory
               n="8.1"
-              kicker="The artefact people keep"
-              head="A certificate is the only piece a student takes home"
-              sub="Training certificate and badge"
-              body="Thirty events and thousands of attendees mean this is the most widely held piece of ADLM print in existence — and the one most likely to be photographed, framed and posted. It carries the full lockup, the navy ground and the seal, so the brand travels wherever the graduate does."
-            >
-              <div className="grid gap-5 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]">
-                <RiseMedia>
-                  <div className="overflow-hidden rounded-2xl border border-white/8">
-                    <img
-                      src={certificateImg}
-                      alt="ADLM training certificate"
-                      className="block w-full"
-                    />
-                  </div>
-                </RiseMedia>
-                <RiseMedia delay={0.07}>
-                  <div className="flex h-full items-center justify-center overflow-hidden rounded-2xl border border-white/8 bg-[#0D1B2E] p-10">
-                    <img
-                      src={badgeImg}
-                      alt="ADLM training badge"
-                      className="max-h-[300px] w-auto"
-                    />
-                  </div>
-                </RiseMedia>
-              </div>
-            </AppliedStory>
-
-            <AppliedStory
-              n="8.2"
               kicker="Brand inside the product"
               head="The identity has to survive being software"
               sub="Dashboard and mobile"
@@ -919,7 +877,7 @@ export default function AdlmBrand() {
             </AppliedStory>
 
             <AppliedStory
-              n="8.3"
+              n="8.2"
               kicker="Pictures that did not exist"
               head="When the imagery a brand needs cannot be licensed"
               sub="Generated art direction"
@@ -948,7 +906,6 @@ export default function AdlmBrand() {
           white="The brand,"
           accent="applied"
           images={withAssetsOnly(TOUCHPOINTS)}
-          bands="landscape"
           description="Stationery, training collateral and merchandise, photographed. More of the set goes up as it is produced."
         />
 

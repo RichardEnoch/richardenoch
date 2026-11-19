@@ -68,11 +68,6 @@ const ProjectDetailsHero = ({ project }) => {
       ? heroMeta.timeline
       : defaultTimeline;
 
-  const teamInitials =
-    (Array.isArray(heroMeta.teamInitials)
-      ? heroMeta.teamInitials.filter(Boolean)
-      : []) || [];
-
   // ⬇️ Intro text: one string from DB, broken into paragraphs by “Enter”
   const rawIntro =
     (typeof project?.introText === "string" && project.introText.trim().length

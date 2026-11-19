@@ -23,12 +23,20 @@ import webMaryKidsHub from "../../assets/websiteThumbs/marykidshub.webp";
 import tabstudioThumb from "../../assets/TabStudio/stationery-dark.webp";
 import verdeLuxeThumb from "../../assets/VerdeLuxe/hero.webp";
 import bookRionThumb from "../../assets/Bookrion/mainSign.jpg";
-import adlmBrandThumb from "../../assets/ADLM/brand/evo-3.webp";
+import adlmLockup from "../../assets/ADLM/brand/evo-3.webp";
 import adlmSystemThumb from "../../assets/ADLM/site/designsystem.webp";
 import adlmProductThumb from "../../assets/ADLM/site/dashboard.webp";
 import adlmSocialThumb from "../../assets/ADLM/gallery/gal-02.webp";
 import cleansteadThumb from "../../assets/Cleanstead/signage.webp";
 import { linkIsLive } from "../../config/featureFlags";
+import { asset } from "../../data/adlmAssets";
+
+/* The brand card used to show the bare lockup on white, which tells a visitor
+   nothing about the work and sits badly on a dark grid. The stationery set is
+   the same identity doing its job. Resolved through the drop-in table rather
+   than imported, so renaming or replacing that file cannot break the build —
+   it falls back to the lockup. */
+const adlmBrandThumb = asset("touchpoints/stationery") || adlmLockup;
 
 const ADLM_BASE = "/projects/featured/adlm-studio";
 

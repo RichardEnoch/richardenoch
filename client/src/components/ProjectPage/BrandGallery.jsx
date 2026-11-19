@@ -10,6 +10,20 @@ function Lightbox({ images, index, onClose, onPrev, onNext }) {
   const img = images[index];
   const total = images.length;
 
+  /* A mockup often comes as a set — the mug in three lightings, the lanyard
+     from two angles. One of them earns the tile; the rest sit here, so the
+     alternates are a click away instead of eight photographs of a mug in the
+     grid. shot 0 is always the one that was on the wall. */
+  const shots = [img.src, ...(img.variants || [])];
+
+  /* Which alternate is showing, and which tile it belongs to. Kept as one
+     value and read during render rather than reset from an effect: moving to
+     the next tile must show its first shot on the same paint, not after a
+     second one. */
+  const [picked, setPicked] = useState({ forIndex: index, shot: 0 });
+  const shot = picked.forIndex === index ? picked.shot : 0;
+  const setShot = (i) => setPicked({ forIndex: index, shot: i });
+
   useEffect(() => {
     const handler = (e) => {
       if (e.key === "Escape") onClose();
@@ -42,11 +56,37 @@ function Lightbox({ images, index, onClose, onPrev, onNext }) {
           onClick={(e) => e.stopPropagation()}
         >
           <img
-            src={img.src}
+            src={shots[shot] || img.src}
             alt={img.alt}
             className="rounded-2xl shadow-[0_32px_120px_rgba(0,0,0,0.9)] object-contain"
             style={{ maxWidth: "88vw", maxHeight: "82vh" }}
           />
+
+          {/* the other shots of this same thing */}
+          {shots.length > 1 && (
+            <div className="absolute left-1/2 top-full mt-4 flex -translate-x-1/2 gap-2">
+              {shots.map((src, i) => (
+                <button
+                  key={src}
+                  type="button"
+                  onClick={() => setShot(i)}
+                  aria-label={`View ${img.label || img.alt} — shot ${i + 1}`}
+                  aria-current={i === shot}
+                  className={`h-12 w-16 overflow-hidden rounded-lg border transition ${
+                    i === shot
+                      ? "border-[#a3e635] opacity-100"
+                      : "border-white/15 opacity-55 hover:opacity-90"
+                  }`}
+                >
+                  <img
+                    src={src}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* label + counter */}
           <div
@@ -58,6 +98,11 @@ function Lightbox({ images, index, onClose, onPrev, onNext }) {
           >
             <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-white/80">
               {img.label || img.alt}
+              {shots.length > 1 && (
+                <span className="ml-2 font-normal normal-case tracking-normal text-white/45">
+                  {shots.length} shots
+                </span>
+              )}
             </p>
             <p className="text-[11px] font-mono text-white/40">
               {String(index + 1).padStart(2, "0")} /{" "}
@@ -297,43 +342,7 @@ const BANDS_2 = [
   [{ c: 2, r: 3 }], // 4:3 landscape
 ];
 
-/* ── the landscape set ──
-   The bands above mix portrait, square and tall tiles, which is what makes
-   the Tabstudio and Verde Luxe galleries pack the way they do. It is the
-   wrong shape for photographed mockups: those come off the camera landscape,
-   and object-cover in a 3:4 tile throws away half the frame — the letterhead
-   loses its foot, the cap loses its brim.
-
-   So a gallery whose contents are all landscape can ask for tiles that are
-   all landscape. Every shape here is 3:2 or 4:3, which is what the mockups
-   actually are, so the crop is a few pixels rather than a third of the
-   picture. Opt in with bands="landscape". */
-const LANDSCAPE_12 = [
-  [
-    { c: 6, r: 8 }, // 3:2
-    { c: 6, r: 8 }, // 3:2
-  ],
-  [
-    { c: 4, r: 6 }, // 4:3
-    { c: 4, r: 6 }, // 4:3
-    { c: 4, r: 6 }, // 4:3
-  ],
-];
-
-const LANDSCAPE_6 = [
-  [{ c: 6, r: 8 }], // 3:2 full width
-  [
-    { c: 3, r: 4 }, // 3:2
-    { c: 3, r: 4 }, // 3:2
-  ],
-];
-
-const LANDSCAPE_2 = [[{ c: 2, r: 3 }]]; // 4:3, one per row
-
-const BAND_SETS = {
-  default: { 12: BANDS_12, 6: BANDS_6, 2: BANDS_2 },
-  landscape: { 12: LANDSCAPE_12, 6: LANDSCAPE_6, 2: LANDSCAPE_2 },
-};
+const BAND_SETS = { 12: BANDS_12, 6: BANDS_6, 2: BANDS_2 };
 
 /* Whatever is left when the bands run out still has to close cleanly, so the
    tail is laid out as its own complete rows rather than trailing off. */
@@ -353,8 +362,8 @@ function closingBand(rem, cols) {
 }
 
 /* Walk the bands until every tile has a shape. */
-function layoutFor(count, cols, set = "default") {
-  const bands = (BAND_SETS[set] || BAND_SETS.default)[cols] || BANDS_6;
+function layoutFor(count, cols) {
+  const bands = BAND_SETS[cols] || BANDS_6;
   const out = [];
   let b = 0;
   while (out.length < count) {
@@ -412,8 +421,6 @@ export default function BrandGallery({
   images = [],
   color = "#a3e635",
   cta = null,
-  /* "landscape" when every picture in the set is wider than it is tall. */
-  bands = "default",
 }) {
   const navigate = useNavigate();
   const headerRef = useRef(null);
@@ -425,8 +432,8 @@ export default function BrandGallery({
   const gridRef = useRef(null);
   const { cols, rowH } = useBentoGrid(gridRef);
   const shapes = React.useMemo(
-    () => layoutFor(images.length, cols, bands),
-    [images.length, cols, bands],
+    () => layoutFor(images.length, cols),
+    [images.length, cols],
   );
 
   const filled = images.filter((item) => item.src);

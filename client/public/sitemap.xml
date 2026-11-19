@@ -5,8 +5,8 @@
 
   Left out on purpose: /book, /book-website and /book-flyer (forms, not
   content), /offer/:token (private links), /cv and /ui-project (redirects),
-  and everything under /projects/featured/adlm-studio, which is gated behind
-  ADLM_CASE_STUDY_LIVE until the case study is finished.
+  and the ADLM case-study pages still switched off in ADLM_PAGES_LIVE
+  (config/featureFlags.js). When one is switched on, add it here.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
@@ -37,6 +37,10 @@
   <url><loc>https://richardenoch.com/projects/cleanstead</loc><priority>0.7</priority></url>
   <url><loc>https://richardenoch.com/projects/tabstudio</loc><priority>0.7</priority></url>
   <url><loc>https://richardenoch.com/projects/book-rion</loc><priority>0.7</priority></url>
+
+  <!-- ADLM Studio: only the published pages -->
+  <url><loc>https://richardenoch.com/projects/featured/adlm-studio/brand</loc><priority>0.8</priority></url>
+  <url><loc>https://richardenoch.com/projects/featured/adlm-studio/design-system</loc><priority>0.8</priority></url>
 
   <!-- Graphic, web and presentation galleries -->
   <url><loc>https://richardenoch.com/graphic-design</loc><priority>0.6</priority></url>

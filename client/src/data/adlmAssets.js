@@ -75,7 +75,15 @@ export function assetProgress(keys = []) {
  * placeholder and a filled frame are the same object with one field more.
  */
 export function withAssets(frames = []) {
-  return frames.map((f) => (f.src ? f : { ...f, src: asset(f.key) }));
+  return frames.map((f) => {
+    if (f.src) return f;
+    const extra = variantsOf(f.key);
+    return {
+      ...f,
+      src: asset(f.key),
+      ...(extra.length ? { variants: extra } : null),
+    };
+  });
 }
 
 /**
@@ -92,6 +100,27 @@ export function withAssets(frames = []) {
  */
 export function withAssetsOnly(frames = []) {
   return withAssets(frames).filter((f) => Boolean(f.src));
+}
+
+/**
+ * The other shots of the same thing.
+ *
+ * A mockup usually comes as a set — the mug in three lightings, the lanyard
+ * from two angles. Only one of them earns a tile in the gallery; the rest
+ * belong behind it, so the lightbox can offer them without the grid turning
+ * into eight photographs of a mug.
+ *
+ * The convention is a double dash: touchpoints/mug is the one on the wall,
+ * touchpoints/mug--2 and --3 are the alternates. Naming is the whole
+ * mechanism, so adding a variant is still just dropping in a file.
+ */
+export function variantsOf(key) {
+  if (!key) return [];
+  const base = String(key).toLowerCase();
+  return Object.keys(BY_KEY)
+    .filter((k) => /--\d+$/.test(k) && k.replace(/--\d+$/, "") === base)
+    .sort()
+    .map((k) => BY_KEY[k]);
 }
 
 export default asset;
